@@ -1,0 +1,51 @@
+.card-content {
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(179, 179, 179, 0.8);
+  position: relative;
+  border-radius: 20px;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.season-card-image {
+  position: relative;
+  max-width: 300px;
+  width: 96%;
+
+  height: 406px;
+  object-fit: cover;
+}
+.card-context {
+  position: absolute;
+  top: 0%;
+  filter: contrast(150%);
+  bottom: 0%;
+  right: 0%;
+  left: 0%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.card-title {
+  margin-top: 50px;
+  color: var(--foreground);
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 50px;
+}
+.card-text {
+  color: var(--foreground);
+  text-align: center;
+}
+.card-button {
+  background-color: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 6px 24px;
+  font-size: 14px;
+  margin-top: 60px;
+  font-weight: 600;
+}

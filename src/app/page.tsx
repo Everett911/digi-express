@@ -1,66 +1,111 @@
-import Image from "next/image";
+"use client";
+import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { MenuHeader } from "@/components/MenuHeader";
+import { productSchema, type Product } from "@/schemas/products";
+import axios from "axios";
+import { Products } from "./products/Products";
+import SeasonCard from "@/components/SeasonCard";
+import Carousel from "@/components/Carousel";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default function Home({
+  totalQuantity,
+  products,
+  loadCart,
+  setProducts,
+}: {
+  totalQuantity: number;
+  products: Product[];
+  loadCart: () => Promise<void>;
+  setProducts: React.Dispatch<
+    React.SetStateAction<
+      {
+        id: string;
+        image: string;
+        name: string;
+        rating: {
+          stars: number;
+          count: number;
+        };
+        priceCents: number;
+        keywords: string[];
+      }[]
+    >
+  >;
+}) {
+  const [active, setActive] = useState<boolean>(false);
+  const [showcaseProduct, setShowcaseProduct] = useState<string>("shoes");
+  useEffect(() => {
+    const getHomeData = async () => {
+      const response = await axios.get("/api/products");
+      const data = productSchema.array().parse(response.data);
+      setProducts(data);
+    };
+    getHomeData();
+  }, [setProducts]);
+  /*
+  const showcaseProducts = products
+    .filter((product) => {
+      if (showcaseProduct === "shoes") {
+        return product.keywords.some((keyword) =>
+          keyword.toLowerCase().includes("shoes"),
+        );
+      }
+
+      if (showcaseProduct === "clothing") {
+        return product.keywords.some((keyword) =>
+          ["apparel", "clothing"].includes(keyword.toLowerCase()),
+        );
+      }
+
+      return true;
+    })
+    .slice(0, 5);
+  */
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <>
+      <Header
+        totalQuantity={totalQuantity}
+        active={active}
+        setActive={setActive}
+      />
+      <div>{active && <MenuHeader active={active} />}</div>
+
+      <Carousel />
+
+      <div className={styles["showcase-container"]}>
+        <div className="title-link">
+          <button
+            className={`${styles["showcase-button"]} ${showcaseProduct === "shoes" ? styles.selected : ""}`}
+            onClick={() => setShowcaseProduct("shoes")}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            New Brands
+          </button>
+          <button
+            className={`${styles["showcase-button"]} ${showcaseProduct === "clothing" ? styles.selected : ""}`}
+            onClick={() => setShowcaseProduct("clothing")}
           >
-            Documentation
-          </a>
+            Discounts
+          </button>
         </div>
-      </main>
-    </div>
+        <div className={styles["showcase-product-container"]}>
+          <div className={styles["products-grid"]}>
+            {/*showcaseProducts.map((product) => (
+              <Products
+                key={product.id}
+                product={product}
+                loadCart={loadCart}
+              />
+            ))*/}
+          </div>
+        </div>
+      </div>
+      <div className={styles["card-container"]}>
+        <SeasonCard />
+      </div>
+      <Footer />
+    </>
   );
 }
