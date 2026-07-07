@@ -1,8 +1,7 @@
 .header {
   background-color: var(--foreground);
   color: black;
-  padding-left: 10px;
-  padding-right: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,10 +11,7 @@
   left: 0;
   height: 60px;
   z-index: 1001;
-  position: fixed;
-  border-radius: 30px;
-  margin: 2%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .header .left-section {

@@ -1,11 +1,11 @@
-.showcase-container {
+.showcaseContainer {
   margin: 80px 40px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
 }
-.showcase-button {
+.showcaseButton {
   border: none;
   background-color: var(--background);
   font-size: 20px;
@@ -14,15 +14,15 @@
   color: rgba(0, 0, 0, 0.8);
 }
 
-.showcase-button:active,
-.showcase-button.selected {
+.showcaseButton:active,
+.showcaseButton.selected {
   border-bottom: 1px solid rgba(0, 0, 0, 0.6);
 }
-.showcase-product-container {
+.showcaseProductContainer {
   position: relative;
   width: 100%;
 }
-.showcase-product-container .products-grid {
+.showcaseProductContainer .productsGrid {
   flex: 2;
   display: flex;
   width: 100%;
@@ -33,7 +33,7 @@
   }
 }
 
-.showcase-product-container .product-container {
+.showcaseProductContainer .productContainer {
   background: radial-gradient(circle, white, rgb(243, 251, 254));
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 15px;
@@ -46,7 +46,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.showcase-product-container .product-image-container {
+.showcaseProductContainer .productImageContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,53 +54,53 @@
   margin-bottom: 20px;
 }
 
-.showcase-product-container .product-image {
+.showcaseProductContainer .productImage {
   max-width: 100%;
   max-height: 100%;
   border-radius: 12px;
 }
 
-.showcase-product-container .product-name {
+.showcaseProductContainer .productName {
   height: 40px;
   margin-bottom: 5px;
   font-size: 14px;
 }
 
-.showcase-product-container .product-rating-container {
+.showcaseProductContainer .productRatingContainer {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
-.showcase-product-container .product-rating-stars {
+.showcaseProductContainer .productRatingStars {
   width: 100px;
   margin-right: 6px;
 }
 
-.showcase-product-container .product-rating-count {
+.showcaseProductContainer .productRatingCount {
   color: rgb(25, 135, 84);
   cursor: auto;
   margin-top: 3px;
   font-size: 14px;
 }
 
-.showcase-product-container .product-price {
+.showcaseProductContainer .productPrice {
   font-weight: 700;
   margin-bottom: 10px;
   font-size: 14px;
 }
 
-.showcase-product-container .product-quantity-container {
+.showcaseProductContainer .productQuantityContainer {
   border: none;
   display: flex;
   align-items: center;
 }
 
-.showcase-product-container .product-spacer {
+.showcaseProductContainer .productSpacer {
   flex: 1;
 }
 
-.showcase-product-container .added-to-cart {
+.showcaseProductContainer .addedToCart {
   color: rgb(25, 135, 84);
   font-size: 16px;
   display: flex;
@@ -108,7 +108,7 @@
   margin-bottom: 8px;
   opacity: 0;
 }
-.showcase-product-container .quantity-icon {
+.showcaseProductContainer .quantityIcon {
   width: 17px;
   height: 17px;
   display: flex;
@@ -116,17 +116,17 @@
   align-items: center;
   padding: 5px;
 }
-.showcase-product-container .quantity-display {
+.showcaseProductContainer .quantityDisplay {
   padding: 5px;
 
   background-color: rgba(245, 238, 220, 0.6);
 }
 
-.showcase-product-container .added-to-cart img {
+.showcaseProductContainer .addedToCart img {
   height: 19px;
   margin-right: 6px;
 }
-.showcase-product-container .quantity-button-minus {
+.showcaseProductContainer .quantityButtonMinus {
   border: none;
 
   border-top-left-radius: 15px;
@@ -134,7 +134,7 @@
   box-shadow: 0 2px 5px rgba(179, 179, 179, 0.4);
   background-color: rgba(245, 238, 220, 0.6);
 }
-.showcase-product-container .quantity-button-plus {
+.showcaseProductContainer .quantityButtonPlus {
   border: none;
 
   border-top-right-radius: 15px;
@@ -143,7 +143,7 @@
   background-color: rgba(245, 238, 220, 0.6);
 }
 
-.showcase-product-container .add-to-cart-button {
+.showcaseProductContainer .addToCartButton {
   width: 100%;
   padding: 8px 5px;
   height: 34px;
@@ -156,7 +156,7 @@
   box-shadow: 0 2px 5px rgba(78, 78, 78, 0.6);
 }
 
-.card-container {
+.cardContainer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -181,16 +181,16 @@
 }
 
 @media (max-width: 767px) {
-  .swiper-carousel {
+  .swiperCarousel {
     display: none;
   }
-  .swiper-carousel-mobile {
+  .swiperCarouselMobile {
     max-width: 100%;
     max-height: 100%;
     position: relative;
     display: flex;
   }
-  .shop-now-button {
+  .shopNowButton {
     position: absolute;
     left: 35%;
     top: 55.7%;

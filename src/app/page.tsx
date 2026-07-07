@@ -6,7 +6,7 @@ import { MenuHeader } from "@/components/MenuHeader";
 import { productSchema, type Product } from "@/schemas/products";
 import axios from "axios";
 import { Products } from "./products/Products";
-import SeasonCard from "@/components/SeasonCard";
+
 import Carousel from "@/components/Carousel";
 import styles from "./page.module.css";
 
@@ -66,45 +66,32 @@ export default function Home({
   */
   return (
     <>
-      <Header
-        totalQuantity={totalQuantity}
-        active={active}
-        setActive={setActive}
-      />
       <div>{active && <MenuHeader active={active} />}</div>
-
       <Carousel />
-
-      <div className={styles["showcase-container"]}>
+      <div className={styles.showcaseContainer}>
         <div className="title-link">
           <button
-            className={`${styles["showcase-button"]} ${showcaseProduct === "shoes" ? styles.selected : ""}`}
+            className={`${styles.showcaseButton} ${showcaseProduct === "shoes" ? styles.selected : ""}`}
             onClick={() => setShowcaseProduct("shoes")}
           >
             New Brands
           </button>
           <button
-            className={`${styles["showcase-button"]} ${showcaseProduct === "clothing" ? styles.selected : ""}`}
+            className={`${styles.showcaseButton} ${showcaseProduct === "clothing" ? styles.selected : ""}`}
             onClick={() => setShowcaseProduct("clothing")}
           >
             Discounts
           </button>
         </div>
-        <div className={styles["showcase-product-container"]}>
-          <div className={styles["products-grid"]}>
+        <div className={styles.showcaseProductContainer}>
+          <div className={styles.productsGrid}>
             {/*showcaseProducts.map((product) => (
-              <Products
-                key={product.id}
-                product={product}
-                loadCart={loadCart}
-              />
-            ))*/}
+            <Products key={product.id} product={product} loadCart={loadCart} />
+          ))*/}
           </div>
         </div>
       </div>
-      <div className={styles["card-container"]}>
-        <SeasonCard />
-      </div>
+      <div className={styles.cardContainer}></div>
       <Footer />
     </>
   );
