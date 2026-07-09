@@ -1,0 +1,78 @@
+.tabList {
+  display: flex; /* Added to keep buttons aligned side-by-side */
+  border-bottom: 1px solid #e2e8f0;
+  margin: 0;
+  font-weight: 600;
+}
+
+.tabButton {
+  flex: 1;
+  padding: 12px 20px 20px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* Smoothly transition color and the border-bottom depth */
+  transition:
+    color 0.2s ease,
+    border-bottom-width 0.2s ease,
+    border-color 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tabButton:hover {
+  color: var(--text-primary);
+}
+
+.activeTabButton {
+  background-color: var(--foreground);
+  color: var(--text-primary); /* Ensures active text matches the line color */
+  border-bottom: 8px solid #2563eb;
+}
+
+/* Master wrapper for all content panels */
+.tabPanel {
+  background-color: var(--foreground);
+  position: absolute;
+  top: 90%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: var(--modern-shadow);
+}
+
+.hiddenPanel,
+.visiblePanel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--border-default);
+  width: 100%;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s;
+}
+
+/* Inactive State: Shifted down and invisible */
+.hiddenPanel {
+  position: absolute; /* Stack hidden panels so they don't take up space */
+  pointer-events: none; /* Prevents users from clicking things inside hidden tabs */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+}
+
+/* Active State: Faded in and moved up to its original spot */
+.visiblePanel {
+  position: relative; /* Restores normal document flow for the active content */
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0px);
+}

@@ -1,46 +1,120 @@
-import { useState } from "react";
-import Link from "next/link";
-import ProfileIcon from "@/assets/images/icons/profile.svg";
-import "./ProfileDropdown.css";
-import { signOut } from "../../lib/actions/auth-actions";
-import { useRouter } from "next/navigation";
+"use client";
 
-function ProfileDropdown() {
+import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut } from "../../lib/actions/auth-actions";
+import { auth } from "../../lib/auth";
+import ProfileIcon from "@/assets/images/icons/profile.svg";
+import styles from "./ProfileDropdown.module.css";
+
+type Session = typeof auth.$Infer.Session;
+
+interface ProfileDropdownProps {
+  session: Session | null;
+}
+
+export default function ProfileDropdown({ session }: ProfileDropdownProps) {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const showMenu = () => setIsOpen(true);
-  const hideMenu = () => setIsOpen(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Handle keyboard accessibility (Escape to close)
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
+  const toggleMenu = () => setIsOpen((prev) => !prev);
+
   const handleSignOut = async () => {
     await signOut();
+    setIsOpen(false);
     router.push("/auth");
   };
+
   return (
     <div
-      className="profile-link"
-      onMouseEnter={showMenu}
-      onMouseLeave={hideMenu}
+      className={styles.container}
+      ref={containerRef}
+      onKeyDown={handleKeyDown}
     >
-      <ProfileIcon className="profile-icon" />
+      {/* Trigger Button */}
+      <button
+        className={styles.trigger}
+        onClick={toggleMenu}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        aria-label={session ? "Open user menu" : "Open auth menu"}
+        type="button"
+      >
+        <ProfileIcon className={styles.icon} />
+      </button>
 
       {isOpen && (
-        <div className="profile-dropdown">
-          <Link className=" header-link" href="/auth">
-            <span className="profile-text-reg">Sign In / Register</span>
-          </Link>
-          <Link className=" header-link" href="/orders">
-            <span className="profile-text-order">Orders</span>
-          </Link>
-          <p> </p>
-          <Link className=" header-link" href="/orders">
-            <span className="profile-text-acc">Account</span>
-          </Link>
-          <button onClick={handleSignOut} className="profile-text-acc">
-            SignOut
-          </button>
+        <div
+          ref={menuRef}
+          className={`${styles.menu} ${styles.open}`}
+          role="menu"
+          aria-labelledby="profile-trigger"
+        >
+          {!session ? (
+            <Link
+              className={styles.item}
+              href="/auth"
+              role="menuitem"
+              onClick={() => setIsOpen(false)}
+            >
+              Sign In / Register
+            </Link>
+          ) : (
+            <>
+              <span className={styles.user}>{session?.user.name}</span>
+              <Link
+                className={styles.item}
+                href="/orders"
+                role="menuitem"
+                onClick={() => setIsOpen(false)}
+              >
+                Orders
+              </Link>
+              <Link
+                className={styles.item}
+                href="/account"
+                role="menuitem"
+                onClick={() => setIsOpen(false)}
+              >
+                Account
+              </Link>
+              <div className={styles.divider} role="separator" />
+              <button
+                className={styles.item}
+                onClick={handleSignOut}
+                role="menuitem"
+                type="button"
+              >
+                Sign Out
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>
   );
 }
-
-export default ProfileDropdown;

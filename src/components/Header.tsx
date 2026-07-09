@@ -11,10 +11,9 @@ import { useState } from "react";
 import ProfileDropdown from "./ProfileDropdown";
 import Hamburger from "@/assets/images/icons/hamburger.svg";
 import HamburgerClose from "@/assets/images/icons/hamburger-close.svg";
-import { MenuHeader } from "./MenuHeader";
+import HeaderTabs from "./HeaderTabs";
 import Link from "next/link";
 import Image from "next/image";
-import { Session } from "better-auth";
 import { auth } from "../../lib/auth";
 
 type Session = typeof auth.$Infer.Session;
@@ -22,6 +21,7 @@ type Session = typeof auth.$Infer.Session;
 export function Header({ session }: { session: Session | null }) {
   const user = session?.user;
   const [active, setActive] = useState<boolean>(false);
+
   const searchParams = useSearchParams();
   const searchText = searchParams.get("search");
   const [search, setSearch] = useState(searchText || "");
@@ -65,9 +65,8 @@ export function Header({ session }: { session: Session | null }) {
           </Link>
         </div>
         <div className="middle-section">
-          <div className="menubar-container">
-            <MenuHeader active={active} />
-          </div>
+          <HeaderTabs />
+
           <div className="toggle-containers">
             <button className="toggle-menu-button" onClick={toggleMenu}>
               {active === true ? (
@@ -98,10 +97,15 @@ export function Header({ session }: { session: Session | null }) {
           <button className="search-button">
             <SearchIcon className="search-icon" onClick={toggleSeachbar} />
           </button>
-          <ProfileDropdown />
-          {session && <span>{user?.name}</span>}
-          {session && (
+          <ProfileDropdown session={session} />
+
+          {session ? (
             <Link className="cart-link header-link" href="/checkout">
+              <div className="cart-quantity">{}</div>
+              <CartLogo className="cart-icon" />
+            </Link>
+          ) : (
+            <Link className="cart-link header-link" href="/auth">
               <div className="cart-quantity">{}</div>
               <CartLogo className="cart-icon" />
             </Link>

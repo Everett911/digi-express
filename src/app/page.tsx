@@ -1,19 +1,12 @@
 "use client";
-import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useEffect, useState } from "react";
-import { MenuHeader } from "@/components/MenuHeader";
 import { productSchema, type Product } from "@/schemas/products";
 import axios from "axios";
-import { Products } from "./products/Products";
-
 import Carousel from "@/components/Carousel";
 import styles from "./page.module.css";
 
 export default function Home({
-  totalQuantity,
-  products,
-  loadCart,
   setProducts,
 }: {
   totalQuantity: number;
@@ -35,7 +28,6 @@ export default function Home({
     >
   >;
 }) {
-  const [active, setActive] = useState<boolean>(false);
   const [showcaseProduct, setShowcaseProduct] = useState<string>("shoes");
   useEffect(() => {
     const getHomeData = async () => {
@@ -64,9 +56,9 @@ export default function Home({
     })
     .slice(0, 5);
   */
+
   return (
     <>
-      <div>{active && <MenuHeader active={active} />}</div>
       <Carousel />
       <div className={styles.showcaseContainer}>
         <div className="title-link">
