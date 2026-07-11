@@ -1,9 +1,17 @@
+import { Montserrat } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
+
 import { auth } from "../../lib/auth";
 import { headers } from "next/headers";
 import { Header } from "@/components/Header";
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "700"], // Specify the weights you need
+  variable: "--font-montserrat", // Optional: creates a CSS variable for Tailwind
+  display: "swap",
+});
 export const metadata: Metadata = {
   title: "Digi-Express",
   description: "Ecommerce Project",
@@ -19,8 +27,8 @@ export default async function RootLayout({
   });
 
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" className={montserrat.variable}>
+      <body className={montserrat.className}>
         <Header session={session} />
         {children}
       </body>

@@ -1,4 +1,3 @@
-/* ProfileDropdown.module.css */
 .container {
   position: relative;
   display: inline-block;
@@ -38,7 +37,7 @@
   position: absolute;
   right: 0;
   top: 125%;
-  width: 220px;
+  width: 150px;
   background: var(--foreground);
   border: 1px solid var(--border-default);
   border-radius: 12px;
@@ -79,7 +78,7 @@
   font-weight: 500;
   border: none;
   background: none;
-  border-radius: 8px;
+
   cursor: pointer;
   transition:
     background-color 0.15s ease,
@@ -88,8 +87,8 @@
 }
 
 .item:hover {
-  background-color: var(--button-secondary-hover);
-  color: var(--button-secondary);
+  color: var(--button-primary-hover);
+  text-decoration: underline;
 }
 
 .item:focus-visible {
@@ -103,22 +102,3 @@
   margin: 4px 0;
   border: none;
 }
-
-/*  
-@media (prefers-color-scheme: dark) {
-  .menu {
-    background: #1e293b;
-    border-color: #334155;
-  }
-  .item {
-    color: #cbd5e1;
-  }
-  .item:hover {
-    background-color: #334155;
-    color: #f8fafc;
-  }
-  .divider {
-    background-color: #334155;
-  }
-}
-*/

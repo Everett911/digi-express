@@ -7,6 +7,7 @@ import { signOut } from "../../lib/actions/auth-actions";
 import { auth } from "../../lib/auth";
 import ProfileIcon from "@/assets/images/icons/profile.svg";
 import styles from "./ProfileDropdown.module.css";
+import { truncateString } from "@/utils/truncatestring";
 
 type Session = typeof auth.$Infer.Session;
 
@@ -20,7 +21,6 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -34,7 +34,6 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Handle keyboard accessibility (Escape to close)
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Escape") {
       setIsOpen(false);
@@ -85,7 +84,9 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
             </Link>
           ) : (
             <>
-              <span className={styles.user}>{session?.user.name}</span>
+              <span className={styles.user}>
+                {truncateString(`${session?.user.name}`, 10)}
+              </span>
               <Link
                 className={styles.item}
                 href="/orders"

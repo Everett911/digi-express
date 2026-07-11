@@ -7,9 +7,10 @@
 
 .tabButton {
   flex: 1;
-  padding: 12px 20px 20px 20px;
-  font-size: 14px;
+  padding: 12px 20px 18px 20px;
+  font-size: 16px;
   font-weight: 500;
+
   color: var(--text-secondary);
   background: none;
   border: none;
@@ -29,7 +30,7 @@
 .activeTabButton {
   background-color: var(--foreground);
   color: var(--text-primary); /* Ensures active text matches the line color */
-  border-bottom: 8px solid #2563eb;
+  border-bottom: 7px solid #2563eb;
 }
 
 /* Master wrapper for all content panels */
@@ -49,13 +50,12 @@
 .hiddenPanel,
 .visiblePanel {
   display: flex;
-  align-items: center;
-  justify-content: center;
+
   border-top: 1px solid var(--border-default);
   width: 100%;
 
   transition:
-    opacity 0.3s ease,
+    opacity 0.1s ease,
     transform 0.3s ease,
     visibility 0.3s;
 }

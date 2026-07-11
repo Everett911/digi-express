@@ -1,0 +1,80 @@
+/* Container layout using CSS Grid */
+.container {
+  display: flex;
+  justify-content: start;
+  gap: 32px;
+  padding: 28px 5%;
+  background-color: var(--background); /* Soft cream background from image */
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+/* Left Column Links */
+.titlelinks {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Style for Next.js <Link> components */
+.titlelinks a {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #1c1b1b;
+  transition: color 0.15s ease;
+}
+
+.titlelinks a:hover {
+  color: #707070;
+}
+
+/* Middle and Right Column Wrappers */
+.type {
+  border-right: 1px solid var(--border-default);
+  border-left: 1px solid var(--border-default);
+  padding: 0px 35px;
+}
+.type,
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Headings for columns 2 and 3 */
+.typeTitle,
+.brandTitle {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1c1b1b;
+  margin-bottom: 4px;
+}
+
+/* Sub-items (List styling) */
+.typeSublinks,
+.subbrand {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4a4a4a;
+  cursor: pointer;
+  white-space: nowrap; /* Prevents text from breaking weirdly */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Safely cuts off long text/links */
+  transition: color 0.15s ease;
+}
+
+.typeSublinks:hover,
+.subbrand:hover {
+  color: #000000;
+}

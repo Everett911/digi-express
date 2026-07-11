@@ -131,7 +131,7 @@
 }
 
 .header .search-button {
-  background-color: var(--background);
+  background-color: var(--foreground);
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 45px;
   height: 50px;

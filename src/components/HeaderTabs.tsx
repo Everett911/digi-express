@@ -2,23 +2,25 @@
 
 import { useState, useRef } from "react";
 import styles from "./HeaderTabs.module.css";
+import SubHeaderTabs from "./SubHeaderTabs";
 
 interface TabItem {
   id: string;
   label: string;
-  content: React.ReactNode;
 }
 
 const tabs: TabItem[] = [
   {
-    id: "profile",
-    label: "Profile",
-    content: <p>Profile management layout.</p>,
+    id: "men",
+    label: "Men",
   },
   {
-    id: "settings",
-    label: "Settings",
-    content: <p>Account preference options.</p>,
+    id: "women",
+    label: "Women",
+  },
+  {
+    id: "appliances",
+    label: "Appliances",
   },
 ];
 
@@ -66,10 +68,8 @@ export default function HeaderTabs() {
             className={
               activeTab === tab.id ? styles.visiblePanel : styles.hiddenPanel
             }
-            // Prevent content mouse events from bubbling if you want strict "leave" behavior
-            // Usually not needed if the container wraps everything tightly
           >
-            {tab.content}
+            <SubHeaderTabs type={tab.id} />
           </div>
         ))}
       </div>
