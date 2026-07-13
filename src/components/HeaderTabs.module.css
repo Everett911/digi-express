@@ -1,13 +1,13 @@
 .tabList {
   display: flex; /* Added to keep buttons aligned side-by-side */
-  border-bottom: 1px solid #e2e8f0;
+
   margin: 0;
   font-weight: 600;
 }
 
 .tabButton {
   flex: 1;
-  padding: 12px 20px 18px 20px;
+  padding: 12px 20px 12px 20px;
   font-size: 16px;
   font-weight: 500;
 
@@ -30,7 +30,7 @@
 .activeTabButton {
   background-color: var(--foreground);
   color: var(--text-primary); /* Ensures active text matches the line color */
-  border-bottom: 7px solid #2563eb;
+  border-bottom: 4px solid #2563eb;
 }
 
 /* Master wrapper for all content panels */

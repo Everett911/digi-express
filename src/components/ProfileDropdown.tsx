@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signOut } from "../../lib/actions/auth-actions";
 import { auth } from "../../lib/auth";
+import { User, CircleUser } from "lucide-react";
 import ProfileIcon from "@/assets/images/icons/profile.svg";
 import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/utils/truncatestring";
@@ -63,7 +64,11 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
         aria-label={session ? "Open user menu" : "Open auth menu"}
         type="button"
       >
-        <ProfileIcon className={styles.icon} />
+        {!session ? (
+          <User size={23} color="#3467cc" className={styles.icon} />
+        ) : (
+          <CircleUser size={25} color="#3467cc" className={styles.icon} />
+        )}
       </button>
 
       {isOpen && (

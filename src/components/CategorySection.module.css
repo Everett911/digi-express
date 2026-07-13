@@ -1,0 +1,121 @@
+.section {
+  max-width: auto;
+  margin: 0;
+  padding: 64px 16px;
+
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header Column Styling */
+.headerColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 200px;
+  flex: 1;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.seeAll {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--button-primary); /* Teal/Cyan color from image */
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.seeAll:hover {
+  color: var(--button-primary-hover);
+}
+
+/* Grid Layout Styling */
+.grid {
+  flex: 3;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.iconSize {
+  size: 20px;
+}
+
+/* Interactive Category Cards */
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: var(--background);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 1px 2px 0 var(--modern-shadow);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--border-default);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.card:hover .iconWrapper {
+  transform: scale(1.1);
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.card:hover .label {
+  color: var(--text-primary);
+}
+
+/* Responsive Media Queries */
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    flex-direction: row;
+    gap: 48px;
+  }
+  .title {
+    margin: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

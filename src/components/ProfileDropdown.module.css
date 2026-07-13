@@ -28,15 +28,13 @@
 }
 
 .icon {
-  width: 28px;
-  height: 28px;
   display: block;
 }
 
 .menu {
   position: absolute;
   right: 0;
-  top: 125%;
+  top: 140%;
   width: 150px;
   background: var(--foreground);
   border: 1px solid var(--border-default);

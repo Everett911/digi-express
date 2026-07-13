@@ -1,117 +1,152 @@
 "use client";
 
+import { useState, useTransition, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import CartLogo from "@/assets/images/icons/cart.svg";
-import SearchIcon from "@/assets/images/icons/search.svg";
-import CloseIcon from "@/assets/images/icons/close.svg";
-import Logo from "@/assets/images/logo.png";
-import MobileLogo from "@/assets/images/mobile-logo.png";
-import "./header.css";
-import { useState } from "react";
-import ProfileDropdown from "./ProfileDropdown";
-import Hamburger from "@/assets/images/icons/hamburger.svg";
-import HamburgerClose from "@/assets/images/icons/hamburger-close.svg";
-import HeaderTabs from "./HeaderTabs";
 import Link from "next/link";
 import Image from "next/image";
-import { auth } from "../../lib/auth";
+import { X, ShoppingCart, Search } from "lucide-react";
+
+import Logo from "@/assets/images/logo.png";
+import MobileLogo from "@/assets/images/mobile-logo.png";
+import Hamburger from "@/assets/images/icons/hamburger.svg";
+import HamburgerClose from "@/assets/images/icons/hamburger-close.svg";
+
+import HeaderTabs from "./HeaderTabs";
+import ProfileDropdown from "./ProfileDropdown";
+import { type auth } from "../../lib/auth";
+import styles from "./Header.module.css";
 
 type Session = typeof auth.$Infer.Session;
 
 export function Header({ session }: { session: Session | null }) {
-  const user = session?.user;
-  const [active, setActive] = useState<boolean>(false);
-
-  const searchParams = useSearchParams();
-  const searchText = searchParams.get("search");
-  const [search, setSearch] = useState(searchText || "");
   const router = useRouter();
-  const [isOpen, SetIsOpen] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const toggleSeachbar = () => SetIsOpen((prev) => !prev);
-  const toggleMenu = () => setActive((prev) => !prev);
-  const updateSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+  // Component States
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Safely read URL search parameters only after mounting to avoid hydration mismatches
+  /*useEffect(() => {
+    setSearchQuery(searchParams.get("search") || "");
+  }, [searchParams]);*/
+
+  const toggleSearchbar = () => setIsSearchOpen((prev) => !prev);
+  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    startTransition(() => {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false); // Closes search bar overlay after redirecting
+    });
   };
 
-  const searchProduct = () => {
-    router.push(`/products?search=${search}`);
-  };
+  const cartLink = session ? "/checkout" : "/auth";
+
   return (
-    <div className="header-container">
-      {isOpen && (
-        <div className="search-bar-container">
-          <div className="search-bar-overlay">
+    <header className={styles.headerContainer}>
+      {/* Search Overlay Dropdown */}
+      {isSearchOpen && (
+        <div className={styles.searchBarContainer}>
+          <form
+            onSubmit={handleSearchSubmit}
+            className={styles.searchBarOverlay}
+          >
             <input
-              className="search-bar"
-              type="text"
-              placeholder="Search"
-              onChange={updateSearchInput}
+              className={styles.searchBar}
+              type="search"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              autoFocus
             />
-            <button className="search-button">
-              <SearchIcon className="search-icon" onClick={searchProduct} />
+            <button
+              type="submit"
+              className={styles.searchButton}
+              disabled={isPending}
+            >
+              <Search size={20} color="#ffffff" />
             </button>
-            <button className="close-button" onClick={toggleSeachbar}>
-              <CloseIcon className="close-icon" />
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={toggleSearchbar}
+            >
+              <X size={20} color="#3467cc" className={styles.closeIcon} />
             </button>
-          </div>
+          </form>
         </div>
       )}
-      <div className="header">
-        <div className="left-section">
-          <Link href="/" className="header-link">
-            <Image className="logo" src={Logo} alt="logo" />
-            <Image className="mobile-logo" src={MobileLogo} alt="mobile-logo" />
+
+      {/* Main Navigation Row */}
+      <div className={styles.header}>
+        <div className={styles.leftSection}>
+          <Link href="/" className={styles.headerLink}>
+            <Image
+              className={styles.logo}
+              src={Logo}
+              alt="Company Logo"
+              priority
+            />
+            <Image
+              className={styles.mobileLogo}
+              src={MobileLogo}
+              alt="Company Logo Mobile"
+              priority
+            />
           </Link>
         </div>
-        <div className="middle-section">
-          <HeaderTabs />
 
-          <div className="toggle-containers">
-            <button className="toggle-menu-button" onClick={toggleMenu}>
-              {active === true ? (
-                <HamburgerClose
-                  style={{
-                    width: "24px",
-                    height: "24px",
-                  }}
-                />
+        <div className={styles.middleSection}>
+          <HeaderTabs />
+          <div className={styles.toggleContainers}>
+            <button
+              type="button"
+              className={styles.toggleMenuButton}
+              onClick={toggleMenu}
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? (
+                <HamburgerClose className={styles.iconSvg} />
               ) : (
-                <Hamburger
-                  style={{
-                    transform: "rotate(360deg)",
-                    transformOrigin: "center",
-                    width: "24px",
-                    height: "24px",
-                  }}
-                />
+                <Hamburger className={styles.iconSvg} />
               )}
             </button>
-            <button className="search-button">
-              <SearchIcon className="search-icon" onClick={toggleSeachbar} />
+            <button
+              type="button"
+              className={styles.searchButton}
+              onClick={toggleSearchbar}
+            >
+              <Search size={20} color="#3467cc" className={styles.searchIcon} />
             </button>
           </div>
         </div>
 
-        <div className="right-section">
-          <button className="search-button">
-            <SearchIcon className="search-icon" onClick={toggleSeachbar} />
+        <div className={styles.rightSection}>
+          <button
+            type="button"
+            className={styles.searchButton}
+            onClick={toggleSearchbar}
+          >
+            <Search size={22} color="#3467cc" />
           </button>
-          <ProfileDropdown session={session} />
 
-          {session ? (
-            <Link className="cart-link header-link" href="/checkout">
-              <div className="cart-quantity">{}</div>
-              <CartLogo className="cart-icon" />
-            </Link>
-          ) : (
-            <Link className="cart-link header-link" href="/auth">
-              <div className="cart-quantity">{}</div>
-              <CartLogo className="cart-icon" />
-            </Link>
-          )}
+          <Link
+            className={`${styles.cartLink} ${styles.headerLink}`}
+            href={cartLink}
+          >
+            <div className={styles.cartQuantity} />
+            <ShoppingCart size={22} color="#3467cc" />
+          </Link>
+
+          <ProfileDropdown session={session} />
         </div>
       </div>
-    </div>
+    </header>
   );
 }

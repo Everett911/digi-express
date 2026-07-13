@@ -23,20 +23,20 @@ export default function SubHeaderTabs({ type }: { type: string }) {
           {type === "appliances" && (
             <div className={styles.typeTitle}>{`HOME'S ESSENTIAL`}</div>
           )}
-          {sublinks.map((sublink) => {
+          {links.map((link) => {
             return (
-              <div key={sublink} className={styles.typeSublinks}>
-                {sublink}
+              <div key={link} className={styles.typeLinks}>
+                {link}
               </div>
             );
           })}
         </div>
         <div className={styles.brand}>
           <div className={styles.brandTitle}>BRANDS</div>
-          {subbrands.map((subbrand) => {
+          {brands.map((brand) => {
             return (
-              <div key={subbrand} className={styles.subbrand}>
-                {subbrand}
+              <div key={brand} className={styles.brandName}>
+                {brand}
               </div>
             );
           })}
@@ -46,12 +46,12 @@ export default function SubHeaderTabs({ type }: { type: string }) {
   );
 }
 
-const sublinks = [
-  "🧴 Grooming & Personal Care",
-  "👟 Apparel & Footwear",
-  "💼 Bags & Accessories",
-  "🏋️ Health, Fitness & Wellness",
-  "📱 Tech & Gadgets",
+const links = [
+  "Grooming & Personal Care",
+  "Apparel & Footwear",
+  "Bags & Accessories",
+  "Health, Fitness & Wellness",
+  "Tech & Gadgets",
 ];
 
-const subbrands = ["Nike", "Addidas", "Zara", "Uniqlo", "New Balance"];
+const brands = ["Nike", "Addidas", "Zara", "Uniqlo", "New Balance"];

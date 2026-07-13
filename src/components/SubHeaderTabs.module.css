@@ -4,11 +4,7 @@
   justify-content: start;
   gap: 32px;
   padding: 28px 5%;
-  background-color: var(--background); /* Soft cream background from image */
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
+  background-color: var(--background);
   box-sizing: border-box;
   width: 100%;
   border-bottom-left-radius: 10px;
@@ -29,12 +25,12 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
-  color: #1c1b1b;
+  color: var(--text-secondary);
   transition: color 0.15s ease;
 }
 
 .titlelinks a:hover {
-  color: #707070;
+  color: var(--text-primary);
 }
 
 /* Middle and Right Column Wrappers */
@@ -57,16 +53,16 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1c1b1b;
+  color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 /* Sub-items (List styling) */
-.typeSublinks,
-.subbrand {
+.typeLinks,
+.brand {
   font-size: 14px;
   font-weight: 400;
-  color: #4a4a4a;
+  color: var(--text-secondary);
   cursor: pointer;
   white-space: nowrap; /* Prevents text from breaking weirdly */
   overflow: hidden;
@@ -74,7 +70,7 @@
   transition: color 0.15s ease;
 }
 
-.typeSublinks:hover,
-.subbrand:hover {
-  color: #000000;
+.typeLinks:hover,
+.brandName:hover {
+  color: var(--text-primary);
 }
