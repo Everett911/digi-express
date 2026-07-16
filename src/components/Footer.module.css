@@ -1,0 +1,214 @@
+/* Base Layout & Color Setup */
+.footerContainer {
+  background-color: #1a3263;
+  color: #e5e5e5;
+  padding: 48px 24px;
+
+  width: 100%;
+}
+
+.topSection {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Structural Accordion Classes */
+.sectionWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.desktopHeading {
+  display: block;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.mobileToggleButton {
+  display: none; /* Hidden on Desktop */
+}
+
+/* Link Actions & Containers */
+.linksContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.navLink {
+  color: #a3a3a3;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #ffffff;
+}
+
+/* Form Styling Rules */
+.subscribeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 2;
+}
+
+.inputSubscribe {
+  width: 100%;
+  background-color: #171717;
+  border: 1px solid #262626;
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-size: 0.875rem;
+  color: #ffffff;
+  transition: border-color 0.2s;
+}
+
+.inputSubscribe:focus {
+  outline: none;
+  border-color: #404040;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxInput {
+  margin-top: 4px;
+  accent-color: #ffffff;
+}
+
+.termText {
+  font-size: 0.75rem;
+  color: #a3a3a3;
+  line-height: 1.5;
+}
+
+.privacyLink {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.privacyLink:hover {
+  color: #d4d4d4;
+}
+
+.subscribeButton {
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subscribeButton:hover {
+  background-color: #e5e5e5;
+}
+
+/* Chevron Styles */
+.chevronIcon {
+  width: 24px;
+  height: 24px;
+  filter: invert(100%);
+  transform: rotate(180deg);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chevronOpen {
+  transform: rotate(0deg);
+}
+
+/* Bottom Signature Layout */
+.bottomSection {
+  max-width: 1200px;
+  margin: 48px auto 0 auto;
+  padding-top: 32px;
+  border-top: 1px solid #171717;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerLogo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footerBottomFont {
+  font-size: 0.75rem;
+  color: #525252;
+}
+
+/* Media Query Adaptations for Mobile Screens */
+@media (max-width: 768px) {
+  .topSection {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .sectionWrapper {
+    border-bottom: 1px solid #171717;
+    padding-bottom: 12px;
+  }
+
+  .desktopHeading {
+    display: none; /* Hide standard headers inside accordion sections */
+  }
+
+  /* Show subscribe header on mobile */
+  .subscribeSection .desktopHeading {
+    display: block;
+    margin-top: 24px;
+  }
+
+  .mobileToggleButton {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .linksContainer {
+    display: none; /* Collapsed by default */
+    padding: 8px 4px 16px 4px;
+  }
+
+  .linksContainer.mobileVisible {
+    display: flex; /* Expands when state is active */
+  }
+
+  .bottomSection {
+    flex-direction: column;
+    gap: 24px;
+    text-align: center;
+    margin-top: 32px;
+  }
+}

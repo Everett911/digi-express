@@ -1,12 +1,14 @@
 :root {
   --background: #f3fbfe;
-  --foreground: hsl(0, 0%, 100%);
+  --foreground: #ffffff;
 
   --text-primary: #1a202c;
   --text-secondary: #5a6a85;
 
   --button-primary: #3467cc;
   --button-primary-hover: #264481;
+  --button-primary-text: var(--background);
+  --button-primary-border: #1a3263;
 
   --button-secondary: #f0f4fc;
   --button-secondary-hover: #1a3263;

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { signOut } from "../../lib/actions/auth-actions";
 import { auth } from "../../lib/auth";
 import { User, CircleUser } from "lucide-react";
-import ProfileIcon from "@/assets/images/icons/profile.svg";
 import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/utils/truncatestring";
 

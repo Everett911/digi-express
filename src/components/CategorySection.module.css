@@ -48,17 +48,13 @@
   gap: 16px;
 }
 
-.iconSize {
-  size: 20px;
-}
-
 /* Interactive Category Cards */
 .card {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  background-color: var(--background);
+  background-color: var(--foreground);
   border: 1px solid var(--border-default);
   border-radius: 8px;
   text-decoration: none;

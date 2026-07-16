@@ -1,0 +1,95 @@
+.colletionSection {
+  max-width: auto;
+  margin: 0;
+  padding: 64px 16px;
+  box-sizing: border-box;
+}
+
+.collectionContainer {
+  display: flex;
+  margin: 10px auto;
+  justify-content: center;
+}
+
+.columnLeft {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  max-width: 700px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.leftWrapper {
+  width: 600px;
+  height: 280px;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  overflow: hidden;
+  border-radius: 20px;
+  position: relative;
+  transition: ease-out 0.3s;
+  border: 1px solid var(--border-default);
+  background-color: var(--foreground);
+  padding: 0px 20px;
+}
+
+.techImage,
+.appImage {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
+
+.appButton,
+.techButton {
+  background-color: var(--button-primary);
+  border: 1px solid var(--border-default);
+  color: var(--button-primary-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: ease-out 0.2s;
+}
+
+.appButton:hover,
+.techButton:hover {
+  background-color: var(--button-primary-hover);
+  box-shadow: var(--modern-shadow);
+}
+
+.appButton {
+  position: absolute;
+  right: 37%;
+  bottom: 25%;
+}
+.techButton {
+  position: absolute;
+  left: 8%;
+  bottom: 20%;
+}
+
+.columnRight {
+  display: flex;
+  flex: 1;
+  height: 600px;
+
+  max-width: 500px;
+}
+.rightWrapper {
+  width: 450px;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: var(--modern-shadow);
+  background-color: #3367cb;
+}
+.deliverImage {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}

@@ -1,6 +1,5 @@
 .tabList {
-  display: flex; /* Added to keep buttons aligned side-by-side */
-
+  display: flex;
   margin: 0;
   font-weight: 600;
 }
@@ -15,7 +14,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  /* Smoothly transition color and the border-bottom depth */
+
   transition:
     color 0.2s ease,
     border-bottom-width 0.2s ease,

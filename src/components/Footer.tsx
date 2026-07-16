@@ -1,155 +1,132 @@
+"use client"; // Required in Next.js App Router for state hooks
+
 import Link from "next/link";
-import "./Footer.css";
 import { useState } from "react";
+import Image from "next/image";
 import Chevron from "@/assets/images/icons/chevron.svg";
 import Logo from "@/assets/images/logo.png";
-import Image from "next/image";
+import styles from "./Footer.module.css"; // Next.js scoped CSS module import
 
-function Footer() {
-  const [activeQuestion, setActiveQuestion] = useState<boolean>(false);
-  const toggleMenuQuestion = () => setActiveQuestion((prev) => !prev);
-  const [activeShop, setActiveShop] = useState<boolean>(false);
-  const toggleMenuShop = () => setActiveShop((prev) => !prev);
-  return (
-    <>
-      <div className="footer-container">
-        <div className="top-section">
-          <div className="help-section">
-            <span className="footer-title-link">Questions</span>
-            {helps.map((item) => (
-              <Link className="navlink-text" href="/" key={item}>
-                <span>{item}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="help-section-mobile">
-            <div className="toggle-container">
-              <button
-                className="toggle-menu-button-footer"
-                onClick={toggleMenuQuestion}
-              >
-                QUESTION
-              </button>
-              {activeQuestion === true ? (
-                <Chevron
-                  className="chevron-icon"
-                  style={{
-                    width: "24px",
-                    height: "36px",
-                    margin: "0px 10px 0px 0px",
-                    filter: "invert(100%)",
-                  }}
-                />
-              ) : (
-                <Chevron
-                  className="chevron-icon"
-                  style={{
-                    transform: "rotate(180deg)",
-                    transformOrigin: "center",
-                    width: "24px",
-                    height: "36px",
-                    margin: "0px 10px 0px 0px",
-                    filter: "invert(100%)",
-                  }}
-                />
-              )}
-            </div>
-            {activeQuestion &&
-              helps.map((item) => (
-                <Link className="navlink-text" href="/" key={item}>
-                  <span>{item}</span>
-                </Link>
-              ))}
-          </div>
-          <div className="shop-section">
-            <span className="footer-title-link">Shop</span>
-            {categories.map((item) => (
-              <Link
-                className="navlink-text"
-                href={`/product/?search=${item}`}
-                key={item}
-              >
-                <span>{item}</span>
-              </Link>
-            ))}
-          </div>
-          <div className="shop-section-mobile">
-            <div className="toggle-container">
-              <button
-                className="toggle-menu-button-footer"
-                onClick={toggleMenuShop}
-              >
-                SHOP
-              </button>
-              {activeShop === true ? (
-                <Chevron
-                  className="chevron-icon"
-                  style={{
-                    width: "24px",
-                    height: "36px",
-                    margin: "0px 10px 0px 0px",
-                    filter: "invert(100%)",
-                  }}
-                />
-              ) : (
-                <Chevron
-                  className="chevron-icon"
-                  style={{
-                    transform: "rotate(180deg)",
-                    transformOrigin: "center",
-                    width: "24px",
-                    height: "36px",
-                    margin: "0px 10px 0px 0px",
-                    filter: "invert(100%)",
-                  }}
-                />
-              )}
-            </div>
-            {activeShop &&
-              categories.map((item) => (
-                <Link
-                  className="navlink-text"
-                  href={`/product/?search=${item}`}
-                  key={item}
-                >
-                  <span>{item}</span>
-                </Link>
-              ))}
-          </div>
-          <div className="subscribe-section">
-            <span className="subscribe-text">
-              Subscribe to get our latest trends
-            </span>
-            <input className="input-subscribe" type="email" />
-            <label>
-              <input
-                type="checkbox"
-                id="terms"
-                name="agreement"
-                value="accepted"
-              />
-              <span className="term-text">
-                By proceeding, you affirm that you read and agree to
-              </span>
-              <Link className="navlink-text" href="/">
-                Privacy Notice
-              </Link>
-            </label>
-            <button className="subscribe-button">Subscribe</button>
-          </div>
-        </div>
-        <div className="bottom-section">
-          <Image className="footer-logo" src={Logo} alt="logo" />
-          <span className="footer-bottom-font">
-            © 2026 DigiExpress, Inc. All Rights Reserved.
-          </span>
-        </div>
-      </div>
-    </>
-  );
+interface AccordionProps {
+  title: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
 }
 
-export default Footer;
+// Reusable Sub-component to eliminate duplicate markup
+const FooterAccordion = ({
+  title,
+  isOpen,
+  onToggle,
+  children,
+}: AccordionProps) => (
+  <div className={styles.sectionWrapper}>
+    {/* Mobile Toggle Button */}
+    <button className={styles.mobileToggleButton} onClick={onToggle}>
+      <span>{title}</span>
+      <Chevron
+        className={`${styles.chevronIcon} ${isOpen ? styles.chevronOpen : ""}`}
+      />
+    </button>
+
+    {/* Desktop Heading Accent */}
+    <h3 className={styles.desktopHeading}>{title}</h3>
+
+    {/* Dropdown Menu Item Area */}
+    <div
+      className={`${styles.linksContainer} ${isOpen ? styles.mobileVisible : ""}`}
+    >
+      {children}
+    </div>
+  </div>
+);
+
+export default function Footer() {
+  const [activeQuestion, setActiveQuestion] = useState<boolean>(false);
+  const [activeShop, setActiveShop] = useState<boolean>(false);
+
+  return (
+    <footer className={styles.footerContainer}>
+      <div className={styles.topSection}>
+        {/* Questions Accordion Column */}
+        <FooterAccordion
+          title="Questions"
+          isOpen={activeQuestion}
+          onToggle={() => setActiveQuestion(!activeQuestion)}
+        >
+          {helps.map((item) => (
+            <Link key={item} href="/" className={styles.navLink}>
+              {item}
+            </Link>
+          ))}
+        </FooterAccordion>
+
+        {/* Shop Accordion Column */}
+        <FooterAccordion
+          title="Shop"
+          isOpen={activeShop}
+          onToggle={() => setActiveShop(!activeShop)}
+        >
+          {categories.map((item) => (
+            <Link
+              key={item}
+              href={`/product/?search=${encodeURIComponent(item)}`}
+              className={styles.navLink}
+            >
+              {item}
+            </Link>
+          ))}
+        </FooterAccordion>
+
+        {/* Subscription Target Area */}
+        <div className={styles.subscribeSection}>
+          <h3 className={styles.desktopHeading}>
+            Subscribe to get our latest trends
+          </h3>
+          <input
+            className={styles.inputSubscribe}
+            type="email"
+            placeholder="Your email address"
+          />
+
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              id="terms"
+              name="agreement"
+              value="accepted"
+              className={styles.checkboxInput}
+            />
+            <span className={styles.termText}>
+              By proceeding, you affirm that you read and agree to{" "}
+              <Link className={styles.privacyLink} href="/">
+                Privacy Notice
+              </Link>
+            </span>
+          </label>
+
+          <button className={styles.subscribeButton}>Subscribe</button>
+        </div>
+      </div>
+
+      {/* Bottom Border Elements */}
+      <div className={styles.bottomSection}>
+        <Image
+          className={styles.footerLogo}
+          src={Logo}
+          alt="DigiExpress Logo"
+          width={140}
+          height={32}
+          priority
+        />
+        <span className={styles.footerBottomFont}>
+          © {new Date().getFullYear()} DigiExpress, Inc. All Rights Reserved.
+        </span>
+      </div>
+    </footer>
+  );
+}
 
 const categories = [
   "Men",
@@ -160,7 +137,6 @@ const categories = [
   "Beauty",
   "Outdoors",
 ];
-
 const helps = [
   "Returns",
   "FAQ",
