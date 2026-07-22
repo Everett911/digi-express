@@ -5,21 +5,17 @@ import styles from "./HeaderTabs.module.css";
 import SubHeaderTabs from "./SubHeaderTabs";
 
 interface TabItem {
-  id: string;
   label: string;
 }
 
 const tabs: TabItem[] = [
   {
-    id: "men",
     label: "Men",
   },
   {
-    id: "women",
     label: "Women",
   },
   {
-    id: "appliances",
     label: "Appliances",
   },
 ];
@@ -47,11 +43,11 @@ export default function HeaderTabs() {
     >
       <div className={styles.tabList}>
         {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
+          const isActive = activeTab === tab.label;
           return (
             <button
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
+              key={tab.label}
+              onClick={() => handleTabClick(tab.label)}
               className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
               aria-expanded={isActive}
             >
@@ -64,12 +60,12 @@ export default function HeaderTabs() {
       <div className={styles.tabPanel}>
         {tabs.map((tab) => (
           <div
-            key={tab.id}
+            key={tab.label}
             className={
-              activeTab === tab.id ? styles.visiblePanel : styles.hiddenPanel
+              activeTab === tab.label ? styles.visiblePanel : styles.hiddenPanel
             }
           >
-            <SubHeaderTabs type={tab.id} />
+            <SubHeaderTabs type={tab.label} />
           </div>
         ))}
       </div>

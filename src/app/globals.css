@@ -4,16 +4,21 @@
 
   --text-primary: #1a202c;
   --text-secondary: #5a6a85;
+  --text-link: #3467cc;
+  --text-tretiary: var(--foreground);
 
   --button-primary: #3467cc;
-  --button-primary-hover: #264481;
+  --button-primary-hover: #203e7a;
   --button-primary-text: var(--background);
-  --button-primary-border: #1a3263;
+  --button-primary-border: #2952a2;
 
-  --button-secondary: #f0f4fc;
-  --button-secondary-hover: #1a3263;
-  --button-secondary-border: #3467cc;
-  --button-secondary-text: #3467cc;
+  --button-secondary: #ecf0fb;
+  --button-secondary-hover: #bfd1ef;
+  --button-secondary-border: #e1e8f8;
+  --button-secondary-text: #1a202c;
+
+  --footer-border: #2952a2;
+  --footer-background: #122448;
 
   --success: #10b981;
   --error: #ef4444;

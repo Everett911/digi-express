@@ -7,16 +7,17 @@
   padding: 64px 16px;
 }
 .text {
-  font-size: 24px;
-  font-weight: 700px;
+  font-size: 20px;
+  font-weight: 650;
   color: var(--text-primary);
-  padding: 20px 0px;
+  padding: 10px 15px;
 }
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 32px;
+  margin: 1% 20px;
 }
 
 .leftWrapper,
@@ -63,8 +64,9 @@
 
 .leftButton:hover {
   background-color: var(--button-secondary-hover);
-  color: var(--button-secondary);
+  color: var(--button-secondary-text);
   border: 1px solid var(--button-secondary-border);
+  box-shadow: var(--modern-shadow);
 }
 
 .rightButton {
@@ -76,4 +78,23 @@
 .rightButton:hover {
   background-color: var(--button-primary-hover);
   border: 1px solid var(--button-primary-border);
+  color: var(--button-primary-text);
+  box-shadow: var(--modern-shadow);
+}
+@media (max-width: 640px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .leftButton {
+    font-size: 8px;
+    left: 12px;
+    padding: 5px 45px;
+  }
+  .rightButton {
+    font-size: 8px;
+    right: 5%;
+    bottom: 9%;
+    padding: 10px 57px;
+  }
 }

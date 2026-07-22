@@ -1,14 +1,12 @@
 .tabList {
   display: flex;
   margin: 0;
-  font-weight: 600;
 }
 
 .tabButton {
   flex: 1;
   padding: 12px 20px 12px 20px;
   font-size: 16px;
-  font-weight: 500;
 
   color: var(--text-secondary);
   background: none;
@@ -23,16 +21,15 @@
 }
 
 .tabButton:hover {
-  color: var(--text-primary);
+  color: var(--text-link);
 }
 
 .activeTabButton {
   background-color: var(--foreground);
-  color: var(--text-primary); /* Ensures active text matches the line color */
+  color: var(--text-link);
   border-bottom: 4px solid #2563eb;
 }
 
-/* Master wrapper for all content panels */
 .tabPanel {
   background-color: var(--foreground);
   position: absolute;
@@ -59,18 +56,16 @@
     visibility 0.3s;
 }
 
-/* Inactive State: Shifted down and invisible */
 .hiddenPanel {
-  position: absolute; /* Stack hidden panels so they don't take up space */
-  pointer-events: none; /* Prevents users from clicking things inside hidden tabs */
+  position: absolute;
+  pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
+  transform: translateY(20px);
 }
 
-/* Active State: Faded in and moved up to its original spot */
 .visiblePanel {
-  position: relative; /* Restores normal document flow for the active content */
+  position: relative;
   opacity: 1;
   visibility: visible;
   transform: translateY(0px);

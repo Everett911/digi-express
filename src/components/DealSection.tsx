@@ -1,5 +1,6 @@
-import Deal from "@/assets/images/Deal.svg";
-import Gift from "@/assets/images/Gift.svg";
+import Image from "next/image";
+import Deal from "@/assets/images/Deal.png";
+import Gift from "@/assets/images/Gift.png";
 
 import styles from "./DealSection.module.css";
 
@@ -9,11 +10,19 @@ function DealSection() {
       <span className={styles.text}>Featured Deals</span>
       <div className={styles.container}>
         <div className={styles.leftWrapper}>
-          <Deal className={styles.leftImg} />
+          <Image
+            src={Deal}
+            alt="Exclusive Deals Image"
+            className={styles.leftImg}
+          />
           <button className={styles.leftButton}>Shop Now</button>
         </div>
         <div className={styles.rightWrapper}>
-          <Gift className={styles.rightImg} />
+          <Image
+            src={Gift}
+            alt="Welcome Gift Image"
+            className={styles.rightImg}
+          />
           <button className={styles.rightButton}>Shop Now</button>
         </div>
       </div>

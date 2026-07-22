@@ -1,148 +1,128 @@
-"use client"; // Required in Next.js App Router for state hooks
-
+// components/Footer.tsx
 import Link from "next/link";
-import { useState } from "react";
-import Image from "next/image";
-import Chevron from "@/assets/images/icons/chevron.svg";
+import {
+  SiFacebook,
+  SiInstagram,
+  SiX,
+  SiYoutube,
+} from "@icons-pack/react-simple-icons";
+import styles from "./Footer.module.css";
 import Logo from "@/assets/images/logo.png";
-import styles from "./Footer.module.css"; // Next.js scoped CSS module import
+import Image from "next/image";
 
-interface AccordionProps {
-  title: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
+interface footerlinks {
+  label: string;
+  href: string;
 }
 
-// Reusable Sub-component to eliminate duplicate markup
-const FooterAccordion = ({
-  title,
-  isOpen,
-  onToggle,
-  children,
-}: AccordionProps) => (
-  <div className={styles.sectionWrapper}>
-    {/* Mobile Toggle Button */}
-    <button className={styles.mobileToggleButton} onClick={onToggle}>
-      <span>{title}</span>
-      <Chevron
-        className={`${styles.chevronIcon} ${isOpen ? styles.chevronOpen : ""}`}
-      />
-    </button>
-
-    {/* Desktop Heading Accent */}
-    <h3 className={styles.desktopHeading}>{title}</h3>
-
-    {/* Dropdown Menu Item Area */}
-    <div
-      className={`${styles.linksContainer} ${isOpen ? styles.mobileVisible : ""}`}
-    >
-      {children}
-    </div>
-  </div>
-);
+interface footerTabs {
+  title: string;
+  links: footerlinks[];
+}
 
 export default function Footer() {
-  const [activeQuestion, setActiveQuestion] = useState<boolean>(false);
-  const [activeShop, setActiveShop] = useState<boolean>(false);
-
   return (
-    <footer className={styles.footerContainer}>
-      <div className={styles.topSection}>
-        {/* Questions Accordion Column */}
-        <FooterAccordion
-          title="Questions"
-          isOpen={activeQuestion}
-          onToggle={() => setActiveQuestion(!activeQuestion)}
-        >
-          {helps.map((item) => (
-            <Link key={item} href="/" className={styles.navLink}>
-              {item}
-            </Link>
-          ))}
-        </FooterAccordion>
+    <div className={styles.footerContainer}>
+      {/* 1. Header Banner */}
+      <div className={styles.banner}>
+        <h2 className={styles.bannerText}>
+          Swift transit. Zero delay. Done right.
+        </h2>
+      </div>
+      <footer className={styles.mainFooter}>
+        <div className={styles.grid}>
+          <div className={styles.brandInfo}>
+            <div className={styles.logoContainer}>
+              <Image src={Logo} alt="Logo" className={styles.logo} />
+            </div>
 
-        {/* Shop Accordion Column */}
-        <FooterAccordion
-          title="Shop"
-          isOpen={activeShop}
-          onToggle={() => setActiveShop(!activeShop)}
-        >
-          {categories.map((item) => (
-            <Link
-              key={item}
-              href={`/product/?search=${encodeURIComponent(item)}`}
-              className={styles.navLink}
-            >
-              {item}
-            </Link>
-          ))}
-        </FooterAccordion>
+            <div className={styles.socials}>
+              <a href="#" className={styles.socialIcon} aria-label="Facebook">
+                <SiFacebook />
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="Twitter">
+                <SiX />
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="YouTube">
+                <SiYoutube />
+              </a>
+              <a href="#" className={styles.socialIcon} aria-label="Instagram">
+                <SiInstagram />
+              </a>
+            </div>
+          </div>
 
-        {/* Subscription Target Area */}
-        <div className={styles.subscribeSection}>
-          <h3 className={styles.desktopHeading}>
-            Subscribe to get our latest trends
-          </h3>
-          <input
-            className={styles.inputSubscribe}
-            type="email"
-            placeholder="Your email address"
-          />
+          {/* Navigation Matrix */}
 
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              id="terms"
-              name="agreement"
-              value="accepted"
-              className={styles.checkboxInput}
-            />
-            <span className={styles.termText}>
-              By proceeding, you affirm that you read and agree to{" "}
-              <Link className={styles.privacyLink} href="/">
-                Privacy Notice
-              </Link>
-            </span>
-          </label>
-
-          <button className={styles.subscribeButton}>Subscribe</button>
+          {tabs.map((tab: footerTabs) => {
+            return (
+              <div key={tab.title} className={styles.columnWrapper}>
+                <h4 className={styles.columnTitle}>{tab.title}</h4>
+                <ul className={styles.linkList}>
+                  {tab.links.map((link: footerlinks) => {
+                    return (
+                      <li key={link.label}>
+                        <Link href={link.href} className={styles.link}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         </div>
-      </div>
 
-      {/* Bottom Border Elements */}
-      <div className={styles.bottomSection}>
-        <Image
-          className={styles.footerLogo}
-          src={Logo}
-          alt="DigiExpress Logo"
-          width={140}
-          height={32}
-          priority
-        />
-        <span className={styles.footerBottomFont}>
-          © {new Date().getFullYear()} DigiExpress, Inc. All Rights Reserved.
-        </span>
-      </div>
-    </footer>
+        {/* Global Copyright Line */}
+        <div className={styles.copyright}>
+          © 2026 Digi-Express. All Rights Reserved. | Privacy Policy | Terms of
+          Service
+        </div>
+      </footer>
+    </div>
   );
 }
 
-const categories = [
-  "Men",
-  "Women",
-  "Toddler",
-  "Electronics",
-  "Appliances",
-  "Beauty",
-  "Outdoors",
-];
-const helps = [
-  "Returns",
-  "FAQ",
-  "Terms and Conditions",
-  "Privacy Policy",
-  "Order History",
-  "How To Track Your Order",
-  "Size Chart",
+const tabs: footerTabs = [
+  {
+    title: "Men",
+    links: [
+      { label: "Grooming", href: "#" },
+      { label: "Apparel", href: "#" },
+      { label: "Footwear", href: "#" },
+      { label: "Outdoor", href: "#" },
+      { label: "Fitness & Wellness", href: "#" },
+    ],
+  },
+  {
+    title: "Women",
+    links: [
+      { label: "Personal Care", href: "#" },
+      { label: "Clothing", href: "#" },
+      { label: "Accessories", href: "#" },
+      { label: "Footwear", href: "#" },
+      { label: "Fitness & Wellness", href: "#" },
+    ],
+  },
+  {
+    title: "Guide and Help",
+    links: [
+      { label: "Create Account", href: "#" },
+      { label: "Login", href: "#" },
+      { label: "Orders", href: "#" },
+      { label: "Tracking", href: "#" },
+      { label: "Account", href: "#" },
+    ],
+  },
+  {
+    title: "Brands",
+    links: [
+      { label: "Nike", href: "#" },
+      { label: "Adidas", href: "#" }, // Fixed typo "Addidas"
+      { label: "Zara", href: "#" },
+      { label: "Uniqlo", href: "#" },
+      { label: "New Balance", href: "#" },
+    ],
+  },
 ];
