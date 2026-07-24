@@ -1,16 +1,12 @@
 "use client";
 
-import { useState, useTransition, useEffect } from "react";
+import { useState, useTransition, useEffect, useId } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { X, ShoppingCart, Search } from "lucide-react";
-
 import Logo from "@/assets/images/logo.png";
 import MobileLogo from "@/assets/images/mobile-logo.png";
-import Hamburger from "@/assets/images/icons/hamburger.svg";
-import HamburgerClose from "@/assets/images/icons/hamburger-close.svg";
-
 import HeaderTabs from "./HeaderTabs";
 import ProfileDropdown from "./ProfileDropdown";
 import { type auth } from "../../lib/auth";
@@ -18,46 +14,66 @@ import styles from "./Header.module.css";
 
 type Session = typeof auth.$Infer.Session;
 
-export function Header({ session }: { session: Session | null }) {
+interface HeaderProps {
+  session: Session | null;
+}
+
+export function Header({ session }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-
-  // Component States
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const searchInputId = useId();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const currentSearchParam = searchParams.get("search") || "";
+  const displayQuery = searchQuery || currentSearchParam;
 
-  // Safely read URL search parameters only after mounting to avoid hydration mismatches
-  /*useEffect(() => {
-    setSearchQuery(searchParams.get("search") || "");
-  }, [searchParams]);*/
+  useEffect(() => {
+    if (!isSearchOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsSearchOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isSearchOpen]);
 
   const toggleSearchbar = () => setIsSearchOpen((prev) => !prev);
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
+    const trimmedQuery = displayQuery.trim();
+    if (!trimmedQuery) return;
 
     startTransition(() => {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setIsSearchOpen(false); // Closes search bar overlay after redirecting
+      router.push(`/products?search=${encodeURIComponent(trimmedQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery("");
     });
   };
 
   const cartLink = session ? "/checkout" : "/auth";
 
   return (
-    <header className={styles.headerContainer}>
+    <header className={styles.headerContainer} role="banner">
       {/* Search Overlay Dropdown */}
       {isSearchOpen && (
-        <div className={styles.searchBarContainer}>
+        <div
+          className={styles.searchBarContainer}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Product Search"
+        >
           <form
             onSubmit={handleSearchSubmit}
             className={styles.searchBarOverlay}
           >
+            <label htmlFor={searchInputId} className="sr-only">
+              Search products
+            </label>
             <input
+              id={searchInputId}
               className={styles.searchBar}
               type="search"
               placeholder="Search products..."
@@ -69,6 +85,7 @@ export function Header({ session }: { session: Session | null }) {
               type="submit"
               className={styles.searchButton}
               disabled={isPending}
+              aria-label="Submit search"
             >
               <Search size={20} color="#ffffff" />
             </button>
@@ -76,6 +93,7 @@ export function Header({ session }: { session: Session | null }) {
               type="button"
               className={styles.closeButton}
               onClick={toggleSearchbar}
+              aria-label="Close search"
             >
               <X size={20} color="#3467cc" className={styles.closeIcon} />
             </button>
@@ -86,7 +104,7 @@ export function Header({ session }: { session: Session | null }) {
       {/* Main Navigation Row */}
       <div className={styles.header}>
         <div className={styles.leftSection}>
-          <Link href="/" className={styles.headerLink}>
+          <Link href="/" className={styles.headerLink} aria-label="Home">
             <Image
               className={styles.logo}
               src={Logo}
@@ -102,36 +120,17 @@ export function Header({ session }: { session: Session | null }) {
           </Link>
         </div>
 
-        <div className={styles.middleSection}>
+        <nav className={styles.middleSection} aria-label="Main navigation">
           <HeaderTabs />
-          <div className={styles.toggleContainers}>
-            <button
-              type="button"
-              className={styles.toggleMenuButton}
-              onClick={toggleMenu}
-              aria-expanded={isMenuOpen}
-            >
-              {isMenuOpen ? (
-                <HamburgerClose className={styles.iconSvg} />
-              ) : (
-                <Hamburger className={styles.iconSvg} />
-              )}
-            </button>
-            <button
-              type="button"
-              className={styles.searchButton}
-              onClick={toggleSearchbar}
-            >
-              <Search size={20} color="#3467cc" className={styles.searchIcon} />
-            </button>
-          </div>
-        </div>
+        </nav>
 
         <div className={styles.rightSection}>
           <button
             type="button"
             className={styles.searchButton}
             onClick={toggleSearchbar}
+            aria-expanded={isSearchOpen}
+            aria-label="Open search"
           >
             <Search size={22} color="#3467cc" />
           </button>
@@ -139,6 +138,7 @@ export function Header({ session }: { session: Session | null }) {
           <Link
             className={`${styles.cartLink} ${styles.headerLink}`}
             href={cartLink}
+            aria-label="Shopping Cart"
           >
             <div className={styles.cartQuantity} />
             <ShoppingCart size={22} color="#3467cc" />

@@ -82,10 +82,6 @@
   transition: transform 0.2s ease;
 }
 
-.toggleContainers {
-  display: none;
-}
-
 /* Search Bar Overlay Window */
 .searchBarContainer {
   position: fixed;
@@ -170,22 +166,8 @@
   .mobileLogo {
     display: block;
   }
-  .leftSection {
-    order: 2;
-    justify-content: center;
-  }
+
   .middleSection {
-    order: 1;
-    justify-content: flex-start;
-  }
-  .rightSection {
-    order: 3;
-  }
-  .rightSection .searchButton {
     display: none;
-  }
-  .toggleContainers {
-    display: flex;
-    gap: 12px;
   }
 }

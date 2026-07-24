@@ -3,7 +3,7 @@
 import Link from "next/link";
 import styles from "./SubHeaderTabs.module.css";
 
-export default function SubHeaderTabs({ type }: { type: string }) {
+export default function SubHeaderTabs({ titleTab }: { titleTab: string }) {
   return (
     <>
       <div className={styles.container}>
@@ -14,13 +14,13 @@ export default function SubHeaderTabs({ type }: { type: string }) {
           <Link href={"/"}>BRANDED</Link>
         </div>
         <div className={styles.type}>
-          {type === "men" && (
+          {titleTab === "Men" && (
             <div className={styles.typeTitle}>{`MEN'S ESSENTIAL`}</div>
           )}
-          {type === "women" && (
+          {titleTab === "Women" && (
             <div className={styles.typeTitle}>{`WOMEN'S ESSENTIAL`}</div>
           )}
-          {type === "appliances" && (
+          {titleTab === "Appliances" && (
             <div className={styles.typeTitle}>{`HOME'S ESSENTIAL`}</div>
           )}
           {links.map((link) => {

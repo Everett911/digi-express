@@ -22,10 +22,34 @@ import "swiper/css/pagination";
 
 function Carousel() {
   const slidesData = [
-    { desktop: Spring, mobile: SpringMobile, alt: "Spring Season" },
-    { desktop: Summer, mobile: SummerMobile, alt: "Summer Season" },
-    { desktop: Autumn, mobile: AutumnMobile, alt: "Autumn Season" },
-    { desktop: Winter, mobile: WinterMobile, alt: "Winter Season" },
+    {
+      desktop: Spring,
+      mobile: SpringMobile,
+      alt: "Spring Season",
+      title: "Fresh Arrivals, Freshly Discounted",
+      text: "New season. Newer styles",
+    },
+    {
+      desktop: Summer,
+      mobile: SummerMobile,
+      alt: "Summer Season",
+      title: "Splash Into Our Summer Collection",
+      text: "Hot weather. Cooler prices.",
+    },
+    {
+      desktop: Autumn,
+      mobile: AutumnMobile,
+      alt: "Autumn Season",
+      title: "Embrace the Autumn Shift",
+      text: "Fall in love with these prices.",
+    },
+    {
+      desktop: Winter,
+      mobile: WinterMobile,
+      alt: "Winter Season",
+      title: "Melting Down Prices On Winter Essentials",
+      text: "Cold days, bold looks",
+    },
   ];
 
   return (
@@ -49,6 +73,8 @@ function Carousel() {
               alt={slide.alt}
               priority={index === 0}
             />
+            <span className={style.title}>{slide.title}</span>
+            <span className={style.text}>{slide.text}</span>
             <Link href="/product" className="header-link">
               <button className={style["swiper-button"]}>Shop Now</button>
             </Link>
@@ -62,6 +88,8 @@ function Carousel() {
               alt={slide.alt}
               priority={index === 0}
             />
+            <span className={style.title}>{slide.title}</span>
+            <span className={style.text}>{slide.text}</span>
             <Link href="/product" className="header-link">
               <button className={style["swiper-button"]}>Shop Now</button>
             </Link>

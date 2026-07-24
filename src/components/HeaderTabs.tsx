@@ -65,7 +65,7 @@ export default function HeaderTabs() {
               activeTab === tab.label ? styles.visiblePanel : styles.hiddenPanel
             }
           >
-            <SubHeaderTabs type={tab.label} />
+            <SubHeaderTabs titleTab={tab.label} />
           </div>
         ))}
       </div>
