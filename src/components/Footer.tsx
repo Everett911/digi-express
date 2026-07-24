@@ -1,4 +1,6 @@
 // components/Footer.tsx
+"use client"; // Required in Next.js App Router for state hooks
+
 import Link from "next/link";
 import {
   SiFacebook,
@@ -6,9 +8,11 @@ import {
   SiX,
   SiYoutube,
 } from "@icons-pack/react-simple-icons";
+import { Plus, Minus } from "lucide-react";
 import styles from "./Footer.module.css";
 import Logo from "@/assets/images/logo.png";
 import Image from "next/image";
+import { Activity, useState } from "react";
 
 interface footerlinks {
   label: string;
@@ -21,6 +25,16 @@ interface footerTabs {
 }
 
 export default function Footer() {
+  // Store the active index instead of a boolean
+  const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
+
+  const handleTabClick = (index: number) => {
+    setActiveTabIndex((prevIndex) => (prevIndex === index ? null : index));
+  };
+
+  const iconColor = "#3467cc";
+  const iconSize = 20;
+
   return (
     <div className={styles.footerContainer}>
       {/* 1. Header Banner */}
@@ -29,6 +43,7 @@ export default function Footer() {
           Swift transit. Zero delay. Done right.
         </h2>
       </div>
+
       <footer className={styles.mainFooter}>
         <div className={styles.grid}>
           <div className={styles.brandInfo}>
@@ -53,22 +68,52 @@ export default function Footer() {
           </div>
 
           {/* Navigation Matrix */}
-
-          {tabs.map((tab: footerTabs) => {
+          {tabs.map((tab: footerTabs, index: number) => {
+            const isOpen = activeTabIndex === index;
             return (
               <div key={tab.title} className={styles.columnWrapper}>
-                <h4 className={styles.columnTitle}>{tab.title}</h4>
-                <ul className={styles.linkList}>
-                  {tab.links.map((link: footerlinks) => {
-                    return (
-                      <li key={link.label}>
-                        <Link href={link.href} className={styles.link}>
-                          {link.label}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
+                {/* Desktop View */}
+                <div className={styles.desktop}>
+                  <h4 className={styles.columnTitle}>{tab.title}</h4>
+                  <ul className={styles.linkList}>
+                    {tab.links.map((link: footerlinks) => {
+                      return (
+                        <li key={link.label}>
+                          <Link href={link.href} className={styles.link}>
+                            {link.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                {/* Mobile View */}
+                <div className={styles.mobile}>
+                  <button onClick={() => handleTabClick(index)}>
+                    <h4 className={styles.columnTitle}>{tab.title}</h4>
+                  </button>
+
+                  <span className={styles.icon}>
+                    {isOpen ? (
+                      <Minus color={iconColor} size={iconSize} />
+                    ) : (
+                      <Plus color={iconColor} size={iconSize} />
+                    )}
+                  </span>
+
+                  <Activity mode={isOpen ? "visible" : "hidden"}>
+                    <ul className={styles.linkList}>
+                      {tab.links.map((link: footerlinks) => (
+                        <li key={link.label}>
+                          <Link href={link.href} className={styles.link}>
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </Activity>
+                </div>
               </div>
             );
           })}
@@ -84,7 +129,8 @@ export default function Footer() {
   );
 }
 
-const tabs: footerTabs = [
+// Fixed type mapping to an array of objects
+const tabs: footerTabs[] = [
   {
     title: "Men",
     links: [
@@ -119,7 +165,7 @@ const tabs: footerTabs = [
     title: "Brands",
     links: [
       { label: "Nike", href: "#" },
-      { label: "Adidas", href: "#" }, // Fixed typo "Addidas"
+      { label: "Adidas", href: "#" },
       { label: "Zara", href: "#" },
       { label: "Uniqlo", href: "#" },
       { label: "New Balance", href: "#" },
