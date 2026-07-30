@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Header } from "../../components/Header";
+import { Header } from "../../components/Header/Header";
 import "./TrackingPage.css";
 import { useParams } from "react-router";
 import axios from "axios";
@@ -9,7 +9,7 @@ import {
   type orderProduct,
   type Order,
 } from "../../schemas/orders";
-import Footer from "../../components/Footer";
+import Footer from "../../components/Footer/Footer";
 
 type Props = {
   totalQuantity: number;

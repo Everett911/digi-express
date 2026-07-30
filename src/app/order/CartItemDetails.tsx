@@ -22,7 +22,7 @@ export function CartItemDetails({ order, loadCart }: Props) {
         };
 
         return (
-          <Fragment key={p.product?.id}>
+          <Fragment key={p.productId}>
             <div className="product-image-container">
               <img src={p.product?.image} />
             </div>

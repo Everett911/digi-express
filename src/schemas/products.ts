@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const productSchema = z.object({
   id: z.string().uuid(),
-  image: z.string(),
+  image: z.array(z.string()),
   name: z.string(),
   rating: z.object({
     stars: z.number().min(0).max(5),

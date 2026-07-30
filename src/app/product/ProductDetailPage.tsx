@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { NavLink, useParams } from "react-router";
-import { Header } from "../../components/Header";
+import { Header } from "../../components/Header/Header";
 import MinusIcon from "../../assets/images/icons/minus.svg?react";
 import PlusIcon from "../../assets/images/icons/plus.svg?react";
 import axios from "axios";
 import "./ProductDetailPage.css";
 import { formatMoney } from "../../utils/money";
-import Footer from "../../components/Footer";
+import Footer from "../../components/Footer/Footer";
 import Chevron from "../../assets/images/icons/chevron.svg?react";
 import Swiper from "swiper";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";

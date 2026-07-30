@@ -60,11 +60,7 @@ export function CartItemDetails({
     await loadCart();
   };
   return (
-    <div
-      key={cartItem.productId}
-      className="cart-item-container"
-      data-testid="cart-item-container"
-    >
+    <div className="cart-item-container" data-testid="cart-item-container">
       <div className="delivery-date" data-testid="delivery-date">
         Delivery date:{" "}
         {dayjs(selectedDeliveryOption?.estimatedDeliveryTimeMs ?? 0).format(

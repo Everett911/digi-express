@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import styles from "./auth.module.css";
-import Footer from "@/components/Footer";
+import Footer from "@/components/Footer/Footer";
 
 import {
   signIn,

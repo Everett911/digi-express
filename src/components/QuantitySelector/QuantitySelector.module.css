@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  width: 100%;
+}
+
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 48px;
+  background-color: #ffffff;
+}
+
+.qtyBtn {
+  background: none;
+  border: none;
+  width: 40px;
+  height: 100%;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #374151;
+  transition: background-color 0.15s ease;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background-color: #f3f4f6;
+}
+
+.qtyBtn:disabled {
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.qtyDisplay {
+  width: 44px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #111827;
+  user-select: none;
+}

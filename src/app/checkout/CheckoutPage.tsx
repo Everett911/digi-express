@@ -9,7 +9,7 @@ import {
   deliveryOptionSchema,
   type Delivery,
 } from "../../schemas/deliveryOptions";
-import Footer from "../../components/Footer";
+import Footer from "../../components/Footer/Footer";
 
 type Props = {
   cart: CartItem[];

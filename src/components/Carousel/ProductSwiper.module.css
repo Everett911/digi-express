@@ -1,0 +1,50 @@
+.carouselWrapper {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Main Viewport Slider Container */
+.mainSwiper {
+  width: 100%;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.slideInner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.productImage {
+  object-fit: cover;
+}
+
+/* Thumbnail Strip Layout */
+.thumbsSwiper {
+  margin-top: 16px;
+  box-sizing: border-box;
+}
+
+.thumbSlideInner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  cursor: pointer;
+  border: 2px solid transparent;
+  opacity: 0.4;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Localized active class driven by React State instead of Swiper markup hashes */
+.thumbSlideInnerActive {
+  opacity: 1 !important;
+  border-color: #000000 !important;
+  transform: scale(0.97);
+}

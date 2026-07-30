@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Header } from "../../components/Header";
+import { Header } from "../../components/Header/Header";
 import { OrderGrid } from "./OrderGrid";
 import "./OrderPage.css";
 import { type Order, orderSchema } from "../../schemas/orders";
-import Footer from "../../components/Footer";
+import Footer from "../../components/Footer/Footer";
 
 type Props = {
   totalQuantity: number;

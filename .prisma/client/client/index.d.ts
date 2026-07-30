@@ -1684,7 +1684,6 @@ export namespace Prisma {
 
   export type ProductMinAggregateOutputType = {
     id: string | null
-    image: string | null
     name: string | null
     priceCents: number | null
     createdAt: Date | null
@@ -1693,7 +1692,6 @@ export namespace Prisma {
 
   export type ProductMaxAggregateOutputType = {
     id: string | null
-    image: string | null
     name: string | null
     priceCents: number | null
     createdAt: Date | null
@@ -1723,7 +1721,6 @@ export namespace Prisma {
 
   export type ProductMinAggregateInputType = {
     id?: true
-    image?: true
     name?: true
     priceCents?: true
     createdAt?: true
@@ -1732,7 +1729,6 @@ export namespace Prisma {
 
   export type ProductMaxAggregateInputType = {
     id?: true
-    image?: true
     name?: true
     priceCents?: true
     createdAt?: true
@@ -1839,7 +1835,7 @@ export namespace Prisma {
 
   export type ProductGroupByOutputType = {
     id: string
-    image: string
+    image: string[]
     name: string
     rating: JsonValue
     priceCents: number
@@ -1931,7 +1927,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      image: string
+      image: string[]
       name: string
       rating: Prisma.JsonValue
       priceCents: number
@@ -2364,7 +2360,7 @@ export namespace Prisma {
    */
   interface ProductFieldRefs {
     readonly id: FieldRef<"Product", 'String'>
-    readonly image: FieldRef<"Product", 'String'>
+    readonly image: FieldRef<"Product", 'String[]'>
     readonly name: FieldRef<"Product", 'String'>
     readonly rating: FieldRef<"Product", 'Json'>
     readonly priceCents: FieldRef<"Product", 'Int'>
@@ -10959,7 +10955,7 @@ export namespace Prisma {
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
     id?: UuidFilter<"Product"> | string
-    image?: StringFilter<"Product"> | string
+    image?: StringNullableListFilter<"Product">
     name?: StringFilter<"Product"> | string
     rating?: JsonFilter<"Product">
     priceCents?: IntFilter<"Product"> | number
@@ -10988,7 +10984,7 @@ export namespace Prisma {
     AND?: ProductWhereInput | ProductWhereInput[]
     OR?: ProductWhereInput[]
     NOT?: ProductWhereInput | ProductWhereInput[]
-    image?: StringFilter<"Product"> | string
+    image?: StringNullableListFilter<"Product">
     name?: StringFilter<"Product"> | string
     rating?: JsonFilter<"Product">
     priceCents?: IntFilter<"Product"> | number
@@ -11020,7 +11016,7 @@ export namespace Prisma {
     OR?: ProductScalarWhereWithAggregatesInput[]
     NOT?: ProductScalarWhereWithAggregatesInput | ProductScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"Product"> | string
-    image?: StringWithAggregatesFilter<"Product"> | string
+    image?: StringNullableListFilter<"Product">
     name?: StringWithAggregatesFilter<"Product"> | string
     rating?: JsonWithAggregatesFilter<"Product">
     priceCents?: IntWithAggregatesFilter<"Product"> | number
@@ -11523,7 +11519,7 @@ export namespace Prisma {
 
   export type ProductCreateInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -11536,7 +11532,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -11549,7 +11545,7 @@ export namespace Prisma {
 
   export type ProductUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -11562,7 +11558,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -11575,7 +11571,7 @@ export namespace Prisma {
 
   export type ProductCreateManyInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -11586,7 +11582,7 @@ export namespace Prisma {
 
   export type ProductUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -11597,7 +11593,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -12147,6 +12143,14 @@ export namespace Prisma {
     not?: NestedUuidFilter<$PrismaModel> | string
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -12194,14 +12198,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntFilter<$PrismaModel> | number
-  }
-
-  export type StringNullableListFilter<$PrismaModel = never> = {
-    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    has?: string | StringFieldRefInput<$PrismaModel> | null
-    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
-    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
-    isEmpty?: boolean
   }
 
   export type DateTimeFilter<$PrismaModel = never> = {
@@ -12252,7 +12248,6 @@ export namespace Prisma {
 
   export type ProductMaxOrderByAggregateInput = {
     id?: SortOrder
-    image?: SortOrder
     name?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
@@ -12261,7 +12256,6 @@ export namespace Prisma {
 
   export type ProductMinOrderByAggregateInput = {
     id?: SortOrder
-    image?: SortOrder
     name?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
@@ -12761,6 +12755,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type ProductCreateimageInput = {
+    set: string[]
+  }
+
   export type ProductCreatekeywordsInput = {
     set: string[]
   }
@@ -12793,6 +12791,11 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type ProductUpdateimageInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -13608,7 +13611,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutOrdersInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -13620,7 +13623,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutOrdersInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -13693,7 +13696,7 @@ export namespace Prisma {
     OR?: ProductScalarWhereInput[]
     NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
     id?: UuidFilter<"Product"> | string
-    image?: StringFilter<"Product"> | string
+    image?: StringNullableListFilter<"Product">
     name?: StringFilter<"Product"> | string
     rating?: JsonFilter<"Product">
     priceCents?: IntFilter<"Product"> | number
@@ -13779,7 +13782,7 @@ export namespace Prisma {
 
   export type ProductCreateWithoutCartItemsInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -13791,7 +13794,7 @@ export namespace Prisma {
 
   export type ProductUncheckedCreateWithoutCartItemsInput = {
     id?: string
-    image: string
+    image?: ProductCreateimageInput | string[]
     name: string
     rating: JsonNullValueInput | InputJsonValue
     priceCents: number
@@ -13877,7 +13880,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutCartItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -13889,7 +13892,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutCartItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -14350,7 +14353,7 @@ export namespace Prisma {
 
   export type ProductUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -14362,7 +14365,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
@@ -14374,7 +14377,7 @@ export namespace Prisma {
 
   export type ProductUncheckedUpdateManyWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
-    image?: StringFieldUpdateOperationsInput | string
+    image?: ProductUpdateimageInput | string[]
     name?: StringFieldUpdateOperationsInput | string
     rating?: JsonNullValueInput | InputJsonValue
     priceCents?: IntFieldUpdateOperationsInput | number
