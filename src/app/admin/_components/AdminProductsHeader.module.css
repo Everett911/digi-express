@@ -1,0 +1,6 @@
+.text {
+  margin-bottom: 16px;
+  font-size: 36px;
+  line-height: 40px;
+  color: var(--text-primary);
+}

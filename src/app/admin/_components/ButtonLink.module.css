@@ -1,0 +1,13 @@
+.button {
+  padding: 6px;
+  background-color: var(--button-primary);
+  border: none;
+  border-radius: 4px;
+  &:hover {
+    background-color: var(--button-primary-hover);
+  }
+}
+.link {
+  text-decoration: none;
+  color: var(--text-tretiary);
+}

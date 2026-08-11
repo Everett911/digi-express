@@ -5,8 +5,8 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import styles from "./products.module.css";
 import {
-  ProductSkeleton,
   ProductCard,
+  ProductSkeleton,
 } from "@/components/ProductCard/ProductCard";
 import { Product } from "@/schemas/products";
 import { Suspense } from "react";
@@ -15,19 +15,40 @@ interface PageProps {
   searchParams: Promise<{ search?: string }>;
 }
 
-export default async function ProductsPage({ searchParams }: PageProps) {
+async function getSearchQuery(searchParams: PageProps["searchParams"]) {
   const resolvedParams = await searchParams;
   const searchQuery = resolvedParams.search?.trim() || "";
+  return searchQuery;
+}
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
+async function getSearchProducts(searchQuery: string) {
   const databaseProducts = await prisma.product.findMany({
     where: buildProductSearchWhere(searchQuery),
     orderBy: { createdAt: "desc" },
   });
-  const products = databaseProducts as unknown as Product[];
+  return databaseProducts as unknown as Product[];
+}
+
+async function ProductList({ searchQuery }: { searchQuery: string }) {
+  const products = await getSearchProducts(searchQuery);
+
+  if (products.length === 0) {
+    return (
+      <div className={styles.noResults}>
+        <h3>No items found</h3>
+        <p>We couldn&apos;t find any products matching your search term.</p>
+      </div>
+    );
+  }
+
+  return <ProductCard products={products} />;
+}
+
+export default async function ProductsPage({ searchParams }: PageProps) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const searchQuery = await getSearchQuery(searchParams);
 
   return (
     <main className={styles.container}>
@@ -50,16 +71,9 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         </p>
       )}
 
-      {products.length === 0 ? (
-        <div className={styles.noResults}>
-          <h3>No items found</h3>
-          <p>We couldn&apos;t find any products matching your search term.</p>
-        </div>
-      ) : (
-        <Suspense fallback={<ProductSkeleton />}>
-          <ProductCard products={products} />
-        </Suspense>
-      )}
+      <Suspense fallback={<ProductSkeleton />}>
+        <ProductList searchQuery={searchQuery} />
+      </Suspense>
     </main>
   );
 }

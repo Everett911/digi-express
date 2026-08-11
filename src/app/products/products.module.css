@@ -56,7 +56,7 @@
   height: 280px;
 }
 .image {
-  object-fit: contain;
+  object-fit: scale-down;
   display: inline-block;
 }
 

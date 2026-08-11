@@ -8,8 +8,8 @@ import { Header } from "@/components/Header/Header";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "700"], // Specify the weights you need
-  variable: "--font-montserrat", // Optional: creates a CSS variable for Tailwind
+  weight: ["400", "700"],
+  variable: "--font-montserrat",
   display: "swap",
 });
 export const metadata: Metadata = {

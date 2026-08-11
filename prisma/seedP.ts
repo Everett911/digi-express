@@ -9,19 +9,18 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const { defaultDeliveryOptions } =
-    await import("./defaultDeliveryOptions.js");
+  const { defaultProducts } = await import("./oldProduct.js");
 
-  // Clear existing products (optional)
-  await prisma.deliveryOption.deleteMany({});
+  await prisma.product.deleteMany({});
 
-  // Import products
-  for (const deliveryOption of defaultDeliveryOptions) {
-    await prisma.deliveryOption.create({
+  for (const product of defaultProducts) {
+    await prisma.product.create({
       data: {
-        id: deliveryOption.id,
-        deliveryDays: deliveryOption.deliveryDays,
-        priceCents: deliveryOption.priceCents,
+        image: product.image,
+        name: product.name,
+        rating: product.rating,
+        priceCents: product.priceCents,
+        keywords: product.keywords,
       },
     });
   }

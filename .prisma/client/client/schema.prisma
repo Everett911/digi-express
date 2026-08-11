@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../.prisma/client/client"
@@ -14,17 +8,19 @@ datasource db {
 }
 
 model Product {
-  id         String   @id @default(uuid()) @db.Uuid
-  image      String[]
-  name       String
-  rating     Json
-  priceCents Int
-  keywords   String[]
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
-
-  orders    Order[]
-  cartItems CartItem[]
+  id                     String     @id @default(uuid()) @db.Uuid
+  image                  String[]
+  name                   String
+  description            String?
+  color                  String[]   @default([])
+  size                   String[]   @default([])
+  priceCents             Int
+  keywords               String[]
+  createdAt              DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt              DateTime   @updatedAt @db.Timestamptz(3)
+  isAvailableForPurchase Boolean    @default(true)
+  orders                 Order[]
+  cartItems              CartItem[]
 }
 
 model Order {
@@ -35,8 +31,9 @@ model Order {
   createdAt      DateTime @default(now()) @db.Timestamptz(3)
   updatedAt      DateTime @updatedAt @db.Timestamptz(3)
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Restrict)
-  products Product[]
+  user                 User                   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  products             Product[]
+  PurchaseVerification PurchaseVerification[]
 }
 
 model DeliveryOption {
@@ -46,7 +43,6 @@ model DeliveryOption {
   createdAt    DateTime @default(now()) @db.Timestamptz(3)
   updatedAt    DateTime @updatedAt @db.Timestamptz(3)
 
-  // Reverse relationship link for the CartItem model
   cartItems CartItem[]
 }
 
@@ -73,8 +69,10 @@ model User {
   id            String     @id
   name          String
   email         String
+  role          String     @default("customer")
   emailVerified Boolean    @default(false)
   image         String?
+  rating        Json?
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   sessions      Session[]
@@ -128,4 +126,13 @@ model Verification {
   updatedAt  DateTime @updatedAt
 
   @@index([identifier])
+}
+
+model PurchaseVerification {
+  id        String   @id @default(uuid()) @db.Uuid
+  orderId   String   @db.Uuid
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

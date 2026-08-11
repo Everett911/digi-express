@@ -3,6 +3,7 @@ import Image from "next/image";
 import { formatMoney } from "@/utils/money";
 import Link from "next/link";
 import { Product } from "@/schemas/products";
+import { Suspense } from "react";
 
 interface Props {
   products: Product[];
@@ -19,8 +20,8 @@ export function ProductCard({ products }: Props) {
                 <Image
                   src={`/products/${product.image[0]}.png`}
                   alt={product.name}
-                  width={320}
-                  height={280}
+                  fill
+                  style={{ objectFit: "cover" }}
                 />
               </div>
               <div className={styles.cardContent}>
