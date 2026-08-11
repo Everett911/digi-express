@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 type RuleWithTest = {
   test?: RegExp | { test: (value: string) => boolean };
@@ -13,6 +14,7 @@ const nextConfig: NextConfig = {
   },
   typedRoutes: true,
   turbopack: {
+    root: path.resolve(__dirname),
     rules: {
       "*.svg": {
         loaders: ["@svgr/webpack"],
