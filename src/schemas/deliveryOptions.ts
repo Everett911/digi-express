@@ -1,10 +1,11 @@
 import { z } from "zod";
 
-export const deliveryOptionSchema = z.object({
+export const DeliveryOptionSchema = z.object({
   id: z.string(),
-  deliveryDays: z.number().int().nonnegative(),
-  priceCents: z.number().int().nonnegative(),
-  estimatedDeliveryTimeMs: z.number().int().positive(),
+  deliveryDays: z.number().int(),
+  priceCents: z.number().int(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
-export type Delivery = z.infer<typeof deliveryOptionSchema>;
+export type DeliveryOption = z.infer<typeof DeliveryOptionSchema>;

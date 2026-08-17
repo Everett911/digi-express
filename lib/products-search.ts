@@ -1,4 +1,4 @@
-import type { Prisma } from "../.prisma/client/client";
+import type { Prisma } from "@prisma-client";
 
 export function buildProductSearchWhere(
   searchQuery: string,
@@ -11,8 +11,17 @@ export function buildProductSearchWhere(
 
   return {
     OR: [
-      { name: { contains: trimmed, mode: "insensitive" as const } },
-      { keywords: { has: trimmed } as const },
+      {
+        name: {
+          contains: trimmed,
+          mode: "insensitive",
+        },
+      },
+      {
+        keywords: {
+          hasSome: [trimmed],
+        },
+      },
     ],
   };
 }

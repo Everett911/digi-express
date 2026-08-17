@@ -2,7 +2,7 @@ import AdminProductsHeader from "../_components/AdminProductsHeader";
 import styles from "./page.module.css";
 import ButtonLink from "../_components/ButtonLink";
 import { DropdownMenu, Table } from "@radix-ui/themes";
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { CheckCircle, MoreVertical, XCircle } from "lucide-react";
 import Link from "next/link";
 import {

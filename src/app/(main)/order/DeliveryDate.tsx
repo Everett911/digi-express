@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import type { orderProduct } from "../../schemas/orders";
+import type { orderProduct } from "@/src/schemas/orders";
 
 
 export function DeliveryDate({ estimatedDeliveryTimeMs }: orderProduct) {

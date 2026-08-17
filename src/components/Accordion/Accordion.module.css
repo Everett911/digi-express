@@ -1,0 +1,68 @@
+/* components/AccordionItem.module.css */
+
+.container {
+  width: 100%;
+  margin: 8px auto;
+  border: 2px solid var(--border-default);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--foreground);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.trigger:hover {
+  background-color: var(--background);
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+  color: #64748b;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Smooth height transition wrapper using CSS Grid */
+.panelWrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 0.3s ease-out,
+    opacity 0.3s ease-out;
+  opacity: 0;
+}
+
+.panelWrapperOpen {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.panelInner {
+  overflow: hidden;
+}
+
+.content {
+  padding: 1rem;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border-top: 1px solid #f1f5f9;
+}

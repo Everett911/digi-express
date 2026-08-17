@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Delivery from "@/assets/images/Delivery.png";
-import Appliances from "@/assets/images/Appliances.png";
-import Tech from "@/assets/images/Tech.png";
+import Delivery from "@/src/assets/images/Delivery.png";
+import Appliances from "@/src/assets/images/Appliances.png";
+import Tech from "@/src/assets/images/Tech.png";
 import styles from "./CollectionSection.module.css";
 
 export default function CollectionSection() {

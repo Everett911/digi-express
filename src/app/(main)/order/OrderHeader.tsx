@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { formatMoney } from "../../utils/money";
-import type { Order } from "../../schemas/orders";
+import { formatMoney } from "@/src/utils/money";
+import type { Order } from "@/src/schemas/orders";
 
 export function OrderHeader({ order }: { order: Order }) {
   return (

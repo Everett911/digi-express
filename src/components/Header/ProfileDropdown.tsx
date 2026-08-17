@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useRef, useEffect, KeyboardEvent } from "react";
+import { useState, useRef, useEffect, KeyboardEvent, Activity } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signOut } from "../../../lib/actions/auth-actions";
-import { auth } from "../../../lib/auth";
+import { signOut } from "@/lib/db/auth.action";
+import { auth } from "@/lib/auth";
 import { User, CircleUser } from "lucide-react";
 import styles from "./ProfileDropdown.module.css";
-import { truncateString } from "@/utils/truncatestring";
+import { truncateString } from "@/src/utils/truncatestring";
 
 type Session = typeof auth.$Infer.Session;
 
@@ -107,6 +107,13 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
               >
                 Account
               </Link>
+              <Activity
+                mode={session?.user.role === "admin" ? "visible" : "hidden"}
+              >
+                <Link className={styles.item} role="menuitem" href={"/admin"}>
+                  Admin
+                </Link>
+              </Activity>
               <div className={styles.divider} role="separator" />
               <button
                 className={styles.item}

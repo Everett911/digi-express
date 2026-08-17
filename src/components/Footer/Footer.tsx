@@ -1,5 +1,4 @@
-// components/Footer.tsx
-"use client"; // Required in Next.js App Router for state hooks
+"use client";
 
 import Link from "next/link";
 import {
@@ -10,7 +9,7 @@ import {
 } from "@icons-pack/react-simple-icons";
 import { Plus, Minus } from "lucide-react";
 import styles from "./Footer.module.css";
-import Logo from "@/assets/images/logo.png";
+import Logo from "@/src/assets/images/logo.png";
 import Image from "next/image";
 import { Activity, useState } from "react";
 
@@ -25,7 +24,6 @@ interface footerTabs {
 }
 
 export default function Footer() {
-  // Store the active index instead of a boolean
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
 
   const handleTabClick = (index: number) => {
@@ -67,12 +65,10 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Navigation Matrix */}
           {tabs.map((tab: footerTabs, index: number) => {
             const isOpen = activeTabIndex === index;
             return (
               <div key={tab.title} className={styles.columnWrapper}>
-                {/* Desktop View */}
                 <div className={styles.desktop}>
                   <h4 className={styles.columnTitle}>{tab.title}</h4>
                   <ul className={styles.linkList}>
@@ -88,7 +84,6 @@ export default function Footer() {
                   </ul>
                 </div>
 
-                {/* Mobile View */}
                 <div className={styles.mobile}>
                   <button onClick={() => handleTabClick(index)}>
                     <h4 className={styles.columnTitle}>{tab.title}</h4>
@@ -120,7 +115,6 @@ export default function Footer() {
           })}
         </div>
 
-        {/* Global Copyright Line */}
         <div className={styles.copyright}>
           © 2026 Digi-Express. All Rights Reserved. | Privacy Policy | Terms of
           Service
@@ -130,7 +124,6 @@ export default function Footer() {
   );
 }
 
-// Fixed type mapping to an array of objects
 const tabs: footerTabs[] = [
   {
     title: "Men",

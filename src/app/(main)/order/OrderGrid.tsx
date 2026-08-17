@@ -1,4 +1,4 @@
-import type { Order } from "../../schemas/orders";
+import type { Order } from "@/src/schemas/orders";
 import { CartItemDetails } from "./CartItemDetails";
 import { OrderHeader } from "./OrderHeader";
 

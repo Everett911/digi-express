@@ -1,10 +1,12 @@
 "use server";
 
 import { z } from "zod";
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { notFound, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { formatCurrency } from "@/src/utils/formatters";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -12,6 +14,7 @@ const addSchema = z.object({
   name: z.string().min(1),
   priceCents: z.number().int().positive(),
   description: z.string().min(1),
+  brand: z.string().min(1),
   image: z
     .array(fileSchema)
     .nonempty({ message: "At least one image is required" })
@@ -24,6 +27,7 @@ const addSchema = z.object({
 });
 const editSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  brand: z.string().min(1, "Brand is required"),
   description: z.string().min(1, "Description is required"),
   priceCents: z.number().int().positive(),
   color: z.array(z.string()),
@@ -48,13 +52,13 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     return items;
   };
 
-  const rawPrice = formData.get("price")?.toString() || "0";
-  const priceCents = Math.round(parseFloat(rawPrice) * 100);
+  const rawPrice = Number(formData.get("price")?.toString()) || 0;
 
   const parsedData = {
+    brand: formData.get("brand"),
     name: formData.get("name"),
     description: formData.get("description"),
-    priceCents: priceCents,
+    priceCents: rawPrice,
     image: extractFormArray("image"),
     color: extractFormArray("color"),
     size: extractFormArray("size"),
@@ -90,6 +94,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
         isAvailableForPurchase: false,
         name: data.name,
         priceCents: data.priceCents,
+        brand: data.brand,
         description: data.description,
         color: data.color,
         size: data.size,
@@ -102,6 +107,8 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     return { error: (err as Error).message ?? String(err) };
   }
 
+  revalidatePath("/");
+  revalidatePath("/products");
   redirect("/admin/products");
 }
 
@@ -113,6 +120,8 @@ export async function toggleProductAvailability(
     where: { id },
     data: { isAvailableForPurchase },
   });
+  revalidatePath("/");
+  revalidatePath("/products");
 }
 
 export async function deleteProduct(id: string) {
@@ -133,6 +142,8 @@ export async function deleteProduct(id: string) {
       }
     }),
   );
+  revalidatePath("/");
+  revalidatePath("/products");
 }
 
 export async function updateProduct(
@@ -156,13 +167,13 @@ export async function updateProduct(
     return items;
   };
 
-  const rawPrice = formData.get("price")?.toString() || "0";
-  const priceCents = Math.round(parseFloat(rawPrice) * 100);
+  const rawPrice = Number(formData.get("price")?.toString()) || 0;
 
   const parsedData = {
     name: formData.get("name"),
     description: formData.get("description"),
-    priceCents: priceCents,
+    brand: formData.get("brand"),
+    priceCents: rawPrice,
     image: extractFormArray("image"),
     color: extractFormArray("color"),
     size: extractFormArray("size"),
@@ -227,6 +238,7 @@ export async function updateProduct(
       data: {
         isAvailableForPurchase: false,
         name: data.name,
+        brand: data.brand,
         priceCents: data.priceCents,
         description: data.description,
         color: data.color,
@@ -240,5 +252,7 @@ export async function updateProduct(
     return { error: (err as Error).message ?? String(err) };
   }
 
+  revalidatePath("/");
+  revalidatePath("/products");
   redirect("/admin/products");
 }

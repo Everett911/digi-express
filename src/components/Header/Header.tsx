@@ -5,24 +5,24 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { X, ShoppingCart, Search } from "lucide-react";
-import Logo from "@/assets/images/logo.png";
-import MobileLogo from "@/assets/images/mobile-logo.png";
+import Logo from "@/src/assets/images/logo.png";
+import MobileLogo from "@/src/assets/images/mobile-logo.png";
 import HeaderTabs from "./HeaderTabs";
 import ProfileDropdown from "./ProfileDropdown";
-import { type auth } from "../../../lib/auth";
+import { type auth } from "@/lib/auth";
 import styles from "./Header.module.css";
 
 type Session = typeof auth.$Infer.Session;
 
 interface HeaderProps {
   session: Session | null;
+  totalQuantity: number;
 }
 
-export function Header({ session }: HeaderProps) {
+export function Header({ session, totalQuantity }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const searchInputId = useId();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const currentSearchParam = searchParams.get("search") || "";
@@ -134,7 +134,7 @@ export function Header({ session }: HeaderProps) {
             href={cartLink}
             aria-label="Shopping Cart"
           >
-            <div className={styles.cartQuantity}>9</div>
+            <div className={styles.cartQuantity}>{totalQuantity}</div>
             <ShoppingCart size={22} color="#3467cc" />
           </Link>
 

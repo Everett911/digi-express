@@ -1,15 +1,15 @@
 .link {
-  padding: 4px;
+  padding: 8px;
   text-decoration: none;
-  color: var(--text-tretiary);
+  color: var(--text-primary);
 }
 
 .link:hover {
-  background-color: var(--foreground);
-  color: var(--button-secondary-text);
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
 }
 
 .active {
-  background-color: var(--foreground);
-  color: var(--button-secondary-text);
+  background-color: var(--button-primary-hover);
+  color: var(--button-primary-text);
 }

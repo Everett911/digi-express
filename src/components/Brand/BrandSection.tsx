@@ -82,8 +82,8 @@ export default function BrandSection() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.topSection}>
-          <span className={styles.title}>Shop by Brand</span>
-          <Link href={"#"} className={styles.seeAllWrapper}>
+          <h2 className={styles.title}>Shop by Brand</h2>
+          <Link href="/products" className={styles.seeAllWrapper}>
             <span className={styles.seeAll}>See All</span>
           </Link>
         </div>

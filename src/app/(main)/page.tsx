@@ -1,26 +1,37 @@
-"use client";
-import Footer from "@/components/Footer/Footer";
-
-import { type Product } from "@/schemas/products";
-
-import Carousel from "@/components/Carousel/Carousel";
+import Footer from "@/src/components/Footer/Footer";
+import Carousel from "@/src/components/Carousel/Carousel";
 import styles from "./page.module.css";
-import CategorySection from "@/components/Category/CategorySection";
-import CollectionSection from "@/components/Collection/CollectionSection";
-import DealSection from "@/components/Deal/DealSection";
-import BrandSection from "@/components/Brand/BrandSection";
-import Blog from "@/components/Blog/Blog";
+import CategorySection from "@/src/components/Category/CategorySection";
+import CollectionSection from "@/src/components/Collection/CollectionSection";
+import DealSection from "@/src/components/Deal/DealSection";
+import BrandSection from "@/src/components/Brand/BrandSection";
+import Blog from "@/src/components/Blog/Blog";
+import {
+  ProductCard,
+  ProductSkeleton,
+} from "@/src/components/ProductCard/ProductCard";
+import { Suspense } from "react";
+import { getNewestProducts } from "@/lib/db/products";
 
-export default function Home() {
+export default async function Home() {
+  const newestProduct = await getNewestProducts();
   return (
-    <>
+    <main className="styles.main">
       <Carousel />
+      <div className={styles.container}>
+        <h2 className={styles.arrivalText}>New Arrivals</h2>
+        <div className={styles.grid}>
+          <Suspense fallback={<ProductSkeleton />}>
+            <ProductCard products={newestProduct} />
+          </Suspense>
+        </div>
+      </div>
       <CategorySection />
       <CollectionSection />
       <DealSection />
       <BrandSection />
       <Blog />
       <Footer />
-    </>
+    </main>
   );
 }

@@ -1,16 +1,17 @@
+"use client";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
 import Link from "next/link";
 import Image from "next/image";
 
-import Spring from "@/assets/images/Spring.png";
-import Summer from "@/assets/images/Summer.png";
-import Winter from "@/assets/images/Winter.png";
-import Autumn from "@/assets/images/Autumn.png";
-import SpringMobile from "@/assets/images/Spring-mobile.png";
-import SummerMobile from "@/assets/images/Summer-mobile.png";
-import WinterMobile from "@/assets/images/Winter-mobile.png";
-import AutumnMobile from "@/assets/images/Autumn-mobile.png";
+import Spring from "@/src/assets/images/Spring.png";
+import Summer from "@/src/assets/images/Summer.png";
+import Winter from "@/src/assets/images/Winter.png";
+import Autumn from "@/src/assets/images/Autumn.png";
+import SpringMobile from "@/src/assets/images/Spring-mobile.png";
+import SummerMobile from "@/src/assets/images/Summer-mobile.png";
+import WinterMobile from "@/src/assets/images/Winter-mobile.png";
+import AutumnMobile from "@/src/assets/images/Autumn-mobile.png";
 
 import style from "./Carousel.module.css";
 

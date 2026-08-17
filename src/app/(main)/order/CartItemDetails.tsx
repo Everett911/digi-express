@@ -2,7 +2,7 @@ import BuyAgainIcon from "../../assets/images/icons/buy-again.png";
 import { Fragment } from "react";
 import { DeliveryDate } from "./DeliveryDate";
 import axios from "axios";
-import type { Order, orderProduct } from "../../schemas/orders";
+import type { Order, orderProduct } from "@/src/schemas/orders";
 
 type Props = {
   order: Order;

@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "../.prisma/client/client";
+import { PrismaClient } from "@prisma-client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { nextCookies } from "better-auth/next-js";
 
@@ -31,6 +31,15 @@ export const auth = betterAuth({
         required: false,
         returned: true,
         defaultValue: "customer",
+      },
+    },
+  },
+  session: {
+    additionalFields: {
+      cartId: {
+        type: "string",
+        required: false,
+        input: true, // Allows client to update or set it
       },
     },
   },

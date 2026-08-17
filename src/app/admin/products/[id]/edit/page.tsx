@@ -1,4 +1,4 @@
-import AdminProductsHeader from "@/app/admin/_components/AdminProductsHeader";
+import AdminProductsHeader from "@/src/app/admin/_components/AdminProductsHeader";
 import ProductForm from "../../_components/ProductForm";
 import { notFound } from "next/navigation";
 import { prisma } from "../../../../../../lib/prisma";

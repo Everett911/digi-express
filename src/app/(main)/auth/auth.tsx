@@ -2,13 +2,9 @@
 
 import { useState } from "react";
 import styles from "./auth.module.css";
-import Footer from "@/components/Footer/Footer";
+import Footer from "@/src/components/Footer/Footer";
 
-import {
-  signIn,
-  signInSocial,
-  signUp,
-} from "../../../lib/actions/auth-actions";
+import { signIn, signInSocial, signUp } from "@/lib/db/auth.action";
 
 export default function AuthClientPage() {
   const [isSignIn, setIsSignIn] = useState(true);

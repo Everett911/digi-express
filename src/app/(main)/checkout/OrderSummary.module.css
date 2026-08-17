@@ -1,0 +1,167 @@
+.orderSummary {
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+}
+
+.cartItemContainer {
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 12px;
+  background-color: var(--foreground);
+}
+
+.cartItemContainer:last-child {
+  margin-bottom: 0;
+}
+
+.deliveryGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+}
+
+.productInfo {
+  display: flex;
+  gap: 15px;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  flex-shrink: 0;
+  padding-top: 40px;
+}
+
+.productImage {
+  object-fit: contain;
+}
+
+.productDetails {
+  min-width: 0;
+}
+
+.productName {
+  font-weight: 700;
+  margin-bottom: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productPrice {
+  color: var(--text-link);
+  font-weight: 700;
+}
+
+.productColor .productSize {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.quantityUpdate {
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteLink {
+  color: var(--error);
+  background-color: var(--button-secondary);
+  border: 1px solid var(--button-secondary-border);
+  cursor: pointer;
+  padding: 10;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: ease-in 0.2s;
+  &:hover {
+    background-color: var(--button-secondary-hover);
+    border: 1px solid var(--button-primary-border);
+    transform: translateY(-2px);
+  }
+}
+.updateLink {
+  color: var(--success);
+  background-color: var(--button-secondary);
+  border: 1px solid var(--button-secondary-border);
+  cursor: pointer;
+  padding: 10;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: ease-in 0.2s;
+  &:hover {
+    background-color: var(--button-secondary-hover);
+    border: 1px solid var(--button-primary-border);
+    transform: translateY(-2px);
+  }
+}
+.updateLink:hover .deleteLink:hover {
+  text-decoration: underline;
+}
+
+.deliveryOptions {
+  min-width: 0;
+}
+
+.deliveryHeader {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.optionRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.optionRow:last-child {
+  margin-bottom: 0;
+}
+
+.radioInput {
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.optionLabel {
+  display: flex;
+  flex-direction: column;
+}
+.deliveryHeader {
+  color: var(--text-primary);
+}
+.deliveryDate {
+  color: var(--success);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.deliveryCost {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+@media (max-width: 1000px) {
+  .deliveryGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .productInfo {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .quantityUpdate {
+    justify-content: center;
+  }
+}

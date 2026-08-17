@@ -1,4 +1,4 @@
-// components/Card.tsx
+"use client";
 import styles from "./Card.module.css";
 
 interface CardProps {

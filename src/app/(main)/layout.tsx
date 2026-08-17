@@ -1,17 +1,9 @@
-import { Montserrat } from "next/font/google";
 import type { Metadata } from "next";
-import "./globals.css";
-
-import { auth } from "../../lib/auth";
+import { getCartFromSession } from "@/lib/db/cart";
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { Header } from "@/components/Header/Header";
+import { Header } from "@/src/components/Header/Header";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-montserrat",
-  display: "swap",
-});
 export const metadata: Metadata = {
   title: "Digi-Express",
   description: "Ecommerce Project",
@@ -20,7 +12,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default async function MainLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -28,13 +20,13 @@ export default async function RootLayout({
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
+  const cart = await getCartFromSession();
+  const totalQuantity =
+    cart?.reduce((acc, item) => acc + item.quantity, 0) ?? 0;
   return (
-    <html lang="en" className={montserrat.variable}>
-      <body className={montserrat.className}>
-        <Header session={session} />
-        {children}
-      </body>
-    </html>
+    <>
+      <Header session={session} totalQuantity={totalQuantity} />
+      {children}
+    </>
   );
 }

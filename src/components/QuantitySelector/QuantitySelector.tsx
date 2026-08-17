@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import styles from "./QuantitySelector.module.css";
 
-function QuantitySelector() {
-  const [quantity, setQuantity] = useState(1);
-
+function QuantitySelector({
+  quantity,
+  setQuantity,
+}: {
+  quantity: number;
+  setQuantity: Dispatch<SetStateAction<number>>;
+}) {
   const incrementQty = () => setQuantity((prev) => prev + 1);
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 

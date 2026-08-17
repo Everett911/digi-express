@@ -1,7 +1,7 @@
-import Card from "@/components/Card/Card";
+import Card from "@/src/components/Card/Card";
 import styles from "./page.module.css";
-import { prisma } from "../../../lib/prisma";
-import { formatCurrency, formatNumber } from "@/utils/formatters";
+import { prisma } from "@/lib/prisma";
+import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 
 async function getSalesData() {
   const data = await prisma.order.aggregate({

@@ -1,5 +1,5 @@
-import Footer from "../../components/Footer/Footer";
-import { Header } from "../../components/Header/Header";
+import Footer from "@/src/components/Footer/Footer";
+import { Header } from "@/src/components/Header/Header";
 import "./not_found.module.css";
 
 export function NotFoundPage({ totalQuantity }: { totalQuantity: string }) {

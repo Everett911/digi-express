@@ -1,6 +1,7 @@
+"use client";
 import Image from "next/image";
-import Deal from "@/assets/images/Deal.png";
-import Gift from "@/assets/images/Gift.png";
+import Deal from "@/src/assets/images/Deal.png";
+import Gift from "@/src/assets/images/Gift.png";
 
 import styles from "./DealSection.module.css";
 

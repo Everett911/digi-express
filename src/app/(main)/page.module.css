@@ -1,0 +1,22 @@
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.arrivalText {
+  color: var(--text-primary);
+}
+.container {
+  padding: 32px 16px;
+}
+.grid {
+  display: flex;
+  white-space: nowrap;
+  overflow-x: auto; /* Scroll left to right */
+  overflow-y: hidden;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .grid {
+    width: 300px;
+  }
+}

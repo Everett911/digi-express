@@ -1,19 +1,24 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 16px;
-
+  gap: 8px;
   width: 100%;
 }
 
 .quantitySelector {
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-default);
   border-radius: 6px;
   overflow: hidden;
-  height: 48px;
-  background-color: #ffffff;
+  height: 36px;
+  background-color: var(--foreground);
+  transition: ease-in 0.2s;
+  &:hover {
+    background-color: var(--button-secondary-hover);
+    border: 1px solid var(--button-primary-border);
+    transform: translateY(-2px);
+  }
 }
 
 .qtyBtn {
@@ -26,16 +31,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #374151;
+  color: var(--text-secondary);
   transition: background-color 0.15s ease;
 }
 
 .qtyBtn:hover:not(:disabled) {
-  background-color: #f3f4f6;
+  background-color: var(--background);
+  color: var(--text-primary);
 }
 
 .qtyBtn:disabled {
-  color: #9ca3af;
+  color: var(--text-tretiary);
   cursor: not-allowed;
 }
 
@@ -44,6 +50,6 @@
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
-  color: #111827;
+  color: var(--text-primary);
   user-select: none;
 }

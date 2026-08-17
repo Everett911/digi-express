@@ -1,55 +1,47 @@
-import { prisma } from "../../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import Link from "next/link";
-
+import ProductDetailContent from "./ProductDetailContent";
 import styles from "./detail.module.css";
-import ProductSwiper from "@/components/Carousel/ProductSwiper";
-import { CircleArrowLeft } from "lucide-react";
-import QuantitySelector from "@/components/QuantitySelector/QuantitySelector";
-import { formatMoney } from "@/utils/money";
+import ProductSwiper from "@/src/components/Carousel/ProductSwiper";
+import ProductDescription from "@/src/components/Accordion/ProductDescription";
 
-interface DetailPageProps {
+import ProductCare from "@/src/components/Accordion/ProductCare";
+import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
+
+export default async function ProductDetailPage({
+  params,
+}: {
   params: Promise<{ id: string }>;
-}
+}) {
+  const { id } = await params; // Next.js 15 requires awaiting params
 
-export default async function ProductDetailPage({ params }: DetailPageProps) {
-  const { id } = await params;
-
-  const product = await prisma.product.findUnique({
-    where: { id },
-  });
-
-  if (!product) {
-    notFound();
-  }
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product) notFound();
 
   return (
-    <main className={styles.container}>
-      <Link href="/products" className={styles.backLink}>
-        <CircleArrowLeft
-          className={styles.backIcon}
-          color="#3467cc"
-          size="30"
-        />{" "}
-        Back
-      </Link>
-
-      <div className={styles.layout}>
-        <div className={styles.imageContainer}>
-          <ProductSwiper images={product.image} />
+    <main>
+      <div className={styles.container}>
+        <div className={styles.backLinkWrapper}>
+          <Link className={styles.backLink} href={"/"}>
+            Home
+          </Link>
+          <ChevronLeft />
+          <Link className={styles.backLink} href={"/products"}>
+            Product
+          </Link>
         </div>
-
-        <div className={styles.details}>
-          <h1 className={styles.title}>{product.name}</h1>
-          <p className={styles.price}>{formatMoney(product.priceCents)}</p>
-          <p className={styles.description}>haha</p>
-          <div className={styles.buttonWrapper}>
-            <QuantitySelector />
-            <button type="button" className={styles.actionButton}>
-              Add to Cart
-            </button>
+        <div className={styles.layout}>
+          <div className={styles.imageContainer}>
+            <ProductSwiper images={product.image} />
           </div>
+
+          <ProductDetailContent product={product} />
         </div>
+        <ProductDescription description={product.description ?? ""} />
+        {!["appliances", "appliance"].some((item) =>
+          product.keywords.includes(item),
+        ) && <ProductCare />}
       </div>
     </main>
   );

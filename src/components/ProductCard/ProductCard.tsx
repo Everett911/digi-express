@@ -1,24 +1,35 @@
-import styles from "@/app/products/products.module.css";
+"use client";
+import styles from "./ProductCard.module.css";
 import Image from "next/image";
-import { formatMoney } from "@/utils/money";
 import Link from "next/link";
-import { Product } from "@/schemas/products";
-import { Suspense } from "react";
+import { Product } from "@/src/schemas/products";
+import { formatCurrency } from "@/src/utils/formatters";
 
 interface Props {
   products: Product[];
 }
 
 export function ProductCard({ products }: Props) {
+  if (!products || products.length === 0) {
+    return <p className={styles.noProducts}>No popular products found.</p>;
+  }
   return (
-    <div className={styles.grid}>
-      {products.map((product) => (
-        <div key={product.id}>
-          <Link href={`/products/${product.id}`} className={styles.linkClick}>
-            <div key={product.id} className={styles.card}>
+    <>
+      {products.map((product) => {
+        const displayImage =
+          product.image && product.image.length > 0
+            ? product.image[0]
+            : "/images/placeholder.jpg";
+
+        return (
+          <div key={product.id}>
+            <Link
+              href={`/products/${product.id}`}
+              className={`${styles.linkClick} ${styles.card}`}
+            >
               <div className={styles.imageWrapper}>
                 <Image
-                  src={`/products/${product.image[0]}.png`}
+                  src={displayImage}
                   alt={product.name}
                   fill
                   style={{ objectFit: "cover" }}
@@ -26,35 +37,21 @@ export function ProductCard({ products }: Props) {
               </div>
               <div className={styles.cardContent}>
                 <h3 className={styles.productName}>{product.name}</h3>
-                {product.rating && (
-                  <div className={styles.ratingWrapper}>
-                    <Image
-                      className="product-rating-stars"
-                      src={`/ratings/rating-${product.rating.stars * 10}.png`}
-                      alt="rating star"
-                      width={100}
-                      height={20}
-                    />
-                    <div className="product-rating-count link-primary">
-                      ({product.rating.count})
-                    </div>
-                  </div>
-                )}
                 <p className={styles.price}>
-                  {formatMoney(product.priceCents)}
+                  {formatCurrency(product.priceCents)}
                 </p>
               </div>
-            </div>
-          </Link>
-        </div>
-      ))}
-    </div>
+            </Link>
+          </div>
+        );
+      })}
+    </>
   );
 }
 
 export function ProductSkeleton() {
   return (
-    <div className={styles.grid}>
+    <>
       {Array.from({ length: 8 }).map((_, index) => (
         <div key={index} className={`${styles.card} ${styles.skeletonCard}`}>
           <div className={`${styles.imageWrapper} ${styles.skeletonImage}`} />
@@ -75,6 +72,6 @@ export function ProductSkeleton() {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }

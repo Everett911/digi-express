@@ -1,91 +1,113 @@
-import { formatMoney } from "../../utils/money";
-import { useNavigate } from "react-router";
-import axios from "axios";
-import type { PaymentSummary } from "../../schemas/paymentSummary";
+"use client";
 
-type Props = {
-  paymentSummary: PaymentSummary | null;
-  loadCart: () => Promise<void>;
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+
+import { createOrderFromCart } from "@/lib/db/cart.action";
+import styles from "./PaymentSummary.module.css";
+import { formatCurrency } from "@/src/utils/formatters";
+
+type PaymentSummaryType = {
+  totalItems: number;
+  productCostCents: number;
+  shippingCostCents: number;
+  totalCostBeforeTaxCents: number;
+  taxCents: number;
+  totalCostCents: number;
 };
 
-export function PaymentSummary({ paymentSummary, loadCart }: Props) {
-  const navigate = useNavigate();
+type Props = {
+  paymentSummary: PaymentSummaryType | null;
+};
 
-  const createOrder = async () => {
-    await axios.post("/api/orders");
+export function PaymentSummary({ paymentSummary }: Props) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
-    await loadCart();
+  const handlePlaceOrder = () => {
+    startTransition(async () => {
+      const result = await createOrderFromCart();
 
-    navigate("/orders");
+      if (result.success) {
+        router.push("/");
+      } else {
+        alert(result.error || "Order placement failed.");
+      }
+    });
   };
 
+  if (!paymentSummary) {
+    return <div className={styles.paymentSummary}>Loading totals...</div>;
+  }
+
   return (
-    <div className="payment-summary">
-      <div className="payment-summary-title">Payment Summary</div>
-      {paymentSummary && (
-        <>
-          <div
-            className="payment-summary-row"
-            data-testid="payment-summary-product-cost"
-          >
-            <div>Items ({paymentSummary.totalItems}):</div>
-            <div
-              className="payment-summary-money"
-              data-testid="payment-summary-money-without-tax-and-delivery"
-            >
-              {formatMoney(paymentSummary.productCostCents)}
-            </div>
-          </div>
+    <div className={styles.paymentSummary}>
+      <h2 className={styles.title}>Order Summary</h2>
 
-          <div className="payment-summary-row">
-            <div>Shipping &amp; handling:</div>
-            <div
-              className="payment-summary-money"
-              data-testid="payment-summary-money-delivery"
-            >
-              {formatMoney(paymentSummary.shippingCostCents)}
-            </div>
-          </div>
+      <div className={styles.row} data-testid="payment-summary-product-cost">
+        <div>Items ({paymentSummary.totalItems}):</div>
+        <div
+          className={styles.money}
+          data-testid="payment-summary-money-without-tax-and-delivery"
+        >
+          {formatCurrency(paymentSummary.productCostCents)}
+        </div>
+      </div>
 
-          <div className="payment-summary-row subtotal-row">
-            <div>Total before tax:</div>
-            <div
-              className="payment-summary-money"
-              data-testid="payment-summary-money-total-before-tax"
-            >
-              {formatMoney(paymentSummary.totalCostBeforeTaxCents)}
-            </div>
-          </div>
+      <div className={styles.row}>
+        <div>Shipping &amp; handling:</div>
+        <div
+          className={styles.money}
+          data-testid="payment-summary-money-delivery"
+        >
+          {paymentSummary.shippingCostCents === 0
+            ? "FREE"
+            : formatCurrency(paymentSummary.shippingCostCents)}
+        </div>
+      </div>
 
-          <div className="payment-summary-row">
-            <div>Estimated tax (10%):</div>
-            <div
-              className="payment-summary-money"
-              data-testid="payment-summary-money-estimated-tax"
-            >
-              {formatMoney(paymentSummary.taxCents)}
-            </div>
-          </div>
+      <hr className={styles.divider} />
 
-          <div className="payment-summary-row total-row">
-            <div>Order total:</div>
-            <div
-              className="payment-summary-money"
-              data-testid="payment-summary-money-order-total"
-            >
-              {formatMoney(paymentSummary.totalCostCents)}
-            </div>
-          </div>
+      <div className={`${styles.row} ${styles.subtotalRow}`}>
+        <div>Total before tax:</div>
+        <div
+          className={styles.money}
+          data-testid="payment-summary-money-total-before-tax"
+        >
+          {formatCurrency(paymentSummary.totalCostBeforeTaxCents)}
+        </div>
+      </div>
 
-          <button
-            className="place-order-button button-primary"
-            data-testid="place-order-button"
-            onClick={createOrder}
-          >
-            Place your order
-          </button>
-        </>
-      )}
+      <div className={styles.row}>
+        <div>Estimated tax (10%):</div>
+        <div
+          className={styles.money}
+          data-testid="payment-summary-money-estimated-tax"
+        >
+          {formatCurrency(paymentSummary.taxCents)}
+        </div>
+      </div>
+
+      <hr className={styles.divider} />
+
+      <div className={`${styles.row} ${styles.totalRow}`}>
+        <div>Order total:</div>
+        <div
+          className={styles.money}
+          data-testid="payment-summary-money-order-total"
+        >
+          {formatCurrency(paymentSummary.totalCostCents)}
+        </div>
+      </div>
+
+      <button
+        className={styles.placeOrderButton}
+        data-testid="place-order-button"
+        onClick={handlePlaceOrder}
+        disabled={isPending || paymentSummary.totalItems === 0}
+      >
+        {isPending ? "Processing..." : "Place your order"}
+      </button>
     </div>
   );
 }

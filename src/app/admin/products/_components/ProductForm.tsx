@@ -2,13 +2,14 @@
 
 import styles from "./ProductForm.module.css";
 import { Activity, ChangeEvent, useActionState, useState } from "react";
-import { formatCurrency } from "@/utils/formatters";
+import { formatCurrency } from "@/src/utils/formatters";
 import { Button } from "@radix-ui/themes";
 import { addProduct, updateProduct } from "../../_actions/products";
 import { useFormStatus } from "react-dom";
 import Form from "next/form";
-import { Product } from "../../../../../.prisma/client/client";
+
 import Image from "next/image";
+import { Product } from "@/prisma/@prisma-client";
 
 function ProductForm({ product }: { product?: Product | null }) {
   const [error, action] = useActionState(
@@ -111,6 +112,28 @@ function ProductForm({ product }: { product?: Product | null }) {
           </Activity>
         </div>
         <div className={styles.formContainer}>
+          <label htmlFor="name">Brand</label>
+          <input
+            type="text"
+            id="brand"
+            name="brand"
+            className={styles.input}
+            required
+            defaultValue={product?.brand}
+          />
+          <Activity
+            mode={
+              error && "fieldErrors" in error && error.fieldErrors.name
+                ? "visible"
+                : "hidden"
+            }
+          >
+            <span className={styles.errorMessage}>
+              {error && "fieldErrors" in error && error.fieldErrors.name}
+            </span>
+          </Activity>
+        </div>
+        <div className={styles.formContainer}>
           <label htmlFor="description">Description</label>
           <textarea
             id="description"
@@ -165,7 +188,6 @@ function ProductForm({ product }: { product?: Product | null }) {
               type="button"
               onClick={addImageField}
               className={styles.button}
-              disabled={product != null}
             >
               + Add More Images
             </button>
@@ -194,7 +216,7 @@ function ProductForm({ product }: { product?: Product | null }) {
               className={styles.input}
               placeholder={`Color #${index + 1}`}
               required
-              defaultValue={product?.color}
+              defaultValue={product?.color[index]}
             />
           ))}
           <button
@@ -228,14 +250,13 @@ function ProductForm({ product }: { product?: Product | null }) {
               className={styles.input}
               placeholder={`Size #${index + 1}`}
               required
-              defaultValue={product?.size}
+              defaultValue={product?.size[index]}
             />
           ))}
           <button
             type="button"
             onClick={addSizeField}
             className={styles.button}
-            disabled={product != null}
           >
             + Add More Sizes
           </button>
@@ -262,14 +283,13 @@ function ProductForm({ product }: { product?: Product | null }) {
               className={styles.input}
               placeholder={`Keyword #${index + 1} for better searches`}
               required
-              defaultValue={product?.keywords}
+              defaultValue={product?.keywords[index]}
             />
           ))}
           <button
             type="button"
             onClick={addKeywordField}
             className={styles.button}
-            disabled={product != null}
           >
             + Add More Keywords
           </button>

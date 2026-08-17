@@ -1,15 +1,16 @@
+"use client";
 import React from "react";
 import styles from "./Blog.module.css";
 import Image from "next/image";
-import first from "@/assets/images/Blog1.png";
-import second from "@/assets/images/Blog2.png";
-import third from "@/assets/images/Blog3.png";
-import forth from "@/assets/images/Blog4.png";
+import first from "@/src/assets/images/Blog1.png";
+import second from "@/src/assets/images/Blog2.png";
+import third from "@/src/assets/images/Blog3.png";
+import forth from "@/src/assets/images/Blog4.png";
 
 function Blog() {
   return (
     <div className={styles.section}>
-      <span className={styles.titleSection}>Latest Blogs</span>
+      <h2 className={styles.titleSection}>Latest Blogs</h2>
       <div className={styles.container}>
         <div className={styles.wrapperBox}>
           <button className={styles.button}>Fitness</button>

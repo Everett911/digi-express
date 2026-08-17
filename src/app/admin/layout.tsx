@@ -1,13 +1,23 @@
-import { Nav, NavLink } from "@/components/Nav/Nav";
+import { Nav, NavLink } from "@/src/components/Nav/Nav";
 import styles from "./page.module.css";
 import { Theme } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
+import type { Metadata } from "next";
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { auth } from "../../../lib/auth";
+import { auth } from "@/lib/auth";
+import Image from "next/image";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Digi-Express",
+  description: "Ecommerce Project",
+  icons: {
+    icon: "/website-logo.png",
+  },
+};
 
 export default async function AdminLayout({
   children,
@@ -23,10 +33,22 @@ export default async function AdminLayout({
   return (
     <>
       <Nav>
-        <NavLink href="/admin">Dashboard</NavLink>
-        <NavLink href="/admin/products">Products</NavLink>
-        <NavLink href="/admin/users">Customers</NavLink>
-        <NavLink href="/admin/sales">Sales</NavLink>
+        <Link href={"/"}>
+          <Image
+            src={"/logo.png"}
+            alt="header logo"
+            height={50}
+            width={150}
+            style={{ objectFit: "contain" }}
+            className={styles.imgLogo}
+          />
+        </Link>
+        <div>
+          <NavLink href="/admin">Dashboard</NavLink>
+          <NavLink href="/admin/products">Products</NavLink>
+          <NavLink href="/admin/users">Customers</NavLink>
+          <NavLink href="/admin/sales">Sales</NavLink>
+        </div>
       </Nav>
       <Theme accentColor="blue">
         <div className={styles.container}>{children}</div>

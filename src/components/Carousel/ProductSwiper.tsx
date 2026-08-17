@@ -3,12 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-// Import Swiper core and required modules
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Thumbs, Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
 
-// Import core Swiper CSS files
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
@@ -23,15 +21,12 @@ export default function ProductSwiper({ images }: props) {
   const [mainSwiper, setMainSwiper] = useState<SwiperType | null>(null);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-  // Track the active index via state to bypass unstable class bindings
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <div className={styles.carouselWrapper}>
-      {/* Main Large Image Viewer */}
       <Swiper
         onSwiper={setMainSwiper}
-        // Force state update whenever the slide transitions (via drag, arrow click, or thumbnail selection)
         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
         loop={false}
         spaceBetween={10}
@@ -46,7 +41,7 @@ export default function ProductSwiper({ images }: props) {
           <SwiperSlide key={index}>
             <div className={styles.slideInner}>
               <Image
-                src={`/products/${img}.png`}
+                src={`${img}`}
                 alt={`Product view ${index + 1}`}
                 fill
                 priority={index === 0}
@@ -94,7 +89,7 @@ export default function ProductSwiper({ images }: props) {
                 }}
               >
                 <Image
-                  src={`/products/${img}.png`}
+                  src={`${img}`}
                   alt={`Thumbnail selector ${index + 1}`}
                   fill
                   sizes="160px"

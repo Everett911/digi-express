@@ -1,6 +1,7 @@
 .container {
-  background-color: var(--button-primary);
+  background-color: var(--admin-background);
   display: flex;
-  justify-content: center;
-  padding: 0 4px;
+  justify-content: space-between;
+  padding: 0 8px;
+  align-items: center;
 }

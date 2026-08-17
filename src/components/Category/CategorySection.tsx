@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import Link from "next/link";
 import {
   Sparkles,
@@ -9,6 +9,8 @@ import {
   FlameKindling,
   Blender,
   Smartphone,
+  Sofa,
+  Panda,
 } from "lucide-react";
 import styles from "./CategorySection.module.css";
 
@@ -44,8 +46,8 @@ export default function CategorySection() {
     },
     {
       id: "4",
-      name: "Appliances",
-      icon: <Blender size={iconSize} color={iconColor} />,
+      name: "Furniture",
+      icon: <Sofa size={iconSize} color={iconColor} />,
       href: "/category/sweat-pants",
     },
     {
@@ -56,8 +58,8 @@ export default function CategorySection() {
     },
     {
       id: "6",
-      name: "Tech/Gadget",
-      icon: <Smartphone size={iconSize} color={iconColor} />,
+      name: "Toys",
+      icon: <Panda size={iconSize} color={iconColor} />,
       href: "/category/t-shirt",
     },
     {
@@ -79,7 +81,7 @@ export default function CategorySection() {
       <div className={styles.container}>
         <div className={styles.headerColumn}>
           <span className={styles.title}>Shop by Category</span>
-          <Link href="/categories" className={styles.seeAll}>
+          <Link href="/products" className={styles.seeAll}>
             See all
           </Link>
         </div>

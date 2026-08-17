@@ -1,14 +1,19 @@
-import { formatMoney } from "../../utils/money";
-import axios from "axios";
+"use client";
+
+import Image from "next/image";
+import { useState, useTransition } from "react";
+import { formatMoney } from "@/src/utils/money";
 import dayjs from "dayjs";
 import { DeliveryOptions } from "./DeliveryOptions";
-import { useState } from "react";
-import type { CartItem } from "../../schemas/cart";
-import type { Delivery } from "../../schemas/deliveryOptions";
+
+import styles from "./CartItemDetails.module.css";
+import type { CartItem } from "@/src/schemas/cart";
+import type { DeliveryOption } from "@/src/schemas/deliveryOptions";
+import { deleteCartItem, updateCartItemQuantity } from "@/lib/db/cart.action";
 
 type Props = {
   cartItem: CartItem;
-  deliveryOptions: Delivery[];
+  deliveryOptions: DeliveryOption[];
   loadCart: () => Promise<void>;
 };
 
@@ -19,97 +24,107 @@ export function CartItemDetails({
 }: Props) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [quantity, setQuantity] = useState(cartItem.quantity);
+  const [isPending, startTransition] = useTransition();
 
-  const updateQuantity = async () => {
+  const handleUpdate = () => {
     if (!isUpdating) {
       setIsUpdating(true);
+      return;
     }
 
-    if (isUpdating) {
-      await axios.put(`/api/cart-items/${cartItem.productId}`, {
-        quantity,
-      });
-      setIsUpdating(false);
-    }
-
-    loadCart();
+    startTransition(async () => {
+      try {
+        await updateCartItemQuantity(cartItem.productId, quantity);
+        await loadCart();
+        setIsUpdating(false);
+      } catch (err) {
+        console.error(err);
+      }
+    });
   };
 
-  const InputValueQuantity = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(Number(event.target.value));
-  };
-
-  const keyEvent = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const keyPress = event.key;
-
-    if (keyPress === "Enter") {
-      updateQuantity();
-    } else if (keyPress === "Escape") {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleUpdate();
+    } else if (event.key === "Escape") {
       setQuantity(cartItem.quantity);
       setIsUpdating(false);
     }
   };
 
-  const selectedDeliveryOption = deliveryOptions.find((deliveryOption) => {
-    return deliveryOption.id === cartItem.deliveryOptionId;
-  });
-
-  const deleteCartItem = async () => {
-    await axios.delete(`/api/cart-items/${cartItem.productId}`);
-
-    await loadCart();
+  const handleDelete = () => {
+    startTransition(async () => {
+      try {
+        await deleteCartItem(cartItem.productId);
+        await loadCart();
+      } catch (err) {
+        console.error(err);
+      }
+    });
   };
+
+  const selectedDeliveryOption = deliveryOptions.find(
+    (opt) => opt.id === cartItem.deliveryOptionId,
+  );
+
   return (
-    <div className="cart-item-container" data-testid="cart-item-container">
-      <div className="delivery-date" data-testid="delivery-date">
+    <div className={styles.itemContainer} data-testid="cart-item-container">
+      <div className={styles.deliveryDate} data-testid="delivery-date">
         Delivery date:{" "}
-        {dayjs(selectedDeliveryOption?.estimatedDeliveryTimeMs ?? 0).format(
-          "dddd, MMMM D",
-        )}
+        {selectedDeliveryOption
+          ? dayjs()
+              .add(selectedDeliveryOption.deliveryDays, "day")
+              .format("dddd, MMMM D")
+          : "Select an option"}
       </div>
 
-      <div
-        className="cart-item-details-grid"
-        data-testid="cart-item-details-grid"
-      >
-        <img
-          className="product-image"
+      <div className={styles.detailsGrid} data-testid="cart-item-details-grid">
+        <Image
+          className={styles.productImage}
           data-testid="product-image"
-          src={cartItem.product.image}
+          src={cartItem.product.image?.[0] || cartItem.product.image}
+          alt={cartItem.product.name}
+          width={150}
+          height={150}
         />
 
-        <div className="cart-item-details">
-          <div className="product-name" data-testid="product-name">
+        <div className={styles.productDetails}>
+          <div className={styles.productName} data-testid="product-name">
             {cartItem.product.name}
           </div>
-          <div className="product-price" data-testid="product-price">
+          <div className={styles.productPrice} data-testid="product-price">
             {formatMoney(cartItem.product.priceCents)}
           </div>
-          <div className="product-quantity" data-testid="product-quantity">
-            <span>
+
+          <div
+            className={styles.productQuantity}
+            data-testid="product-quantity"
+          >
+            <span className={styles.quantityWrapper}>
               Quantity:{" "}
               <input
-                type="text"
-                className="input-quantity"
-                style={{ opacity: isUpdating ? 1 : 0 }}
+                type="number"
+                min="1"
+                className={`${styles.inputQuantity} ${isUpdating ? styles.visible : ""}`}
                 value={quantity}
-                onChange={InputValueQuantity}
-                onKeyDown={keyEvent}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                onKeyDown={handleKeyDown}
+                disabled={isPending}
               />
-              <span className="quantity-label" data-testid="quantity-label">
-                {cartItem.quantity}
-              </span>
+              {!isUpdating && (
+                <span
+                  className={styles.quantityLabel}
+                  data-testid="quantity-label"
+                >
+                  {cartItem.quantity}
+                </span>
+              )}
             </span>
-            <span
-              className="update-quantity-link link-primary"
-              onClick={updateQuantity}
-            >
-              Update
+
+            <span className={styles.link} onClick={handleUpdate}>
+              {isUpdating ? "Save" : "Update"}
             </span>
-            <span
-              className="delete-quantity-link link-primary"
-              onClick={deleteCartItem}
-            >
+            <span className={styles.link} onClick={handleDelete}>
               Delete
             </span>
           </div>

@@ -9,7 +9,7 @@ export const UserSchema = z.object({
   role: z.string().default("customer"),
   rating: z.object({
     stars: z.number().min(0).max(5),
-    count: z.number().int().nonnegative(),
+    productId: z.string(),
   }),
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date(),

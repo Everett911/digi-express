@@ -1,0 +1,84 @@
+.paymentSummary {
+  background-color: var(--foreground);
+  border: 1px solid var(--border-default, #e5e7eb);
+  border-radius: 12px;
+  padding: 24px;
+  position: sticky;
+  top: 160px;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #111827);
+  margin: 0 0 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--text-secondary, #4b5563);
+  margin-bottom: 12px;
+}
+
+.money {
+  font-weight: 600;
+  color: var(--text-primary, #111827);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid var(--border-default, #e5e7eb);
+  margin: 16px 0;
+}
+
+.subtotalRow {
+  font-weight: 500;
+}
+
+.totalRow {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-link);
+}
+
+.totalRow .money {
+  color: var(--text-link);
+  font-weight: 700;
+}
+
+.placeOrderButton {
+  width: 100%;
+  background: var(--button-primary);
+  color: var(--foreground);
+  font-weight: 600;
+  padding: 12px 24px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 16px;
+
+  transition: ease-in 0.1s;
+  &:hover {
+    box-shadow: var(--modern-shadow);
+    transform: translateY(-2px);
+  }
+}
+
+.placeOrderButton:hover:not(:disabled) {
+  background-color: var(--button-primary-hover);
+}
+
+.placeOrderButton:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.placeOrderButton:disabled {
+  background: var(--border-default, #e5e7eb);
+  color: var(--text-secondary, #9ca3af);
+  box-shadow: none;
+  cursor: not-allowed;
+}

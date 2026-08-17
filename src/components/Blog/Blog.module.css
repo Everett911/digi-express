@@ -5,8 +5,6 @@
 }
 
 .container {
-  margin: 25px auto;
-
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   place-content: center;
@@ -18,8 +16,6 @@
 .titleSection {
   color: var(--text-primary);
   padding: 10px 30px;
-  font-size: 20px;
-  font-weight: 700;
 }
 
 .title {
@@ -101,7 +97,6 @@
     margin: 20px;
   }
 
-  /* Give the items a minimum width so they force the container to overflow */
   .container > * {
     min-width: 316px;
   }
