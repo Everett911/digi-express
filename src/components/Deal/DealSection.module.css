@@ -64,8 +64,9 @@
 .leftButton:hover {
   background-color: var(--button-secondary-hover);
   color: var(--button-secondary-text);
-  border: 1px solid var(--button-secondary-border);
+  border: 1px solid var(--border-default);
   box-shadow: var(--modern-shadow);
+  transform: translateY(-2px);
 }
 
 .rightButton {
@@ -78,7 +79,8 @@
   background-color: var(--button-primary-hover);
   border: 1px solid var(--button-primary-border);
   color: var(--button-primary-text);
-  box-shadow: var(--modern-shadow);
+
+  transform: translateY(-2px);
 }
 @media (max-width: 640px) {
   .container {

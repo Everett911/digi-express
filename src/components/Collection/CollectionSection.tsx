@@ -5,6 +5,7 @@ import Delivery from "@/src/assets/images/Delivery.png";
 import Appliances from "@/src/assets/images/Appliances.png";
 import Tech from "@/src/assets/images/Tech.png";
 import styles from "./CollectionSection.module.css";
+import Link from "next/link";
 
 export default function CollectionSection() {
   return (
@@ -17,11 +18,15 @@ export default function CollectionSection() {
               alt="Appliances Card"
               className={styles.appImage}
             />
-            <button className={styles.appButton}>Shop Now</button>
+            <Link href={"/products?type=appliances"}>
+              <button className={styles.appButton}>Shop Now</button>
+            </Link>
           </div>
           <div className={styles.bottomWrapper}>
             <Image src={Tech} alt="Tech Card" className={styles.techImage} />
-            <button className={styles.techButton}>Shop Now</button>
+            <Link href={"/products?type=gadget"}>
+              <button className={styles.techButton}>Shop Now</button>
+            </Link>
           </div>
         </div>
         <div className={styles.columnRight}>

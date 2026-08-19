@@ -33,7 +33,9 @@ export default function ProductDescription({
         className={`${styles.panelWrapper} ${isOpen ? styles.panelWrapperOpen : ""}`}
       >
         <div className={styles.panelInner}>
-          <div className={styles.content}>{description}</div>
+          <div className={styles.content}>
+            <pre className={styles.pre}>{description}</pre>
+          </div>
         </div>
       </div>
     </div>

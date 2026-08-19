@@ -44,8 +44,11 @@ model OrderItem {
   orderId    String   @db.Uuid
   productId  String   @db.Uuid
   quantity   Int
+  name       String
   color      String?
   size       String?
+  image      String
+  deliveryDays Int
   priceCents Int
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   updatedAt  DateTime @updatedAt @db.Timestamptz(3)

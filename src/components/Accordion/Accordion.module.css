@@ -66,3 +66,8 @@
   line-height: 1.5;
   border-top: 1px solid #f1f5f9;
 }
+
+.pre {
+  font-family: inherit;
+  white-space: pre-wrap;
+}

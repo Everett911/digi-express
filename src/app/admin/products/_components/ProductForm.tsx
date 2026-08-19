@@ -97,7 +97,7 @@ function ProductForm({ product }: { product?: Product | null }) {
             defaultValue={product?.priceCents}
           />
           <div className={styles.totalText}>
-            Preview: {formatCurrency(numericPriceCents / 100)}
+            Preview: {formatCurrency(numericPriceCents)}
           </div>
           <Activity
             mode={
@@ -223,7 +223,6 @@ function ProductForm({ product }: { product?: Product | null }) {
             type="button"
             onClick={addColorField}
             className={styles.button}
-            disabled={product != null}
           >
             + Add More Colors
           </button>

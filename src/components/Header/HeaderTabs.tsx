@@ -3,23 +3,29 @@
 import { useState, useRef } from "react";
 import styles from "./HeaderTabs.module.css";
 import SubHeaderTabs from "./SubHeaderTabs";
+import { Route } from "next";
 
 interface TabItem {
   label: string;
+  href: Route;
 }
 
 const tabs: TabItem[] = [
   {
     label: "Men",
+    href: "/products?type=men",
   },
   {
     label: "Women",
+    href: "/products?type=women",
   },
   {
     label: "Kids",
+    href: "/products?type=kids",
   },
   {
     label: "Homewares",
+    href: "/products?type=homewares",
   },
 ];
 
@@ -47,14 +53,16 @@ export default function HeaderTabs() {
         {tabs.map((tab) => {
           const isActive = activeTab === tab.label;
           return (
-            <button
-              key={tab.label}
-              onClick={() => handleTabClick(tab.label)}
-              className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
-              aria-expanded={isActive}
-            >
-              {tab.label}
-            </button>
+            <>
+              <button
+                key={tab.label}
+                onClick={() => handleTabClick(tab.label)}
+                className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
+                aria-expanded={isActive}
+              >
+                {tab.label}
+              </button>
+            </>
           );
         })}
       </div>

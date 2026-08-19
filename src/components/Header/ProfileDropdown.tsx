@@ -93,7 +93,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
               </span>
               <Link
                 className={styles.item}
-                href="/orders"
+                href="/order"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >

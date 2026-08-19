@@ -31,7 +31,7 @@ export function PaymentSummary({ paymentSummary }: Props) {
       if (result.success) {
         router.push("/");
       } else {
-        alert(result.error || "Order placement failed.");
+        alert("Order placement failed.");
       }
     });
   };

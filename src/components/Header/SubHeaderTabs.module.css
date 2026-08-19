@@ -1,4 +1,3 @@
-/* Container layout using CSS Grid */
 .container {
   display: flex;
   justify-content: start;
@@ -10,19 +9,21 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+.container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-/* Left Column Links */
 .titlelinks {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-/* Style for Next.js <Link> components */
 .titlelinks a {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--text-secondary);
@@ -33,7 +34,6 @@
   color: var(--text-primary);
 }
 
-/* Middle and Right Column Wrappers */
 .type {
   border-right: 1px solid var(--border-default);
   border-left: 1px solid var(--border-default);
@@ -46,28 +46,26 @@
   gap: 14px;
 }
 
-/* Headings for columns 2 and 3 */
 .typeTitle,
 .brandTitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-primary);
-  margin-bottom: 4px;
 }
 
-/* Sub-items (List styling) */
 .typeLinks,
-.brand {
+.brandName {
   font-size: 14px;
   font-weight: 400;
   color: var(--text-secondary);
   cursor: pointer;
-  white-space: nowrap; /* Prevents text from breaking weirdly */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Safely cuts off long text/links */
+  text-overflow: ellipsis;
   transition: color 0.15s ease;
+  text-decoration: none;
+  line-height: 2;
 }
 
 .typeLinks:hover,

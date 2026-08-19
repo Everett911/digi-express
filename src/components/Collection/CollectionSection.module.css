@@ -30,8 +30,7 @@
   position: relative;
   transition: ease-out 0.3s;
   border: 1px solid var(--border-default);
-  background-color: var(--foreground);
-  padding: 0px 20px;
+  background-color: var(--button-secondary);
 }
 
 .techImage,
@@ -56,6 +55,7 @@
 .techButton:hover {
   background-color: var(--button-primary-hover);
   box-shadow: var(--modern-shadow);
+  transform: translateY(-2px);
 }
 
 .appButton {

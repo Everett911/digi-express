@@ -7,12 +7,11 @@ import {
   Footprints,
   Briefcase,
   FlameKindling,
-  Blender,
-  Smartphone,
   Sofa,
   Panda,
 } from "lucide-react";
 import styles from "./CategorySection.module.css";
+import { Route } from "next";
 
 interface CategoryItem {
   id: string;
@@ -30,49 +29,52 @@ export default function CategorySection() {
       id: "1",
       name: "Personal Care",
       icon: <Sparkles size={iconSize} color={iconColor} />,
-      href: "/category/personal-care",
+
+      href: "/products?type=personal-care",
     },
     {
       id: "2",
       name: "Accessories",
       icon: <Watch size={iconSize} color={iconColor} />,
-      href: "/category/accessories",
+      href: "/products?type=accessories",
     },
     {
       id: "3",
       name: "Clothing",
       icon: <Shirt size={iconSize} color={iconColor} />,
-      href: "/category/coats",
+
+      href: "/products?type=clothing",
     },
     {
       id: "4",
       name: "Furniture",
       icon: <Sofa size={iconSize} color={iconColor} />,
-      href: "/category/sweat-pants",
+      href: "/products?type=furniture",
     },
     {
       id: "5",
       name: "Outdoors",
       icon: <FlameKindling size={iconSize} color={iconColor} />,
-      href: "/category/perfume",
+      href: "/products?type=outdoors",
     },
     {
       id: "6",
       name: "Toys",
       icon: <Panda size={iconSize} color={iconColor} />,
-      href: "/category/t-shirt",
+      href: "/products?type=toys",
     },
     {
       id: "7",
       name: "Shoes",
       icon: <Footprints size={iconSize} color={iconColor} />,
-      href: "/category/sneakers",
+
+      href: "/products?type=shoes",
     },
     {
       id: "8",
       name: "Bags",
       icon: <Briefcase size={iconSize} color={iconColor} />,
-      href: "/category/bags",
+      href: "/products?type=bags",
     },
   ];
 
@@ -86,12 +88,11 @@ export default function CategorySection() {
           </Link>
         </div>
 
-        {/* Right Side 4x2 Responsive Grid */}
         <div className={styles.grid}>
           {categories.map((category) => (
             <Link
               key={category.id}
-              href={category.href}
+              href={category.href as Route}
               className={styles.card}
             >
               <div className={styles.iconWrapper}>{category.icon}</div>

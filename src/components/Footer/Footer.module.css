@@ -14,7 +14,7 @@
 }
 
 .bannerText {
-  color: var(--foreground);
+  color: var(--text-tretiary);
   font-size: 24px; /* Fluid size: looks great on both phone and desktop */
   font-weight: 700;
   font-style: italic;
@@ -89,15 +89,9 @@
 }
 
 .logoText {
-  color: var(--foreground);
+  color: var(--text-tretiary);
   font-size: 14px;
   font-weight: 700;
-  margin: 0;
-}
-
-.tagline {
-  font-size: 14px;
-  color: #94a3b8;
   margin: 0;
 }
 
@@ -110,18 +104,18 @@
 .socialIcon {
   color: #64748b;
   text-decoration: none;
-  font-size: 18px; /* Larger touch targets for mobile fingers */
+  font-size: 18px;
   transition: color 0.2s ease;
   padding: 4px;
 }
 
 .socialIcon:hover {
-  color: #ffffff;
+  color: var(--button-secondary);
 }
 
 @media (min-width: 768px) {
   .brandInfo {
-    align-items: flex-start; /* Left-align on desktop grids */
+    align-items: flex-start;
     text-align: left;
   }
   .socials {
@@ -134,7 +128,7 @@
 }
 
 .columnTitle {
-  color: var(--foreground);
+  color: var(--text-tretiary);
   font-size: 16px;
   font-weight: 600;
   margin-top: 0;

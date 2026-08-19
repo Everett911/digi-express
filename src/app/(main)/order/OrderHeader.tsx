@@ -1,23 +1,23 @@
-import dayjs from "dayjs";
-import { formatMoney } from "@/src/utils/money";
 import type { Order } from "@/src/schemas/orders";
+import { formatCurrency, formatDate } from "@/src/utils/formatters";
+import styles from "./OrderPage.module.css";
 
 export function OrderHeader({ order }: { order: Order }) {
   return (
-    <div className="order-header">
-      <div className="order-header-left-section">
-        <div className="order-date">
-          <div className="order-header-label">Order Placed:</div>
-          <div>{dayjs(order.orderTimeMs).format("MMMM D")}</div>
+    <div className={styles.orderHeader}>
+      <div className={styles.orderHeaderLeftSection}>
+        <div className={styles.orderDate}>
+          <div className={styles.orderHeaderLabel}>Order Placed:</div>
+          <div>{formatDate(order.createdAt)}</div>
         </div>
-        <div className="order-total">
-          <div className="order-header-label">Total:</div>
-          <div>{formatMoney(order.totalCostCents)}</div>
+        <div className={styles.orderTotal}>
+          <div className={styles.orderHeaderLabel}>Total:</div>
+          <div>{formatCurrency(order.totalCostCents)}</div>
         </div>
       </div>
 
-      <div className="order-header-right-section">
-        <div className="order-header-label">Order ID:</div>
+      <div className={styles.orderHeaderRightSection}>
+        <div className={styles.orderHeaderLabel}>Order ID:</div>
         <div>{order.id}</div>
       </div>
     </div>

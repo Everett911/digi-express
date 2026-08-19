@@ -1,5 +1,3 @@
-import { prisma } from "../../../../lib/prisma";
-import { buildProductSearchWhere } from "../../../../lib/products-search";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
@@ -8,12 +6,19 @@ import {
   ProductCard,
   ProductSkeleton,
 } from "@/src/components/ProductCard/ProductCard";
-import { Product } from "@/src/schemas/products";
 import { Suspense } from "react";
-import { cache } from "@/lib/cache";
+import FilterPanel from "@/src/components/ProductFilter/FilterPanel";
+import { getProductCount, getProducts } from "@/lib/db/products";
 
 interface PageProps {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{
+    search?: string;
+    size?: string | string[];
+    color?: string | string[];
+    priceGroup?: string | string[];
+    type?: string | string[];
+    brand?: string | string[];
+  }>;
 }
 
 async function getSearchQuery(searchParams: PageProps["searchParams"]) {
@@ -22,29 +27,23 @@ async function getSearchQuery(searchParams: PageProps["searchParams"]) {
   return searchQuery;
 }
 
-export const getSearchProducts = (searchQuery: string) =>
-  cache(
-    async (): Promise<Product[]> => {
-      return prisma.product.findMany({
-        where: buildProductSearchWhere(searchQuery),
-        orderBy: { createdAt: "desc" },
-      });
-    },
-    ["products", "search", searchQuery],
-    {
-      revalidate: 60 * 60 * 24,
-      tags: ["products"],
-    },
-  )();
-
-async function ProductList({ searchQuery }: { searchQuery: string }) {
-  const products = await getSearchProducts(searchQuery);
+async function ProductList({
+  searchQuery,
+  searchParams,
+}: {
+  searchQuery: string;
+  searchParams: PageProps["searchParams"];
+}) {
+  const products = await getProducts(searchQuery, searchParams);
 
   if (products.length === 0) {
     return (
       <div className={styles.searchNoFound}>
         <h3>No items found</h3>
-        <p>We couldn&apos;t find any products matching your search term.</p>
+        <p>
+          We couldn&apos;t find any products matching your search term or active
+          filters.
+        </p>
       </div>
     );
   }
@@ -57,9 +56,12 @@ export default async function ProductsPage({ searchParams }: PageProps) {
     headers: await headers(),
   });
   const searchQuery = await getSearchQuery(searchParams);
+  const productCount = await getProductCount();
 
   return (
     <main className={styles.container}>
+      <FilterPanel productCount={productCount} />
+
       {session?.user ? (
         ""
       ) : (
@@ -76,9 +78,10 @@ export default async function ProductsPage({ searchParams }: PageProps) {
           Showing results for: &ldquo;<strong>{searchQuery}</strong>&rdquo;
         </p>
       )}
+
       <div className={styles.grid}>
         <Suspense fallback={<ProductSkeleton />}>
-          <ProductList searchQuery={searchQuery} />
+          <ProductList searchQuery={searchQuery} searchParams={searchParams} />
         </Suspense>
       </div>
     </main>

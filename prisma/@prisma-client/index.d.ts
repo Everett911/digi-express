@@ -4308,11 +4308,13 @@ export namespace Prisma {
 
   export type OrderItemAvgAggregateOutputType = {
     quantity: number | null
+    deliveryDays: number | null
     priceCents: number | null
   }
 
   export type OrderItemSumAggregateOutputType = {
     quantity: number | null
+    deliveryDays: number | null
     priceCents: number | null
   }
 
@@ -4321,8 +4323,11 @@ export namespace Prisma {
     orderId: string | null
     productId: string | null
     quantity: number | null
+    name: string | null
     color: string | null
     size: string | null
+    image: string | null
+    deliveryDays: number | null
     priceCents: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4333,8 +4338,11 @@ export namespace Prisma {
     orderId: string | null
     productId: string | null
     quantity: number | null
+    name: string | null
     color: string | null
     size: string | null
+    image: string | null
+    deliveryDays: number | null
     priceCents: number | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4345,8 +4353,11 @@ export namespace Prisma {
     orderId: number
     productId: number
     quantity: number
+    name: number
     color: number
     size: number
+    image: number
+    deliveryDays: number
     priceCents: number
     createdAt: number
     updatedAt: number
@@ -4356,11 +4367,13 @@ export namespace Prisma {
 
   export type OrderItemAvgAggregateInputType = {
     quantity?: true
+    deliveryDays?: true
     priceCents?: true
   }
 
   export type OrderItemSumAggregateInputType = {
     quantity?: true
+    deliveryDays?: true
     priceCents?: true
   }
 
@@ -4369,8 +4382,11 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     quantity?: true
+    name?: true
     color?: true
     size?: true
+    image?: true
+    deliveryDays?: true
     priceCents?: true
     createdAt?: true
     updatedAt?: true
@@ -4381,8 +4397,11 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     quantity?: true
+    name?: true
     color?: true
     size?: true
+    image?: true
+    deliveryDays?: true
     priceCents?: true
     createdAt?: true
     updatedAt?: true
@@ -4393,8 +4412,11 @@ export namespace Prisma {
     orderId?: true
     productId?: true
     quantity?: true
+    name?: true
     color?: true
     size?: true
+    image?: true
+    deliveryDays?: true
     priceCents?: true
     createdAt?: true
     updatedAt?: true
@@ -4492,8 +4514,11 @@ export namespace Prisma {
     orderId: string
     productId: string
     quantity: number
+    name: string
     color: string | null
     size: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt: Date
     updatedAt: Date
@@ -4523,8 +4548,11 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     quantity?: boolean
+    name?: boolean
     color?: boolean
     size?: boolean
+    image?: boolean
+    deliveryDays?: boolean
     priceCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4537,8 +4565,11 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     quantity?: boolean
+    name?: boolean
     color?: boolean
     size?: boolean
+    image?: boolean
+    deliveryDays?: boolean
     priceCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4551,8 +4582,11 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     quantity?: boolean
+    name?: boolean
     color?: boolean
     size?: boolean
+    image?: boolean
+    deliveryDays?: boolean
     priceCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4565,14 +4599,17 @@ export namespace Prisma {
     orderId?: boolean
     productId?: boolean
     quantity?: boolean
+    name?: boolean
     color?: boolean
     size?: boolean
+    image?: boolean
+    deliveryDays?: boolean
     priceCents?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "productId" | "quantity" | "color" | "size" | "priceCents" | "createdAt" | "updatedAt", ExtArgs["result"]["orderItem"]>
+  export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "productId" | "quantity" | "name" | "color" | "size" | "image" | "deliveryDays" | "priceCents" | "createdAt" | "updatedAt", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     product?: boolean | ProductDefaultArgs<ExtArgs>
@@ -4597,8 +4634,11 @@ export namespace Prisma {
       orderId: string
       productId: string
       quantity: number
+      name: string
       color: string | null
       size: string | null
+      image: string
+      deliveryDays: number
       priceCents: number
       createdAt: Date
       updatedAt: Date
@@ -5031,8 +5071,11 @@ export namespace Prisma {
     readonly orderId: FieldRef<"OrderItem", 'String'>
     readonly productId: FieldRef<"OrderItem", 'String'>
     readonly quantity: FieldRef<"OrderItem", 'Int'>
+    readonly name: FieldRef<"OrderItem", 'String'>
     readonly color: FieldRef<"OrderItem", 'String'>
     readonly size: FieldRef<"OrderItem", 'String'>
+    readonly image: FieldRef<"OrderItem", 'String'>
+    readonly deliveryDays: FieldRef<"OrderItem", 'Int'>
     readonly priceCents: FieldRef<"OrderItem", 'Int'>
     readonly createdAt: FieldRef<"OrderItem", 'DateTime'>
     readonly updatedAt: FieldRef<"OrderItem", 'DateTime'>
@@ -13320,8 +13363,11 @@ export namespace Prisma {
     orderId: 'orderId',
     productId: 'productId',
     quantity: 'quantity',
+    name: 'name',
     color: 'color',
     size: 'size',
+    image: 'image',
+    deliveryDays: 'deliveryDays',
     priceCents: 'priceCents',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -13724,8 +13770,11 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderItem"> | string
     productId?: UuidFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
+    name?: StringFilter<"OrderItem"> | string
     color?: StringNullableFilter<"OrderItem"> | string | null
     size?: StringNullableFilter<"OrderItem"> | string | null
+    image?: StringFilter<"OrderItem"> | string
+    deliveryDays?: IntFilter<"OrderItem"> | number
     priceCents?: IntFilter<"OrderItem"> | number
     createdAt?: DateTimeFilter<"OrderItem"> | Date | string
     updatedAt?: DateTimeFilter<"OrderItem"> | Date | string
@@ -13738,8 +13787,11 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    name?: SortOrder
     color?: SortOrderInput | SortOrder
     size?: SortOrderInput | SortOrder
+    image?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13755,8 +13807,11 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderItem"> | string
     productId?: UuidFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
+    name?: StringFilter<"OrderItem"> | string
     color?: StringNullableFilter<"OrderItem"> | string | null
     size?: StringNullableFilter<"OrderItem"> | string | null
+    image?: StringFilter<"OrderItem"> | string
+    deliveryDays?: IntFilter<"OrderItem"> | number
     priceCents?: IntFilter<"OrderItem"> | number
     createdAt?: DateTimeFilter<"OrderItem"> | Date | string
     updatedAt?: DateTimeFilter<"OrderItem"> | Date | string
@@ -13769,8 +13824,11 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    name?: SortOrder
     color?: SortOrderInput | SortOrder
     size?: SortOrderInput | SortOrder
+    image?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -13789,8 +13847,11 @@ export namespace Prisma {
     orderId?: UuidWithAggregatesFilter<"OrderItem"> | string
     productId?: UuidWithAggregatesFilter<"OrderItem"> | string
     quantity?: IntWithAggregatesFilter<"OrderItem"> | number
+    name?: StringWithAggregatesFilter<"OrderItem"> | string
     color?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
     size?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+    image?: StringWithAggregatesFilter<"OrderItem"> | string
+    deliveryDays?: IntWithAggregatesFilter<"OrderItem"> | number
     priceCents?: IntWithAggregatesFilter<"OrderItem"> | number
     createdAt?: DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
@@ -14480,8 +14541,11 @@ export namespace Prisma {
   export type OrderItemCreateInput = {
     id?: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14494,8 +14558,11 @@ export namespace Prisma {
     orderId: string
     productId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14504,8 +14571,11 @@ export namespace Prisma {
   export type OrderItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14518,8 +14588,11 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14530,8 +14603,11 @@ export namespace Prisma {
     orderId: string
     productId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -14540,8 +14616,11 @@ export namespace Prisma {
   export type OrderItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -14552,8 +14631,11 @@ export namespace Prisma {
     orderId?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15416,8 +15498,11 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    name?: SortOrder
     color?: SortOrder
     size?: SortOrder
+    image?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15425,6 +15510,7 @@ export namespace Prisma {
 
   export type OrderItemAvgOrderByAggregateInput = {
     quantity?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
   }
 
@@ -15433,8 +15519,11 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    name?: SortOrder
     color?: SortOrder
     size?: SortOrder
+    image?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15445,8 +15534,11 @@ export namespace Prisma {
     orderId?: SortOrder
     productId?: SortOrder
     quantity?: SortOrder
+    name?: SortOrder
     color?: SortOrder
     size?: SortOrder
+    image?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -15454,6 +15546,7 @@ export namespace Prisma {
 
   export type OrderItemSumOrderByAggregateInput = {
     quantity?: SortOrder
+    deliveryDays?: SortOrder
     priceCents?: SortOrder
   }
 
@@ -16728,8 +16821,11 @@ export namespace Prisma {
   export type OrderItemCreateWithoutProductInput = {
     id?: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16740,8 +16836,11 @@ export namespace Prisma {
     id?: string
     orderId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16839,8 +16938,11 @@ export namespace Prisma {
     orderId?: UuidFilter<"OrderItem"> | string
     productId?: UuidFilter<"OrderItem"> | string
     quantity?: IntFilter<"OrderItem"> | number
+    name?: StringFilter<"OrderItem"> | string
     color?: StringNullableFilter<"OrderItem"> | string | null
     size?: StringNullableFilter<"OrderItem"> | string | null
+    image?: StringFilter<"OrderItem"> | string
+    deliveryDays?: IntFilter<"OrderItem"> | number
     priceCents?: IntFilter<"OrderItem"> | number
     createdAt?: DateTimeFilter<"OrderItem"> | Date | string
     updatedAt?: DateTimeFilter<"OrderItem"> | Date | string
@@ -16923,8 +17025,11 @@ export namespace Prisma {
   export type OrderItemCreateWithoutOrderInput = {
     id?: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -16935,8 +17040,11 @@ export namespace Prisma {
     id?: string
     productId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -17939,8 +18047,11 @@ export namespace Prisma {
     id?: string
     orderId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18010,8 +18121,11 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18022,8 +18136,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18033,8 +18150,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     orderId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18044,8 +18164,11 @@ export namespace Prisma {
     id?: string
     productId: string
     quantity: number
+    name: string
     color?: string | null
     size?: string | null
+    image: string
+    deliveryDays: number
     priceCents: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18109,8 +18232,11 @@ export namespace Prisma {
   export type OrderItemUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18121,8 +18247,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18132,8 +18261,11 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     quantity?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     color?: NullableStringFieldUpdateOperationsInput | string | null
     size?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    deliveryDays?: IntFieldUpdateOperationsInput | number
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

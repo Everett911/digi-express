@@ -28,10 +28,12 @@ export async function createOrderFromCart() {
         (acc, i) => acc + i.product.priceCents * i.quantity,
         0,
       );
-      const shippingCost = cartItems.reduce(
-        (acc, i) => acc + i.deliveryOption.priceCents,
-        0,
-      );
+
+      const shipCost = cartItems.reduce((max, item) => {
+        const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
+        return currentItemShipping > max ? currentItemShipping : max;
+      }, 0);
+      const shippingCost = Math.round(shipCost / 100);
       const tax = Math.round((productCost + shippingCost) * 0.1);
       const totalCost = productCost + shippingCost + tax;
 
@@ -40,20 +42,31 @@ export async function createOrderFromCart() {
           userId: session.user.id,
           totalCostCents: totalCost,
           items: {
-            create: cartItems.map((item) => ({
-              productId: item.productId,
-              quantity: item.quantity,
-              color: item.color ?? null,
-              size: item.size ?? null,
-              priceCents: item.product.priceCents,
-            })),
+            create: cartItems.map((item) => {
+              let itemImage = "";
+              if (Array.isArray(item.product.image)) {
+                itemImage = item.product.image[0] || "";
+              } else if (typeof item.product.image === "string") {
+                itemImage = item.product.image;
+              }
+
+              return {
+                productId: item.productId,
+                quantity: item.quantity,
+                color: item.color ?? null,
+                size: item.size ?? null,
+                image: itemImage,
+                priceCents: item.product.priceCents,
+                name: item.product.name,
+                deliveryDays: item.deliveryOption.deliveryDays,
+              };
+            }),
           },
         },
         include: {
           items: true,
         },
       });
-
       await tx.cartItem.deleteMany({
         where: { userId: session.user.id },
       });
@@ -67,6 +80,8 @@ export async function createOrderFromCart() {
 
     return { success: true, orderId: order.id };
   } catch (error: unknown) {
+    console.error("Prisma Transaction Error:", error);
+
     const message =
       error instanceof Error ? error.message : "Failed to process transaction.";
 

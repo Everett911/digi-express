@@ -1,11 +1,11 @@
-import dayjs from "dayjs";
-import type { orderProduct } from "@/src/schemas/orders";
-
-
-export function DeliveryDate({ estimatedDeliveryTimeMs }: orderProduct) {
+export function DeliveryDate({
+  estimatedDeliveryTimeMs,
+}: {
+  estimatedDeliveryTimeMs: string;
+}) {
   return (
     <div className="product-delivery-date">
-      Arriving on: {dayjs(estimatedDeliveryTimeMs).format("MMMM D")}
+      Arriving on: {estimatedDeliveryTimeMs}
     </div>
   );
 }

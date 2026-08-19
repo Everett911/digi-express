@@ -24,7 +24,7 @@
 }
 
 .tabPanel {
-  background-color: var(--foreground);
+  background-color: var(--background);
   position: absolute;
   top: 59px;
   left: 0;

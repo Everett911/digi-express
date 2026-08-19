@@ -1,30 +1,31 @@
 :root {
-  --background: #f3fbfe;
-  --foreground: #ffffff;
+  --background: #f8fafc;
+  --foreground: #0f172a;
 
-  --text-primary: #1a202c;
-  --text-secondary: #5a6a85;
-  --text-link: #3467cc;
-  --text-tretiary: var(--foreground);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-link: #1f3a60;
+  --text-tretiary: #ffffff;
 
-  --button-primary: #3467cc;
-  --button-primary-hover: #203e7a;
-  --button-primary-text: var(--background);
-  --button-primary-border: #2952a2;
+  --button-primary: #1f3a60;
+  --button-primary-hover: #162a45;
+  --button-primary-text: #ffffff;
+  --button-primary-border: #152741;
 
   --button-secondary: #ffffff;
-  --button-secondary-hover: #f3fbfe;
-  --button-secondary-border: #e1e8f8;
-  --button-secondary-text: #1a202c;
+  --button-secondary-hover: #f1f5f9;
+  --button-secondary-border: #cbd5e1;
+  --button-secondary-text: #0f172a;
 
-  --footer-border: #2952a2;
-  --footer-background: #122448;
+  --footer-border: #1e293b;
+  --footer-background: #0f172a;
 
   --success: #10b981;
-  --error: #ef4444;
+  --error: #991b1b;
   --border-default: #e2e8f0;
   --modern-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+    0 4px 6px -1px rgba(15, 23, 42, 0.04),
+    0 10px 15px -3px rgba(15, 23, 42, 0.06);
 }
 
 html {

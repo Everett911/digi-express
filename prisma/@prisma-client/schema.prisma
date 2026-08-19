@@ -39,15 +39,18 @@ model Order {
 }
 
 model OrderItem {
-  id         String   @id @default(uuid()) @db.Uuid
-  orderId    String   @db.Uuid
-  productId  String   @db.Uuid
-  quantity   Int
-  color      String?
-  size       String?
-  priceCents Int
-  createdAt  DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+  id           String   @id @default(uuid()) @db.Uuid
+  orderId      String   @db.Uuid
+  productId    String   @db.Uuid
+  quantity     Int
+  name         String
+  color        String?
+  size         String?
+  image        String
+  deliveryDays Int
+  priceCents   Int
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(3)
 
   order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product Product @relation(fields: [productId], references: [id], onDelete: Restrict)

@@ -51,7 +51,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  background-color: var(--foreground);
+  background-color: var(--button-secondary);
   border: 1px solid var(--border-default);
   border-radius: 8px;
   text-decoration: none;
@@ -67,6 +67,7 @@
   transform: translateY(-2px);
   box-shadow: var(--modern-shadow);
   border-color: var(--button-primary);
+  background-color: var(--button-secondary-hover);
 }
 
 .iconWrapper {

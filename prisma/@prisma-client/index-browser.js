@@ -148,8 +148,11 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   orderId: 'orderId',
   productId: 'productId',
   quantity: 'quantity',
+  name: 'name',
   color: 'color',
   size: 'size',
+  image: 'image',
+  deliveryDays: 'deliveryDays',
   priceCents: 'priceCents',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

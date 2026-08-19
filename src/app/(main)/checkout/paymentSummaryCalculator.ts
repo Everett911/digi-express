@@ -23,12 +23,14 @@ export async function getPaymentSummary(cart: CartItemWithRelations[]) {
     0,
   );
 
-  const shippingCostCents = cart.reduce(
-    (acc: number, item: CartItemWithRelations) => {
-      return acc + (item.deliveryOption?.priceCents ?? 0) / 100;
+  const shipCostCents = cart.reduce(
+    (max: number, item: CartItemWithRelations) => {
+      const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
+      return currentItemShipping > max ? currentItemShipping : max;
     },
     0,
   );
+  const shippingCostCents = Math.round(shipCostCents / 100);
 
   const totalCostBeforeTaxCents = productCostCents + shippingCostCents;
   const taxCents = Math.round(totalCostBeforeTaxCents * 0.1);

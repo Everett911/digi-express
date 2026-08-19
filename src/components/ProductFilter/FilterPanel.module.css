@@ -1,0 +1,210 @@
+.expandButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  padding: 16px 24px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--text-primary);
+  margin: 10px auto;
+}
+
+.filterContainer {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  font-family: inherit;
+  transition: opacity 0.2s ease;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.pending {
+  opacity: 0.6;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-default);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+.collapseButton {
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+}
+
+.collapseButton:hover {
+  color: var(--text-primary);
+}
+
+.productCount {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .panelGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.columnTitle {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.columnDescription {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0 0 16px 0;
+  max-width: 180px;
+}
+
+.sizeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  max-width: 200px;
+}
+
+.sizeButton {
+  height: 40px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: var(--background);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sizeButton:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+.sizeButtonActive {
+  background-color: var(--text-primary);
+  color: var(--background);
+  border-color: var(--text-primary);
+  font-weight: 600;
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  row-gap: 14px;
+  column-gap: 8px;
+}
+
+.colorRowButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.colorSwatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.15s ease;
+}
+
+.colorSwatchBorder {
+  border: 1px solid var(--border-default);
+}
+
+.colorSwatchActive {
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 4px var(--border-hover);
+  transform: scale(1.05);
+}
+
+.labelNormal {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.labelActive {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Checkbox Column Lists */
+.checkboxList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkboxInput {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border-default);
+  margin-right: 12px;
+  cursor: pointer;
+  accent-color: var(--text-primary);
+}
