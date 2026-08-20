@@ -48,6 +48,7 @@ export const signInSocial = async (provider: "github" | "google") => {
       provider,
       callbackURL: "/",
     },
+    headers: await headers(),
   });
 
   if (result?.url) {

@@ -3,6 +3,12 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { PrismaClient } from "@prisma-client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { nextCookies } from "better-auth/next-js";
+import { stripe } from "@better-auth/stripe";
+import Stripe from "stripe";
+
+const stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY! as string, {
+  apiVersion: "2026-07-29.dahlia",
+});
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -39,9 +45,16 @@ export const auth = betterAuth({
       cartId: {
         type: "string",
         required: false,
-        input: true, // Allows client to update or set it
+        input: true,
       },
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    nextCookies(),
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+      createCustomerOnSignUp: true,
+    }),
+  ],
 });

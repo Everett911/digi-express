@@ -1,14 +1,26 @@
 import { z } from "zod";
-import { productSchema } from "./products";
+import { ProductSchema } from "./products";
+import { DeliveryOptionSchema } from "./deliveryOptions";
 
-export const cartItemSchema = z.object({
-  id: z.number().int().positive(),
-  productId: z.string().uuid(),
-  quantity: z.number().int().positive(),
-  deliveryOptionId: z.string(),
-  product: productSchema,
+const nestedCartItemSchema = z.object({
+  product: ProductSchema,
+  deliveryOption: DeliveryOptionSchema,
 });
 
-export const cartSchema = z.array(cartItemSchema);
+const baseCartItemSchema = z.object({
+  id: z.string(),
+  color: z.string().nullable(),
+  size: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+  userId: z.string(),
+  productId: z.string(),
+  quantity: z.number().int().positive(),
+  deliveryOptionId: z.string(),
+});
 
-export type CartItem = z.infer<typeof cartSchema>[number];
+export const cartSchema = z
+  .array(nestedCartItemSchema.merge(baseCartItemSchema))
+  .optional();
+
+export type CartItems = z.infer<typeof cartSchema>;
