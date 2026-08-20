@@ -1,6 +1,6 @@
 .paymentSummary {
-  background-color: var(--foreground);
-  border: 1px solid var(--border-default, #e5e7eb);
+  background-color: #ffffff;
+  border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 24px;
   position: sticky;
@@ -10,7 +10,7 @@
 .title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text-primary, #111827);
+  color: var(--text-primary);
   margin: 0 0 20px;
 }
 
@@ -19,18 +19,18 @@
   justify-content: space-between;
   align-items: center;
   font-size: 0.95rem;
-  color: var(--text-secondary, #4b5563);
+  color: var(--text-secondary);
   margin-bottom: 12px;
 }
 
 .money {
   font-weight: 600;
-  color: var(--text-primary, #111827);
+  color: var(--text-primary);
 }
 
 .divider {
   border: 0;
-  border-top: 1px solid var(--border-default, #e5e7eb);
+  border-top: 1px solid var(--border-default);
   margin: 16px 0;
 }
 
@@ -52,7 +52,7 @@
 .placeOrderButton {
   width: 100%;
   background: var(--button-primary);
-  color: var(--foreground);
+  color: var(--button-primary-text);
   font-weight: 600;
   padding: 12px 24px;
   border: 1px solid transparent;
@@ -77,8 +77,8 @@
 }
 
 .placeOrderButton:disabled {
-  background: var(--border-default, #e5e7eb);
-  color: var(--text-secondary, #9ca3af);
+  background: var(--border-default);
+  color: var(--text-secondary);
   box-shadow: none;
   cursor: not-allowed;
 }

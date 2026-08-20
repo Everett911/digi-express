@@ -39,7 +39,7 @@
   right: 0;
   top: 140%;
   width: 150px;
-  background: var(--foreground);
+  background: #ffffff;
   border: 1px solid var(--border-default);
   border-radius: 12px;
   box-shadow: var(--modern-shadow);

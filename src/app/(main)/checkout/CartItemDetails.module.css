@@ -9,7 +9,7 @@
 .deliveryDate {
   font-size: 1.15rem;
   font-weight: 700;
-  color: #007600; /* Amazon-style clean delivery green */
+  color: var(--success);
   margin-bottom: 15px;
 }
 
@@ -42,7 +42,7 @@
 
 .productPrice {
   font-weight: 700;
-  color: #b91c1c; /* Prominent pricing color */
+  color: var(--error);
 }
 
 .productQuantity {
@@ -51,7 +51,7 @@
   gap: 12px;
   margin-top: 8px;
   font-size: 0.9rem;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 .quantityWrapper {
@@ -63,7 +63,7 @@
 .inputQuantity {
   width: 50px;
   padding: 2px 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-default);
   border-radius: 4px;
   display: none;
   font-size: 0.9rem;
