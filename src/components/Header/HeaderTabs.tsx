@@ -53,16 +53,14 @@ export default function HeaderTabs() {
         {tabs.map((tab) => {
           const isActive = activeTab === tab.label;
           return (
-            <>
-              <button
-                key={tab.label}
-                onClick={() => handleTabClick(tab.label)}
-                className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
-                aria-expanded={isActive}
-              >
-                {tab.label}
-              </button>
-            </>
+            <button
+              key={tab.label}
+              onClick={() => handleTabClick(tab.label)}
+              className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
+              aria-expanded={isActive}
+            >
+              {tab.label}
+            </button>
           );
         })}
       </div>

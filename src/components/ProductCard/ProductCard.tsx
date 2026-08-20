@@ -32,6 +32,7 @@ export function ProductCard({ products }: Props) {
                   src={displayImage}
                   alt={product.name}
                   fill
+                  sizes="(max-width: 360px) 100vw, (max-width: 720px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
                 />
               </div>
