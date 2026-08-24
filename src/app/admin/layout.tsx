@@ -2,10 +2,6 @@ import { Nav, NavLink } from "@/src/components/Nav/Nav";
 import styles from "./page.module.css";
 import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
-
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,12 +20,6 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session || session.user.role !== "admin") {
-    redirect("/auth");
-  }
   return (
     <>
       <Nav>
