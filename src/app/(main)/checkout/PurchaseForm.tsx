@@ -6,9 +6,8 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-
-import styles from "./PurchaseForm.module.css";
 import { formatCurrency } from "@/src/utils/formatters";
+import styles from "./PurchaseForm.module.css";
 
 function PurchaseForm({ totalCostCents }: { totalCostCents: number }) {
   const stripe = useStripe();

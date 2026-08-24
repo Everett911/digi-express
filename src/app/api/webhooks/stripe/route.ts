@@ -9,7 +9,6 @@ import { Order } from "@/src/schemas/orders";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 
-// Explicitly ensure TypeScript treats this type correctly
 type CreatedOrder = Order;
 
 export async function POST(req: NextRequest) {
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOKS_SECRET_KEY as string,
+      process.env.STRIPE_WEBHOOK_SECRET_KEY as string,
     );
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
@@ -66,7 +65,6 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      // 👍 FIX: Return the created data directly from the transaction wrapper
       const createdOrder = await prisma.$transaction(async (tx) => {
         const cartItems = await tx.cartItem.findMany({
           where: { userId },
@@ -119,17 +117,15 @@ export async function POST(req: NextRequest) {
 
         await tx.cartItem.deleteMany({ where: { userId } });
 
-        // Explicitly cast the returned database schema to your custom application type
         return orderResult as unknown as CreatedOrder;
       });
 
-      // 👍 TypeScript now explicitly knows createdOrder is 'CreatedOrder | null' here
       if (createdOrder) {
         try {
           await resend.emails.send({
-            from: "Your Shop <onboarding@resend.dev>",
+            from: "Digi-Express <digi_express.gmail.com>",
             to: customerEmail,
-            subject: `Order Confirmation #${createdOrder.id}`, // 📝 No more 'never' error!
+            subject: `Order Confirmation #${createdOrder.id}`,
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2>Thank you for your order!</h2>
@@ -166,7 +162,7 @@ export async function POST(req: NextRequest) {
 
       revalidatePath("/");
       revalidatePath("/checkout");
-      revalidatePath("/orders");
+      revalidatePath("/order");
 
       return NextResponse.json(
         { success: true, ordered: true },

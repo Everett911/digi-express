@@ -76,7 +76,7 @@ export async function createOrderFromCart() {
 
     revalidatePath("/");
     revalidatePath("/checkout");
-    revalidatePath("/orders");
+    revalidatePath("/order");
 
     return { success: true, orderId: order.id };
   } catch (error: unknown) {
