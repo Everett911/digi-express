@@ -16,11 +16,12 @@ function ProductForm({ product }: { product?: Product | null }) {
     product == null ? addProduct : updateProduct.bind(null, product.id),
     null,
   );
-  const [price, setPrice] = useState<string | undefined>(
+  const [price, setPrice] = useState<number | undefined>(
     product?.priceCents !== undefined && product?.priceCents !== null
-      ? String(product.priceCents / 100)
+      ? Number(product.priceCents)
       : undefined,
   );
+  const previewPrice = price !== undefined ? price / 100 : 0;
   const [colors, setColors] = useState<string[]>(product?.color ?? [""]);
   const [sizes, setSizes] = useState<string[]>(product?.size ?? [""]);
   const [keywords, setKeywords] = useState<string[]>(product?.keywords ?? [""]);
@@ -55,8 +56,6 @@ function ProductForm({ product }: { product?: Product | null }) {
       setImages(updatedImages);
     }
   };
-
-  const numericPriceCents = Math.round(parseFloat(price || "0") * 100);
 
   return (
     <>
@@ -93,11 +92,17 @@ function ProductForm({ product }: { product?: Product | null }) {
             step="0.01"
             required
             className={styles.input}
-            onChange={(e) => setPrice(e.target.value)}
-            defaultValue={product?.priceCents}
+            onChange={(e) =>
+              setPrice(e.target.value ? parseFloat(e.target.value) : undefined)
+            }
+            defaultValue={
+              product?.priceCents !== undefined && product?.priceCents !== null
+                ? product.priceCents
+                : undefined
+            }
           />
           <div className={styles.totalText}>
-            Preview: {formatCurrency(numericPriceCents)}
+            Preview: {formatCurrency(previewPrice)}
           </div>
           <Activity
             mode={

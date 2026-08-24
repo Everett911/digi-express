@@ -2,7 +2,7 @@
   background-color: #ffffff;
   border: 1px solid var(--border-default);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   position: sticky;
   top: 160px;
 }
@@ -47,38 +47,4 @@
 .totalRow .money {
   color: var(--text-link);
   font-weight: 700;
-}
-
-.placeOrderButton {
-  width: 100%;
-  background: var(--button-primary);
-  color: var(--button-primary-text);
-  font-weight: 600;
-  padding: 12px 24px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 16px;
-
-  transition: ease-in 0.1s;
-  &:hover {
-    box-shadow: var(--modern-shadow);
-    transform: translateY(-2px);
-  }
-}
-
-.placeOrderButton:hover:not(:disabled) {
-  background-color: var(--button-primary-hover);
-}
-
-.placeOrderButton:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.placeOrderButton:disabled {
-  background: var(--border-default);
-  color: var(--text-secondary);
-  box-shadow: none;
-  cursor: not-allowed;
 }

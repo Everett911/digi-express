@@ -53,7 +53,9 @@ async function OrderTable() {
                 order.items.reduce((total, item) => total + item.quantity, 0),
               )}
             </Table.Cell>
-            <Table.Cell>{formatCurrency(order.totalCostCents)}</Table.Cell>
+            <Table.Cell>
+              {formatCurrency(order.totalCostCents / 100)}
+            </Table.Cell>
             <Table.Cell>
               <DropdownMenu.Root modal={false}>
                 <DropdownMenu.Trigger>

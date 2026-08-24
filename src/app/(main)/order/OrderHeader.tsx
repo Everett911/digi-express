@@ -12,7 +12,7 @@ export function OrderHeader({ order }: { order: Order }) {
         </div>
         <div className={styles.orderTotal}>
           <div className={styles.orderHeaderLabel}>Total:</div>
-          <div>{formatCurrency(order.totalCostCents)}</div>
+          <div>{formatCurrency(order.totalCostCents / 100)}</div>
         </div>
       </div>
 

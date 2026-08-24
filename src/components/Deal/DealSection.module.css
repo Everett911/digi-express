@@ -50,7 +50,7 @@
   background-color: var(--button-secondary);
   border: 1px solid var(--border-default);
   color: var(--button-secondary-text);
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   transition: ease-out 0.2s;
 }

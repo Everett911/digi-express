@@ -29,11 +29,11 @@ export async function createOrderFromCart() {
         0,
       );
 
-      const shipCost = cartItems.reduce((max, item) => {
+      const shippingCost = cartItems.reduce((max, item) => {
         const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
         return currentItemShipping > max ? currentItemShipping : max;
       }, 0);
-      const shippingCost = Math.round(shipCost / 100);
+
       const tax = Math.round((productCost + shippingCost) * 0.1);
       const totalCost = productCost + shippingCost + tax;
 

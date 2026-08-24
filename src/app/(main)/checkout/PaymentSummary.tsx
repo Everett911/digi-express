@@ -1,9 +1,5 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
-
-import { createOrderFromCart } from "@/lib/db/cart.action";
 import styles from "./PaymentSummary.module.css";
 import { formatCurrency } from "@/src/utils/formatters";
 
@@ -21,21 +17,6 @@ type Props = {
 };
 
 export function PaymentSummary({ paymentSummary }: Props) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const handlePlaceOrder = () => {
-    startTransition(async () => {
-      const result = await createOrderFromCart();
-
-      if (result.success) {
-        router.push("/");
-      } else {
-        alert("Order placement failed.");
-      }
-    });
-  };
-
   if (!paymentSummary) {
     return <div className={styles.paymentSummary}>Loading totals...</div>;
   }
@@ -50,7 +31,7 @@ export function PaymentSummary({ paymentSummary }: Props) {
           className={styles.money}
           data-testid="payment-summary-money-without-tax-and-delivery"
         >
-          {formatCurrency(paymentSummary.productCostCents)}
+          {formatCurrency(paymentSummary.productCostCents / 100)}
         </div>
       </div>
 
@@ -62,7 +43,7 @@ export function PaymentSummary({ paymentSummary }: Props) {
         >
           {paymentSummary.shippingCostCents === 0
             ? "FREE"
-            : formatCurrency(paymentSummary.shippingCostCents)}
+            : formatCurrency(paymentSummary.shippingCostCents / 100)}
         </div>
       </div>
 
@@ -74,7 +55,7 @@ export function PaymentSummary({ paymentSummary }: Props) {
           className={styles.money}
           data-testid="payment-summary-money-total-before-tax"
         >
-          {formatCurrency(paymentSummary.totalCostBeforeTaxCents)}
+          {formatCurrency(paymentSummary.totalCostBeforeTaxCents / 100)}
         </div>
       </div>
 
@@ -84,7 +65,7 @@ export function PaymentSummary({ paymentSummary }: Props) {
           className={styles.money}
           data-testid="payment-summary-money-estimated-tax"
         >
-          {formatCurrency(paymentSummary.taxCents)}
+          {formatCurrency(paymentSummary.taxCents / 100)}
         </div>
       </div>
 
@@ -96,18 +77,9 @@ export function PaymentSummary({ paymentSummary }: Props) {
           className={styles.money}
           data-testid="payment-summary-money-order-total"
         >
-          {formatCurrency(paymentSummary.totalCostCents)}
+          {formatCurrency(paymentSummary.totalCostCents / 100)}
         </div>
       </div>
-
-      <button
-        className={styles.placeOrderButton}
-        data-testid="place-order-button"
-        onClick={handlePlaceOrder}
-        disabled={isPending || paymentSummary.totalItems === 0}
-      >
-        {isPending ? "Processing..." : "Place your order"}
-      </button>
     </div>
   );
 }

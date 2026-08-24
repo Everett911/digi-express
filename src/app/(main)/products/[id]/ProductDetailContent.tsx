@@ -44,7 +44,9 @@ export default function ProductDetailContent({
   return (
     <div className={styles.details}>
       <h1 className={styles.title}>{product.name}</h1>
-      <span className={styles.price}>{formatCurrency(product.priceCents)}</span>
+      <span className={styles.price}>
+        {formatCurrency(product.priceCents / 100)}
+      </span>
 
       <Activity mode={product.size.length === 0 ? "hidden" : "visible"}>
         <span className={styles.sizeTitle}>Size</span>

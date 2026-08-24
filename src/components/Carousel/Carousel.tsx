@@ -73,6 +73,7 @@ function Carousel() {
               src={slide.desktop}
               alt={slide.alt}
               priority={index === 0}
+              loading="eager"
             />
             <span className={style.title}>{slide.title}</span>
             <span className={style.text}>{slide.text}</span>
@@ -88,6 +89,7 @@ function Carousel() {
               src={slide.mobile}
               alt={slide.alt}
               priority={index === 0}
+              loading="eager"
             />
             <span className={style.title}>{slide.title}</span>
             <span className={style.text}>{slide.text}</span>

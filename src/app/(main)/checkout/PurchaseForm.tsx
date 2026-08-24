@@ -1,4 +1,4 @@
-"use client"; // Required for Stripe React hooks
+"use client";
 
 import React, { useState, useTransition } from "react";
 import {
@@ -6,48 +6,64 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { createOrderFromCart } from "@/lib/db/cart.action";
-import { useRouter } from "next/navigation";
 
-function PurchaseForm() {
+import styles from "./PurchaseForm.module.css";
+import { formatCurrency } from "@/src/utils/formatters";
+
+function PurchaseForm({ totalCostCents }: { totalCostCents: number }) {
   const stripe = useStripe();
   const elements = useElements();
-  const router = useRouter();
+
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!stripe || !elements) return;
 
     startTransition(async () => {
-      const result = await createOrderFromCart();
-      if (result.success) {
-        router.push("/");
-      } else {
-        alert("Order placement failed.");
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setErrorMessage(submitError.message ?? "Validation failed.");
+        return;
       }
+
+      const baseUrl =
+        process.env.NEXT_PUBLIC_SERVER_URL || window.location.origin;
+
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: `${window.location.origin}/order-confirmation`,
+          return_url: `${baseUrl}/order`,
         },
       });
 
       if (error) {
-        setErrorMessage(error.message ?? "An unexpected error occurred.");
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setErrorMessage(error.message ?? "An error occurred with your card.");
+        } else {
+          setErrorMessage("An unknown error occurred.");
+        }
       }
     });
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles.container}>
         <PaymentElement />
-        {errorMessage && <div>Error</div>}
-        <button disabled={isPending || !stripe || !elements}>
-          {isPending ? "Processing..." : "Place your order"}
+
+        {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
+
+        <button
+          type="submit"
+          className={styles.placeOrderButton}
+          disabled={isPending || !stripe || !elements}
+        >
+          {isPending
+            ? "Processing..."
+            : `Place your order - ${formatCurrency(totalCostCents / 100)}`}
         </button>
       </form>
     </>

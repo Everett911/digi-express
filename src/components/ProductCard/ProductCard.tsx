@@ -34,12 +34,13 @@ export function ProductCard({ products }: Props) {
                   fill
                   sizes="(max-width: 360px) 100vw, (max-width: 720px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
+                  loading="eager"
                 />
               </div>
               <div className={styles.cardContent}>
                 <h3 className={styles.productName}>{product.name}</h3>
                 <p className={styles.price}>
-                  {formatCurrency(product.priceCents)}
+                  {formatCurrency(product.priceCents / 100)}
                 </p>
               </div>
             </Link>

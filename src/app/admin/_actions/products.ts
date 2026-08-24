@@ -52,7 +52,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     return items;
   };
 
-  const rawPrice = Number(formData.get("price")?.toString()) || 0;
+  const rawPrice = Number(formData.get("price")) || 0;
 
   const parsedData = {
     brand: formData.get("brand"),
@@ -167,7 +167,7 @@ export async function updateProduct(
     return items;
   };
 
-  const rawPrice = Number(formData.get("price")?.toString()) || 0;
+  const rawPrice = Number(formData.get("price")) || 0;
 
   const parsedData = {
     name: formData.get("name"),

@@ -16,3 +16,49 @@
   white-space: nowrap;
   border-width: 0;
 }
+.paginationControls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 12px 0;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  font-size: 14px;
+}
+
+.paginationControls a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #1e293b;
+  text-decoration: none;
+  font-weight: 500;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.paginationControls a:hover:not(.disabled) {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.paginationControls span {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.paginationControls a.disabled {
+  color: #cbd5e1;
+  background-color: #f1f5f9;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+  pointer-events: none;
+}

@@ -43,7 +43,10 @@ export default async function CheckoutPage() {
           </aside>
         </div>
         <div className={styles.paymentSection}>
-          <PurchaseSection clientSecret={stripe.clientSecret} />
+          <PurchaseSection
+            clientSecret={stripe.clientSecret}
+            totalCostCents={paymentSummary.totalCostCents}
+          />
         </div>
       </main>
 

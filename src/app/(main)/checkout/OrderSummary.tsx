@@ -120,19 +120,22 @@ function CartItemRow({
             src={cart.product.image[0]}
             alt={cart.product.name}
             fill
+            sizes="(max-width: 150px) 100vw, (max-width: 150px) 50vw, 33vw"
             className={styles.productImage}
           />
         </div>
         <div className={styles.productDetails}>
           <h4 className={styles.productName}>{cart.product.name}</h4>
           <p className={styles.productPrice}>
-            {formatCurrency(cart.product.priceCents)}
+            {formatCurrency(cart.product.priceCents / 100)}
           </p>
           {cart.color && (
             <p className={styles.productSize}>Color - {cart.color}</p>
           )}
           {cart.size && (
-            <p className={styles.productColor}>Size - {cart.size}</p>
+            <p className={styles.productColor}>
+              Size - {cart.size.toUpperCase()}
+            </p>
           )}
           <div className={styles.quantityUpdate}>
             <QuantitySelector quantity={quantity} setQuantity={setQuantity} />

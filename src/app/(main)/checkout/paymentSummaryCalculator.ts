@@ -18,7 +18,7 @@ export async function getPaymentSummary(cart: CartItemWithRelations[]) {
 
   const productCostCents = cart.reduce(
     (acc: number, item: CartItemWithRelations) => {
-      return acc + (item.product?.priceCents ?? 0) * (item.quantity ?? 0);
+      return acc + item.product?.priceCents * item.quantity;
     },
     0,
   );
@@ -30,14 +30,14 @@ export async function getPaymentSummary(cart: CartItemWithRelations[]) {
     },
     0,
   );
-  const shippingCostCents = Math.round(shipCostCents / 100);
+  const shippingCostCents = shipCostCents;
 
   const totalCostBeforeTaxCents = productCostCents + shippingCostCents;
   const taxCents = Math.round(totalCostBeforeTaxCents * 0.1);
   const totalCostCents = totalCostBeforeTaxCents + taxCents;
 
   const totalItems = cart.reduce(
-    (acc: number, item: CartItemWithRelations) => acc + (item.quantity ?? 0),
+    (acc: number, item: CartItemWithRelations) => acc + item.quantity,
     0,
   );
 

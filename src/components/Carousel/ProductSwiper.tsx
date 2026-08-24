@@ -47,6 +47,7 @@ export default function ProductSwiper({ images }: props) {
                 priority={index === 0}
                 sizes="(max-width: 768px) 100vw, 600px"
                 className={styles.productImage}
+                loading="eager"
               />
             </div>
           </SwiperSlide>
@@ -94,6 +95,7 @@ export default function ProductSwiper({ images }: props) {
                   fill
                   sizes="160px"
                   className={styles.productImage}
+                  loading="eager"
                 />
               </div>
             </SwiperSlide>

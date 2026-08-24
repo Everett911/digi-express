@@ -20,7 +20,8 @@ const baseCartItemSchema = z.object({
 });
 
 export const cartSchema = z
-  .array(nestedCartItemSchema.merge(baseCartItemSchema))
+  .array(nestedCartItemSchema.extend(baseCartItemSchema.shape))
   .optional();
 
-export type CartItems = z.infer<typeof cartSchema>;
+export type Cart = z.infer<typeof cartSchema>;
+export type CartItem = z.infer<typeof baseCartItemSchema>;

@@ -15,5 +15,6 @@ export const getOrderFromSession = reactCache(async () => {
     include: {
       items: true,
     },
+    orderBy: { createdAt: "desc" },
   });
 });

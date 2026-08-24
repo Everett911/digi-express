@@ -48,7 +48,10 @@ async function UserTable() {
             <Table.Cell>{formatNumber(user.orders.length)}</Table.Cell>
             <Table.Cell>
               {formatCurrency(
-                user.orders.reduce((sum, o) => o.totalCostCents + sum, 0),
+                user.orders.reduce(
+                  (sum, o) => (o.totalCostCents + sum) / 100,
+                  0,
+                ),
               )}
             </Table.Cell>
             <Table.Cell>

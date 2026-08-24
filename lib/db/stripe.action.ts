@@ -3,19 +3,11 @@
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { auth } from "../auth";
-import { CartItems } from "@/src/schemas/cart";
+import { prisma } from "@/lib/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
-interface CheckoutParams {
-  totalCostCents: number;
-  cart: CartItems;
-}
-
-export async function createPaymentIntentAction({
-  totalCostCents,
-  cart,
-}: CheckoutParams) {
+export async function createPaymentIntentAction() {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -25,14 +17,35 @@ export async function createPaymentIntentAction({
       return { success: false, error: "Unauthorized. Please sign in." };
     }
 
-    const cartIds = cart ? cart.map((item) => item.id).join(",") : "";
+    const cartItems = await prisma.cartItem.findMany({
+      where: { userId: session.user.id },
+      include: { product: true, deliveryOption: true },
+    });
+
+    if (cartItems.length === 0) {
+      return { success: false, error: "Your cart is empty." };
+    }
+
+    const productCost = cartItems.reduce(
+      (acc, i) => acc + i.product.priceCents * i.quantity,
+      0,
+    );
+
+    const shippingCost = cartItems.reduce((max, item) => {
+      const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
+      return currentItemShipping > max ? currentItemShipping : max;
+    }, 0);
+
+    const tax = Math.round((productCost + shippingCost) * 0.1);
+    const totalCostCents = productCost + shippingCost + tax;
 
     const paymentIntentOptions: Stripe.PaymentIntentCreateParams = {
       amount: totalCostCents,
       currency: "usd",
+      receipt_email: session.user.email ?? undefined,
       metadata: {
-        cartIds,
         userId: session.user.id,
+        userEmail: session.user.email,
       },
     };
 
