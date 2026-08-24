@@ -4,7 +4,9 @@ import { Theme } from "@radix-ui/themes";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -20,6 +22,12 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!session || session.user.role !== "admin") {
+    redirect("/auth");
+  }
   return (
     <>
       <Nav>
