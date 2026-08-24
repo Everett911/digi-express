@@ -15,10 +15,7 @@ export default async function CheckoutPage() {
 
   const paymentSummary = await getPaymentSummary(cart ?? []);
   const totalQuantity = cart?.reduce((acc, item) => acc + item.quantity, 0);
-  const stripe = await createPaymentIntentAction({
-    totalCostCents: paymentSummary.totalCostCents,
-    cart,
-  });
+  const stripe = await createPaymentIntentAction();
   if (!stripe.success || !stripe.clientSecret) {
     return <div>Error initializing payment wrapper: {stripe.error}</div>;
   }
