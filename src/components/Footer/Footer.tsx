@@ -163,7 +163,7 @@ const tabs: footerTabs[] = [
       { label: "Create Account", href: "/auth" },
       { label: "Login", href: "/auth" },
       { label: "Orders", href: "/order" },
-      { label: "Account", href: "#" },
+      { label: "Account", href: "/" },
     ],
   },
   {

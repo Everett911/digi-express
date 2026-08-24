@@ -101,7 +101,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
               </Link>
               <Link
                 className={styles.item}
-                href="/account"
+                href="/"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
