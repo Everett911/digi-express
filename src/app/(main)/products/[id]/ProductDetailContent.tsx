@@ -48,7 +48,13 @@ export default function ProductDetailContent({
         {formatCurrency(product.priceCents / 100)}
       </span>
 
-      <Activity mode={product.size.length === 0 ? "hidden" : "visible"}>
+      <Activity
+        mode={
+          product.size.length === 0 || product.size[0] === "none"
+            ? "hidden"
+            : "visible"
+        }
+      >
         <span className={styles.sizeTitle}>Size</span>
         <div className={styles.sizeContainer}>
           {product.size.map((siz) => (
@@ -61,12 +67,19 @@ export default function ProductDetailContent({
             </SizeButton>
           ))}
         </div>
-      </Activity>
-      {!selectedSize && (
-        <span className={styles.errorText}>Please select a size</span>
-      )}
 
-      <Activity mode={product.color.length === 0 ? "hidden" : "visible"}>
+        {!selectedSize && (
+          <span className={styles.errorText}>Please select a size</span>
+        )}
+      </Activity>
+
+      <Activity
+        mode={
+          product.color.length === 0 || product.size[0] === "none"
+            ? "hidden"
+            : "visible"
+        }
+      >
         <span className={styles.sizeTitle}>Color</span>
         <div className={styles.sizeContainer}>
           {product.color.map((col) => (
@@ -78,10 +91,11 @@ export default function ProductDetailContent({
             />
           ))}
         </div>
+
+        {!selectedColor && (
+          <span className={styles.errorText}>Please select a color</span>
+        )}
       </Activity>
-      {!selectedColor && (
-        <span className={styles.errorText}>Please select a color</span>
-      )}
 
       <div className={styles.buttonWrapper}>
         <QuantitySelector quantity={quantity} setQuantity={setQuantity} />

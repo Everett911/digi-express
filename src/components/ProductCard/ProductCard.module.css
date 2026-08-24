@@ -44,9 +44,14 @@
 .productName {
   font-size: 16px;
   font-weight: 600;
-  color: #1a202c;
+  color: var(--text-primary);
   margin: 0 0 8px 0;
   line-height: 1.4;
+  display: flex;
+  flex: 1; /* Allows the text block to grow and fill empty card space */
+  flex-direction: column;
+  word-break: break-word; /* Breaks long words (like URLs) so they don't clip */
+  white-space: normal;
 }
 
 .ratingWrapper {
@@ -66,9 +71,9 @@
 .noResults {
   text-align: center;
   padding: 64px 16px;
-  color: #718096;
-  background-color: #f8fafc;
-  border: 2px dashed #e2e8f0;
+  color: var(--text-secondary);
+  background-color: var(--background);
+  border: 2px dashed var(--border-default);
   margin-top: 32px;
 }
 
@@ -79,7 +84,7 @@
 
 .skeletonImage,
 .skeletonText {
-  background: #e2e8f0;
+  background: var(--background);
   position: relative;
   overflow: hidden;
   animation: pulse 1.5s infinite ease-in-out;

@@ -4,13 +4,24 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import { formatCurrency } from "@/src/utils/formatters";
+import { Order } from "@/src/schemas/orders";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const resend = new Resend(process.env.RESEND_API_KEY as string);
 
+// Explicitly ensure TypeScript treats this type correctly
+type CreatedOrder = Order;
+
 export async function POST(req: NextRequest) {
   const body = await req.text();
-  const signature = req.headers.get("stripe-signature") as string;
+  const signature = req.headers.get("stripe-signature");
+
+  if (!signature) {
+    return NextResponse.json(
+      { error: "Missing stripe-signature header" },
+      { status: 400 },
+    );
+  }
 
   let event: Stripe.Event;
 
@@ -20,20 +31,21 @@ export async function POST(req: NextRequest) {
       signature,
       process.env.STRIPE_WEBHOOKS_SECRET_KEY as string,
     );
-  } catch (err: any) {
-    console.error(`❌ Webhook Signature Verification Failed: ${err.message}`);
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "Unknown error";
+    console.error(`❌ Webhook Signature Verification Failed: ${errorMessage}`);
     return NextResponse.json(
-      { error: `Webhook Error: ${err.message}` },
+      { error: `Webhook Error: ${errorMessage}` },
       { status: 400 },
     );
   }
 
   if (event.type === "payment_intent.succeeded") {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
-    const userId = paymentIntent.metadata?.userId;
+    const metadata = paymentIntent.metadata;
 
-    const customerEmail =
-      paymentIntent.metadata?.userEmail || paymentIntent.receipt_email;
+    const userId = metadata.userId;
+    const customerEmail = metadata.userEmail || paymentIntent.receipt_email;
 
     if (!userId) {
       console.error(
@@ -54,15 +66,14 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      let createdOrder: any = null;
-
-      await prisma.$transaction(async (tx) => {
+      // 👍 FIX: Return the created data directly from the transaction wrapper
+      const createdOrder = await prisma.$transaction(async (tx) => {
         const cartItems = await tx.cartItem.findMany({
           where: { userId },
           include: { product: true, deliveryOption: true },
         });
 
-        if (cartItems.length === 0) return;
+        if (cartItems.length === 0) return null;
 
         const productCost = cartItems.reduce(
           (acc, i) => acc + i.product.priceCents * i.quantity,
@@ -75,7 +86,7 @@ export async function POST(req: NextRequest) {
         const tax = Math.round((productCost + shippingCost) * 0.1);
         const totalCost = productCost + shippingCost + tax;
 
-        createdOrder = await tx.order.create({
+        const orderResult = await tx.order.create({
           data: {
             userId,
             totalCostCents: totalCost,
@@ -83,7 +94,8 @@ export async function POST(req: NextRequest) {
               create: cartItems.map((item) => {
                 let itemImage = "";
                 if (Array.isArray(item.product.image)) {
-                  itemImage = item.product.image[0] || "";
+                  const firstImg = item.product.image[0];
+                  itemImage = typeof firstImg === "string" ? firstImg : "";
                 } else if (typeof item.product.image === "string") {
                   itemImage = item.product.image;
                 }
@@ -106,14 +118,18 @@ export async function POST(req: NextRequest) {
         });
 
         await tx.cartItem.deleteMany({ where: { userId } });
+
+        // Explicitly cast the returned database schema to your custom application type
+        return orderResult as unknown as CreatedOrder;
       });
 
+      // 👍 TypeScript now explicitly knows createdOrder is 'CreatedOrder | null' here
       if (createdOrder) {
         try {
           await resend.emails.send({
             from: "Your Shop <onboarding@resend.dev>",
             to: customerEmail,
-            subject: `Order Confirmation #${createdOrder.id}`,
+            subject: `Order Confirmation #${createdOrder.id}`, // 📝 No more 'never' error!
             html: `
               <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
                 <h2>Thank you for your order!</h2>
@@ -124,7 +140,7 @@ export async function POST(req: NextRequest) {
                 <ul>
                   ${createdOrder.items
                     .map(
-                      (item: any) => `
+                      (item) => `
                     <li>
                       <strong>${item.name}</strong> (x${item.quantity}) - 
                       $${((item.priceCents * item.quantity) / 100).toFixed(2)}
@@ -139,8 +155,12 @@ export async function POST(req: NextRequest) {
             `,
           });
           console.log(`✅ Confirmation email sent to ${customerEmail}`);
-        } catch (emailError) {
-          console.error("⚠️ Resend Email Delivery Failure:", emailError);
+        } catch (emailError: unknown) {
+          const emailMessage =
+            emailError instanceof Error
+              ? emailError.message
+              : "Unknown email error";
+          console.error(`⚠️ Resend Email Delivery Failure: ${emailMessage}`);
         }
       }
 
@@ -152,17 +172,14 @@ export async function POST(req: NextRequest) {
         { success: true, ordered: true },
         { status: 200 },
       );
-    } catch (error) {
-      console.error("❌ Webhook Order Creation Failure:", error);
+    } catch (error: unknown) {
+      const dbErrorMessage =
+        error instanceof Error ? error.message : "Unknown DB error";
+      console.error(`❌ Webhook Order Creation Failure: ${dbErrorMessage}`);
       return NextResponse.json(
         { error: "Failed to create database order" },
         { status: 500 },
       );
     }
   }
-
-  return NextResponse.json(
-    { received: true, type: event.type },
-    { status: 200 },
-  );
 }
