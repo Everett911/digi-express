@@ -1,5 +1,5 @@
 "use client";
-
+import type { Route } from "next";
 import Link from "next/link";
 import {
   SiFacebook,
@@ -102,7 +102,10 @@ export default function Footer() {
                     <ul className={styles.linkList}>
                       {tab.links.map((link: footerlinks) => (
                         <li key={link.label}>
-                          <Link href={link.href} className={styles.link}>
+                          <Link
+                            href={link.href as Route}
+                            className={styles.link}
+                          >
                             {link.label}
                           </Link>
                         </li>
@@ -128,41 +131,46 @@ const tabs: footerTabs[] = [
   {
     title: "Men",
     links: [
-      { label: "Grooming", href: "#" },
-      { label: "Apparel", href: "#" },
-      { label: "Footwear", href: "#" },
-      { label: "Outdoor", href: "#" },
-      { label: "Fitness & Wellness", href: "#" },
+      {
+        label: "Personal Care",
+        href: "/products?type=men,personal care",
+      },
+      { label: "Clothing", href: "/products?type=men,clothing" },
+      { label: "Footwear", href: "/products?type=men,shoes" },
+      { label: "Outdoor", href: "/products?type=men,outdoor" },
+      { label: "Fitness & Wellness", href: "/products?type=men,fitness" },
     ],
   },
   {
     title: "Women",
     links: [
-      { label: "Personal Care", href: "#" },
-      { label: "Clothing", href: "#" },
-      { label: "Accessories", href: "#" },
-      { label: "Footwear", href: "#" },
-      { label: "Fitness & Wellness", href: "#" },
+      {
+        label: "Personal Care",
+        href: "/products?type=women,personal care",
+      },
+      { label: "Clothing", href: "/products?type=women,clothing" },
+      { label: "Footwear", href: "/products?type=women,shoes" },
+      { label: "Outdoor", href: "/products?type=women,outdoor" },
+      { label: "Fitness & Wellness", href: "/products?type=women,fitness" },
     ],
   },
   {
     title: "Guide and Help",
     links: [
-      { label: "Create Account", href: "#" },
-      { label: "Login", href: "#" },
-      { label: "Orders", href: "#" },
-      { label: "Tracking", href: "#" },
+      { label: "Create Account", href: "/auth" },
+      { label: "Login", href: "/auth" },
+      { label: "Orders", href: "/order" },
       { label: "Account", href: "#" },
     ],
   },
   {
     title: "Brands",
     links: [
-      { label: "Nike", href: "#" },
-      { label: "Adidas", href: "#" },
-      { label: "Zara", href: "#" },
-      { label: "Uniqlo", href: "#" },
-      { label: "New Balance", href: "#" },
+      { label: "Nike", href: "/products?brand=nike" },
+      { label: "Adidas", href: "/products?brand=adidas" },
+      { label: "Zara", href: "/products?brand=zara" },
+      { label: "Uniqlo", href: "/products?brand=uniqlo" },
+      { label: "New Balance", href: "/products?brand=newbalance" },
     ],
   },
 ];
