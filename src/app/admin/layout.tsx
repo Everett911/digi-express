@@ -1,21 +1,12 @@
 import { Nav, NavLink } from "@/src/components/Nav/Nav";
 import styles from "./page.module.css";
 import { Theme } from "@radix-ui/themes";
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 export const dynamic = "force-dynamic";
-
-export const metadata: Metadata = {
-  title: "Digi-Express",
-  description: "Ecommerce Project",
-  icons: {
-    icon: "/website-logo.png",
-  },
-};
 
 export default async function AdminLayout({
   children,
