@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, Lock, ReceiptIcon } from "lucide-react";
+import { ChevronLeft, Lock } from "lucide-react";
 import styles from "./CheckoutHeader.module.css";
 
 export function CheckoutHeader({ totalQuantity }: { totalQuantity: number }) {
