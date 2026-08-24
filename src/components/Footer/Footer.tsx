@@ -75,7 +75,10 @@ export default function Footer() {
                     {tab.links.map((link: footerlinks) => {
                       return (
                         <li key={link.label}>
-                          <Link href={link.href} className={styles.link}>
+                          <Link
+                            href={link.href as Route}
+                            className={styles.link}
+                          >
                             {link.label}
                           </Link>
                         </li>
