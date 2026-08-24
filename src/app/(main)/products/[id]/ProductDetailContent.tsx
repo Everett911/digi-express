@@ -1,82 +1,113 @@
 "use client";
-
-import React, { useState, useTransition } from "react";
-import {
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-
-import styles from "./PurchaseForm.module.css";
+import { Activity, useState, useTransition } from "react";
+import styles from "./detail.module.css";
+import ColorButton from "@/src/components/Button/ColorButton";
+import SizeButton from "@/src/components/Button/SizeButton";
+import { Product } from "@/.prisma/client/client";
 import { formatCurrency } from "@/src/utils/formatters";
-import { createPaymentIntentAction } from "@/lib/db/stripe.action";
+import QuantitySelector from "@/src/components/QuantitySelector/QuantitySelector";
+import { addItemToCart } from "@/lib/db/cart.action";
 
-function PurchaseForm({ totalCostCents }: { totalCostCents: number }) {
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+export default function ProductDetailContent({
+  product,
+}: {
+  product: Product;
+}) {
+  const [selectedColor, setSelectedColor] = useState<string | null>("");
+  const [selectedSize, setSelectedSize] = useState<string | null>("");
+  const [quantity, setQuantity] = useState<number>(1); //
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    if (!stripe || !elements) return;
+  const handleAddToCart = () => {
+    if (product.size.length > 0 && !selectedSize) {
+      return;
+    }
+    if (product.color.length > 0 && !selectedColor) {
+      return;
+    }
 
     startTransition(async () => {
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        setErrorMessage(submitError.message ?? "Validation failed.");
-        return;
-      }
-
-      const res = await createPaymentIntentAction();
-
-      if (!res.success || !res.clientSecret) {
-        setErrorMessage(res.error ?? "Failed to initialize payment.");
-        return;
-      }
-
-      const baseUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || window.location.origin;
-
-      const { error } = await stripe.confirmPayment({
-        elements,
-        clientSecret: res.clientSecret,
-        confirmParams: {
-          return_url: `${baseUrl}/order`,
-        },
-      });
-
-      if (error) {
-        if (error.type === "card_error" || error.type === "validation_error") {
-          setErrorMessage(error.message ?? "An error occurred with your card.");
-        } else {
-          setErrorMessage("An unknown error occurred.");
-        }
+      try {
+        await addItemToCart({
+          productId: product.id,
+          quantity: quantity,
+          size: selectedSize,
+          color: selectedColor,
+        });
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        alert(message || "Something went wrong.");
       }
     });
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit} className={styles.container}>
-        <PaymentElement />
+    <div className={styles.details}>
+      <h1 className={styles.title}>{product.name}</h1>
+      <span className={styles.price}>
+        {formatCurrency(product.priceCents / 100)}
+      </span>
 
-        {errorMessage && <div className={styles.errorText}>{errorMessage}</div>}
+      <Activity
+        mode={
+          product.size.length === 0 || product.size[0] === "none"
+            ? "hidden"
+            : "visible"
+        }
+      >
+        <span className={styles.sizeTitle}>Size</span>
+        <div className={styles.sizeContainer}>
+          {product.size.map((siz) => (
+            <SizeButton
+              key={siz}
+              isActive={selectedSize === siz}
+              onClick={() => setSelectedSize(siz)}
+            >
+              {siz.toUpperCase()}
+            </SizeButton>
+          ))}
+        </div>
+
+        {!selectedSize && (
+          <span className={styles.errorText}>Please select a size</span>
+        )}
+      </Activity>
+
+      <Activity
+        mode={
+          product.color.length === 0 || product.size[0] === "none"
+            ? "hidden"
+            : "visible"
+        }
+      >
+        <span className={styles.sizeTitle}>Color</span>
+        <div className={styles.sizeContainer}>
+          {product.color.map((col) => (
+            <ColorButton
+              key={col}
+              col={col}
+              isActive={selectedColor === col}
+              onClick={() => setSelectedColor(col)}
+            />
+          ))}
+        </div>
+
+        {!selectedColor && (
+          <span className={styles.errorText}>Please select a color</span>
+        )}
+      </Activity>
+
+      <div className={styles.buttonWrapper}>
+        <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
 
         <button
-          type="submit"
-          className={styles.placeOrderButton}
-          disabled={isPending || !stripe || !elements}
+          className={styles.actionButton}
+          onClick={handleAddToCart}
+          disabled={isPending}
         >
-          {isPending
-            ? "Processing..."
-            : `Place your order - ${formatCurrency(totalCostCents / 100)}`}
+          {isPending ? "Adding..." : "Add to Cart"}
         </button>
-      </form>
-    </>
+      </div>
+    </div>
   );
 }
-
-export default PurchaseForm;

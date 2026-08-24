@@ -36,3 +36,7 @@
   box-shadow: none;
   cursor: not-allowed;
 }
+
+.errorText {
+  color: var(--error);
+}
