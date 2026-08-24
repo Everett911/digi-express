@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition, useEffect, useId, Activity } from "react";
+import { useState, useTransition, useEffect, Activity } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";

@@ -1,16 +1,8 @@
-import type { Metadata } from "next";
-import { getCartFromSession } from "@/lib/db/cart";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getCartFromSession } from "@/lib/db/cart";
 import { Header } from "@/src/components/Header/Header";
-
-export const metadata: Metadata = {
-  title: "Digi-Express",
-  description: "Ecommerce Project",
-  icons: {
-    icon: "/website-logo.png",
-  },
-};
+import { headers } from "next/headers";
 
 export default async function MainLayout({
   children,
