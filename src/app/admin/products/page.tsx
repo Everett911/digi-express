@@ -17,7 +17,7 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
     <>
       <div className={styles.container}>
         <AdminProductsHeader>Products</AdminProductsHeader>
-        <ButtonLink href="/admin/products/new">Add Products</ButtonLink>
+        <ButtonLink>Add Products</ButtonLink>
       </div>
 
       <Suspense key={currentPage} fallback={<ProductTableSkeleton />}>
