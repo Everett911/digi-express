@@ -73,9 +73,19 @@ const authOptions = {
 
 export const auth = betterAuth({
   ...authOptions,
-  trustedOrigins: [
-    process.env.BETTER_AUTH_URL
-      ? `${process.env.BETTER_AUTH_URL}`
-      : "http://localhost:3000",
-  ],
+  trustedOrigins: async (request) => {
+    const origins = [
+      process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
+    ];
+    if (request?.url) {
+      try {
+        const url = new URL(request.url);
+        const hostOrigin = `${url.protocol}//${url.host}`;
+        if (!origins.includes(hostOrigin)) origins.push(hostOrigin);
+      } catch {
+        // ignore malformed request url
+      }
+    }
+    return origins;
+  },
 });
