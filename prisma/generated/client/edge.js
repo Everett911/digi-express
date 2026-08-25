@@ -39,12 +39,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.8.0
- * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
+ * Prisma Client JS version: 7.9.1
+ * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
  */
 Prisma.prismaVersion = {
-  client: "7.8.0",
-  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
+  client: "7.9.1",
+  engine: "e922089b7d7502aff4249d5da3420f6fa55fc6ad"
 }
 
 Prisma.PrismaClientKnownRequestError = PrismaClientKnownRequestError;
@@ -241,8 +241,8 @@ exports.Prisma.ModelName = {
  */
 const config = {
   "previewFeatures": [],
-  "clientVersion": "7.8.0",
-  "engineVersion": "3c6e192761c0362d496ed980de936e2f3cebcd3a",
+  "clientVersion": "7.9.1",
+  "engineVersion": "e922089b7d7502aff4249d5da3420f6fa55fc6ad",
   "activeProvider": "postgresql",
   "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Product {\n  id                     String      @id @default(uuid()) @db.Uuid\n  image                  String[]\n  name                   String\n  description            String?\n  color                  String[]    @default([])\n  size                   String[]    @default([])\n  priceCents             Int\n  brand                  String\n  keywords               String[]\n  createdAt              DateTime    @default(now()) @db.Timestamptz(3)\n  updatedAt              DateTime    @updatedAt @db.Timestamptz(3)\n  isAvailableForPurchase Boolean     @default(true)\n  orders                 Order[]\n  cartItems              CartItem[]\n  orderItems             OrderItem[]\n}\n\nmodel Order {\n  id             String   @id @default(uuid()) @db.Uuid\n  userId         String\n  totalCostCents Int\n  createdAt      DateTime @default(now()) @db.Timestamptz(3)\n  updatedAt      DateTime @updatedAt @db.Timestamptz(3)\n\n  user     User        @relation(fields: [userId], references: [id], onDelete: Restrict)\n  products Product[]\n  items    OrderItem[]\n}\n\nmodel OrderItem {\n  id           String   @id @default(uuid()) @db.Uuid\n  orderId      String   @db.Uuid\n  productId    String   @db.Uuid\n  quantity     Int\n  name         String\n  color        String?\n  size         String?\n  image        String\n  deliveryDays Int\n  priceCents   Int\n  createdAt    DateTime @default(now()) @db.Timestamptz(3)\n  updatedAt    DateTime @updatedAt @db.Timestamptz(3)\n\n  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)\n  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)\n\n  @@index([orderId])\n  @@index([productId])\n}\n\nmodel DeliveryOption {\n  id           String   @id\n  deliveryDays Int\n  priceCents   Int\n  createdAt    DateTime @default(now()) @db.Timestamptz(3)\n  updatedAt    DateTime @updatedAt @db.Timestamptz(3)\n\n  cartItems CartItem[]\n}\n\nmodel CartItem {\n  id               String   @id @default(uuid()) @db.Uuid\n  userId           String\n  productId        String   @db.Uuid\n  quantity         Int\n  color            String?\n  size             String?\n  deliveryOptionId String\n  createdAt        DateTime @default(now()) @db.Timestamptz(3)\n  updatedAt        DateTime @updatedAt @db.Timestamptz(3)\n\n  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)\n  product        Product        @relation(fields: [productId], references: [id], onDelete: Cascade)\n  deliveryOption DeliveryOption @relation(fields: [deliveryOptionId], references: [id], onDelete: Restrict)\n\n  @@unique([userId, productId])\n  @@index([userId])\n  @@index([productId])\n  @@index([deliveryOptionId])\n}\n\nmodel User {\n  id            String     @id\n  name          String\n  email         String\n  role          String     @default(\"customer\")\n  emailVerified Boolean    @default(false)\n  image         String?\n  rating        Json?\n  createdAt     DateTime   @default(now())\n  updatedAt     DateTime   @updatedAt\n  sessions      Session[]\n  accounts      Account[]\n  orders        Order[]\n  cartItems     CartItem[]\n\n  @@unique([email])\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n}\n"
 }
