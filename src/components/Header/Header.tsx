@@ -14,22 +14,9 @@ import styles from "./Header.module.css";
 import { authClient } from "@/lib/auth-client";
 
 type Session = typeof authClient.$Infer.Session;
-type ExtendedUser = {
-  id: string;
-  email: string;
-  name: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null;
-  role: "admin" | "customer" | string;
-};
 
 interface HeaderProps {
-  session: {
-    user: ExtendedUser;
-    session: Session | null;
-  } | null;
+  session: Session | null;
   totalQuantity: number;
 }
 

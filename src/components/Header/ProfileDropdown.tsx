@@ -10,22 +10,9 @@ import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/src/utils/truncatestring";
 
 type Session = typeof authClient.$Infer.Session;
-type ExtendedUser = {
-  id: string;
-  email: string;
-  name: string;
-  emailVerified: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-  image?: string | null;
-  role: "admin" | "customer" | string;
-};
 
 interface ProfileDropdownProps {
-  session: {
-    user: ExtendedUser;
-    session: Session | null;
-  } | null;
+  session: Session | null;
 }
 
 export default function ProfileDropdown({ session }: ProfileDropdownProps) {
@@ -126,7 +113,11 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
                 Account
               </Link>
               <Activity
-                mode={session?.user.role === "admin" ? "visible" : "hidden"}
+                mode={
+                  (session?.user?.role ?? "customer") === "admin"
+                    ? "visible"
+                    : "hidden"
+                }
               >
                 <Link className={styles.item} role="menuitem" href={"/admin"}>
                   Admin
