@@ -1,4 +1,4 @@
-import type { Prisma } from "../../.prisma/client/client";
+import type { Prisma } from "@prisma/client";
 
 export function buildProductSearchWhere(
   searchQuery: string,
