@@ -1,21 +1,10 @@
-import { betterAuth } from "better-auth";
+import { betterAuth, BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { PrismaClient } from "@/prisma/generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 import { nextCookies } from "better-auth/next-js";
+import { prisma } from "@/lib/prisma";
 
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
-});
-const prisma = new PrismaClient({ adapter });
-
-export const auth = betterAuth({
+const authOptions = {
   database: prismaAdapter(prisma, { provider: "postgresql" }),
-  trustedOrigins: [
-    process.env.BETTER_AUTH_URL
-      ? `${process.env.BETTER_AUTH_URL}`
-      : "http://localhost:3000",
-  ],
   emailAndPassword: {
     enabled: true,
   },
@@ -49,4 +38,13 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies()],
+} satisfies BetterAuthOptions;
+
+export const auth = betterAuth({
+  ...authOptions,
+  trustedOrigins: [
+    process.env.BETTER_AUTH_URL
+      ? `${process.env.BETTER_AUTH_URL}`
+      : "http://localhost:3000",
+  ],
 });

@@ -5,15 +5,28 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
-import { type auth } from "@/lib/auth";
 import { User, CircleUser } from "lucide-react";
 import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/src/utils/truncatestring";
 
-type Session = typeof auth.$Infer.Session;
+type Session = typeof authClient.$Infer.Session;
+type ExtendedUser = {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null;
+  role: "admin" | "customer" | string; // ✅ Forcefully inject the role attribute here
+};
 
+// 2. Override the inferred type shape
 interface ProfileDropdownProps {
-  session: Session | null;
+  session: {
+    user: ExtendedUser;
+    session: Session | null;
+  } | null;
 }
 
 export default function ProfileDropdown({ session }: ProfileDropdownProps) {
