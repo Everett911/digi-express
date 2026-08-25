@@ -1,7 +1,5 @@
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { nextCookies } from "better-auth/next-js";
-
 import { prisma } from "@/lib/prisma";
 
 const authOptions = {
@@ -38,7 +36,6 @@ const authOptions = {
       },
     },
   },
-  plugins: [nextCookies()],
 } satisfies BetterAuthOptions;
 
 export const auth = betterAuth({
