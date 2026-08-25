@@ -1,4 +1,4 @@
-import { CartItem } from "@prisma/client";
+import { CartItem } from "@/prisma/generated/client";
 
 type CartItemWithRelations = CartItem & {
   product: { priceCents: number };
