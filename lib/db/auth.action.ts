@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "../auth";
 import { headers } from "next/headers";
+import { Route } from "next";
 
 export const signUp = async (email: string, password: string, name: string) => {
   try {
@@ -11,7 +12,7 @@ export const signUp = async (email: string, password: string, name: string) => {
         email,
         password,
         name,
-        callbackURL: "/checkout",
+        callbackURL: "/",
       },
     });
     return { success: true, data: result };
@@ -26,7 +27,7 @@ export const signIn = async (email: string, password: string) => {
       body: {
         email,
         password,
-        callbackURL: "/checkout",
+        callbackURL: "/",
       },
     });
     return { success: true, data: result };
@@ -52,6 +53,6 @@ export const signInSocial = async (provider: "github" | "google") => {
   });
 
   if (result?.url) {
-    redirect(result.url as any);
+    redirect(result.url as Route);
   }
 };
