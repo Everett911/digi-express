@@ -226,13 +226,6 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PurchaseVerificationScalarFieldEnum = {
-  id: 'id',
-  orderId: 'orderId',
-  expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
-};
-
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -269,8 +262,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification',
-  PurchaseVerification: 'PurchaseVerification'
+  Verification: 'Verification'
 };
 
 /**

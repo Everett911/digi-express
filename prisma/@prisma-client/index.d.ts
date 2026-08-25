@@ -58,11 +58,6 @@ export type Account = $Result.DefaultSelection<Prisma.$AccountPayload>
  * 
  */
 export type Verification = $Result.DefaultSelection<Prisma.$VerificationPayload>
-/**
- * Model PurchaseVerification
- * 
- */
-export type PurchaseVerification = $Result.DefaultSelection<Prisma.$PurchaseVerificationPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -274,16 +269,6 @@ export class PrismaClient<
     * ```
     */
   get verification(): Prisma.VerificationDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.purchaseVerification`: Exposes CRUD operations for the **PurchaseVerification** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more PurchaseVerifications
-    * const purchaseVerifications = await prisma.purchaseVerification.findMany()
-    * ```
-    */
-  get purchaseVerification(): Prisma.PurchaseVerificationDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -726,8 +711,7 @@ export namespace Prisma {
     User: 'User',
     Session: 'Session',
     Account: 'Account',
-    Verification: 'Verification',
-    PurchaseVerification: 'PurchaseVerification'
+    Verification: 'Verification'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -743,7 +727,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "product" | "order" | "orderItem" | "deliveryOption" | "cartItem" | "user" | "session" | "account" | "verification" | "purchaseVerification"
+      modelProps: "product" | "order" | "orderItem" | "deliveryOption" | "cartItem" | "user" | "session" | "account" | "verification"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1413,80 +1397,6 @@ export namespace Prisma {
           }
         }
       }
-      PurchaseVerification: {
-        payload: Prisma.$PurchaseVerificationPayload<ExtArgs>
-        fields: Prisma.PurchaseVerificationFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PurchaseVerificationFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PurchaseVerificationFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          findFirst: {
-            args: Prisma.PurchaseVerificationFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PurchaseVerificationFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          findMany: {
-            args: Prisma.PurchaseVerificationFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>[]
-          }
-          create: {
-            args: Prisma.PurchaseVerificationCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          createMany: {
-            args: Prisma.PurchaseVerificationCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PurchaseVerificationCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>[]
-          }
-          delete: {
-            args: Prisma.PurchaseVerificationDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          update: {
-            args: Prisma.PurchaseVerificationUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          deleteMany: {
-            args: Prisma.PurchaseVerificationDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PurchaseVerificationUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PurchaseVerificationUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>[]
-          }
-          upsert: {
-            args: Prisma.PurchaseVerificationUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PurchaseVerificationPayload>
-          }
-          aggregate: {
-            args: Prisma.PurchaseVerificationAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePurchaseVerification>
-          }
-          groupBy: {
-            args: Prisma.PurchaseVerificationGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PurchaseVerificationGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PurchaseVerificationCountArgs<ExtArgs>
-            result: $Utils.Optional<PurchaseVerificationCountAggregateOutputType> | number
-          }
-        }
-      }
     }
   } & {
     other: {
@@ -1604,7 +1514,6 @@ export namespace Prisma {
     session?: SessionOmit
     account?: AccountOmit
     verification?: VerificationOmit
-    purchaseVerification?: PurchaseVerificationOmit
   }
 
   /* Types for Logging */
@@ -1736,13 +1645,11 @@ export namespace Prisma {
   export type OrderCountOutputType = {
     products: number
     items: number
-    PurchaseVerification: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | OrderCountOutputTypeCountProductsArgs
     items?: boolean | OrderCountOutputTypeCountItemsArgs
-    PurchaseVerification?: boolean | OrderCountOutputTypeCountPurchaseVerificationArgs
   }
 
   // Custom InputTypes
@@ -1768,13 +1675,6 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
-  }
-
-  /**
-   * OrderCountOutputType without action
-   */
-  export type OrderCountOutputTypeCountPurchaseVerificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PurchaseVerificationWhereInput
   }
 
 
@@ -3312,7 +3212,6 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     products?: boolean | Order$productsArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
-    PurchaseVerification?: boolean | Order$PurchaseVerificationArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -3347,7 +3246,6 @@ export namespace Prisma {
     user?: boolean | UserDefaultArgs<ExtArgs>
     products?: boolean | Order$productsArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
-    PurchaseVerification?: boolean | Order$PurchaseVerificationArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3363,7 +3261,6 @@ export namespace Prisma {
       user: Prisma.$UserPayload<ExtArgs>
       products: Prisma.$ProductPayload<ExtArgs>[]
       items: Prisma.$OrderItemPayload<ExtArgs>[]
-      PurchaseVerification: Prisma.$PurchaseVerificationPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3768,7 +3665,6 @@ export namespace Prisma {
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     products<T extends Order$productsArgs<ExtArgs> = {}>(args?: Subset<T, Order$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    PurchaseVerification<T extends Order$PurchaseVerificationArgs<ExtArgs> = {}>(args?: Subset<T, Order$PurchaseVerificationArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4249,30 +4145,6 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
-  }
-
-  /**
-   * Order.PurchaseVerification
-   */
-  export type Order$PurchaseVerificationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    where?: PurchaseVerificationWhereInput
-    orderBy?: PurchaseVerificationOrderByWithRelationInput | PurchaseVerificationOrderByWithRelationInput[]
-    cursor?: PurchaseVerificationWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PurchaseVerificationScalarFieldEnum | PurchaseVerificationScalarFieldEnum[]
   }
 
   /**
@@ -12266,1056 +12138,6 @@ export namespace Prisma {
 
 
   /**
-   * Model PurchaseVerification
-   */
-
-  export type AggregatePurchaseVerification = {
-    _count: PurchaseVerificationCountAggregateOutputType | null
-    _min: PurchaseVerificationMinAggregateOutputType | null
-    _max: PurchaseVerificationMaxAggregateOutputType | null
-  }
-
-  export type PurchaseVerificationMinAggregateOutputType = {
-    id: string | null
-    orderId: string | null
-    expiresAt: Date | null
-    createdAt: Date | null
-  }
-
-  export type PurchaseVerificationMaxAggregateOutputType = {
-    id: string | null
-    orderId: string | null
-    expiresAt: Date | null
-    createdAt: Date | null
-  }
-
-  export type PurchaseVerificationCountAggregateOutputType = {
-    id: number
-    orderId: number
-    expiresAt: number
-    createdAt: number
-    _all: number
-  }
-
-
-  export type PurchaseVerificationMinAggregateInputType = {
-    id?: true
-    orderId?: true
-    expiresAt?: true
-    createdAt?: true
-  }
-
-  export type PurchaseVerificationMaxAggregateInputType = {
-    id?: true
-    orderId?: true
-    expiresAt?: true
-    createdAt?: true
-  }
-
-  export type PurchaseVerificationCountAggregateInputType = {
-    id?: true
-    orderId?: true
-    expiresAt?: true
-    createdAt?: true
-    _all?: true
-  }
-
-  export type PurchaseVerificationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PurchaseVerification to aggregate.
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PurchaseVerifications to fetch.
-     */
-    orderBy?: PurchaseVerificationOrderByWithRelationInput | PurchaseVerificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PurchaseVerificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PurchaseVerifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PurchaseVerifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned PurchaseVerifications
-    **/
-    _count?: true | PurchaseVerificationCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PurchaseVerificationMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PurchaseVerificationMaxAggregateInputType
-  }
-
-  export type GetPurchaseVerificationAggregateType<T extends PurchaseVerificationAggregateArgs> = {
-        [P in keyof T & keyof AggregatePurchaseVerification]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePurchaseVerification[P]>
-      : GetScalarType<T[P], AggregatePurchaseVerification[P]>
-  }
-
-
-
-
-  export type PurchaseVerificationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PurchaseVerificationWhereInput
-    orderBy?: PurchaseVerificationOrderByWithAggregationInput | PurchaseVerificationOrderByWithAggregationInput[]
-    by: PurchaseVerificationScalarFieldEnum[] | PurchaseVerificationScalarFieldEnum
-    having?: PurchaseVerificationScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PurchaseVerificationCountAggregateInputType | true
-    _min?: PurchaseVerificationMinAggregateInputType
-    _max?: PurchaseVerificationMaxAggregateInputType
-  }
-
-  export type PurchaseVerificationGroupByOutputType = {
-    id: string
-    orderId: string
-    expiresAt: Date
-    createdAt: Date
-    _count: PurchaseVerificationCountAggregateOutputType | null
-    _min: PurchaseVerificationMinAggregateOutputType | null
-    _max: PurchaseVerificationMaxAggregateOutputType | null
-  }
-
-  type GetPurchaseVerificationGroupByPayload<T extends PurchaseVerificationGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PurchaseVerificationGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PurchaseVerificationGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PurchaseVerificationGroupByOutputType[P]>
-            : GetScalarType<T[P], PurchaseVerificationGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PurchaseVerificationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["purchaseVerification"]>
-
-  export type PurchaseVerificationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["purchaseVerification"]>
-
-  export type PurchaseVerificationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    orderId?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["purchaseVerification"]>
-
-  export type PurchaseVerificationSelectScalar = {
-    id?: boolean
-    orderId?: boolean
-    expiresAt?: boolean
-    createdAt?: boolean
-  }
-
-  export type PurchaseVerificationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "expiresAt" | "createdAt", ExtArgs["result"]["purchaseVerification"]>
-  export type PurchaseVerificationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-  export type PurchaseVerificationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-  export type PurchaseVerificationIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    order?: boolean | OrderDefaultArgs<ExtArgs>
-  }
-
-  export type $PurchaseVerificationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "PurchaseVerification"
-    objects: {
-      order: Prisma.$OrderPayload<ExtArgs>
-    }
-    scalars: $Extensions.GetPayloadResult<{
-      id: string
-      orderId: string
-      expiresAt: Date
-      createdAt: Date
-    }, ExtArgs["result"]["purchaseVerification"]>
-    composites: {}
-  }
-
-  type PurchaseVerificationGetPayload<S extends boolean | null | undefined | PurchaseVerificationDefaultArgs> = $Result.GetResult<Prisma.$PurchaseVerificationPayload, S>
-
-  type PurchaseVerificationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PurchaseVerificationFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PurchaseVerificationCountAggregateInputType | true
-    }
-
-  export interface PurchaseVerificationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PurchaseVerification'], meta: { name: 'PurchaseVerification' } }
-    /**
-     * Find zero or one PurchaseVerification that matches the filter.
-     * @param {PurchaseVerificationFindUniqueArgs} args - Arguments to find a PurchaseVerification
-     * @example
-     * // Get one PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PurchaseVerificationFindUniqueArgs>(args: SelectSubset<T, PurchaseVerificationFindUniqueArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one PurchaseVerification that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PurchaseVerificationFindUniqueOrThrowArgs} args - Arguments to find a PurchaseVerification
-     * @example
-     * // Get one PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PurchaseVerificationFindUniqueOrThrowArgs>(args: SelectSubset<T, PurchaseVerificationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PurchaseVerification that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationFindFirstArgs} args - Arguments to find a PurchaseVerification
-     * @example
-     * // Get one PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PurchaseVerificationFindFirstArgs>(args?: SelectSubset<T, PurchaseVerificationFindFirstArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first PurchaseVerification that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationFindFirstOrThrowArgs} args - Arguments to find a PurchaseVerification
-     * @example
-     * // Get one PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PurchaseVerificationFindFirstOrThrowArgs>(args?: SelectSubset<T, PurchaseVerificationFindFirstOrThrowArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more PurchaseVerifications that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all PurchaseVerifications
-     * const purchaseVerifications = await prisma.purchaseVerification.findMany()
-     * 
-     * // Get first 10 PurchaseVerifications
-     * const purchaseVerifications = await prisma.purchaseVerification.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const purchaseVerificationWithIdOnly = await prisma.purchaseVerification.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PurchaseVerificationFindManyArgs>(args?: SelectSubset<T, PurchaseVerificationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a PurchaseVerification.
-     * @param {PurchaseVerificationCreateArgs} args - Arguments to create a PurchaseVerification.
-     * @example
-     * // Create one PurchaseVerification
-     * const PurchaseVerification = await prisma.purchaseVerification.create({
-     *   data: {
-     *     // ... data to create a PurchaseVerification
-     *   }
-     * })
-     * 
-     */
-    create<T extends PurchaseVerificationCreateArgs>(args: SelectSubset<T, PurchaseVerificationCreateArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many PurchaseVerifications.
-     * @param {PurchaseVerificationCreateManyArgs} args - Arguments to create many PurchaseVerifications.
-     * @example
-     * // Create many PurchaseVerifications
-     * const purchaseVerification = await prisma.purchaseVerification.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PurchaseVerificationCreateManyArgs>(args?: SelectSubset<T, PurchaseVerificationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many PurchaseVerifications and returns the data saved in the database.
-     * @param {PurchaseVerificationCreateManyAndReturnArgs} args - Arguments to create many PurchaseVerifications.
-     * @example
-     * // Create many PurchaseVerifications
-     * const purchaseVerification = await prisma.purchaseVerification.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many PurchaseVerifications and only return the `id`
-     * const purchaseVerificationWithIdOnly = await prisma.purchaseVerification.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PurchaseVerificationCreateManyAndReturnArgs>(args?: SelectSubset<T, PurchaseVerificationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a PurchaseVerification.
-     * @param {PurchaseVerificationDeleteArgs} args - Arguments to delete one PurchaseVerification.
-     * @example
-     * // Delete one PurchaseVerification
-     * const PurchaseVerification = await prisma.purchaseVerification.delete({
-     *   where: {
-     *     // ... filter to delete one PurchaseVerification
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PurchaseVerificationDeleteArgs>(args: SelectSubset<T, PurchaseVerificationDeleteArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one PurchaseVerification.
-     * @param {PurchaseVerificationUpdateArgs} args - Arguments to update one PurchaseVerification.
-     * @example
-     * // Update one PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PurchaseVerificationUpdateArgs>(args: SelectSubset<T, PurchaseVerificationUpdateArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more PurchaseVerifications.
-     * @param {PurchaseVerificationDeleteManyArgs} args - Arguments to filter PurchaseVerifications to delete.
-     * @example
-     * // Delete a few PurchaseVerifications
-     * const { count } = await prisma.purchaseVerification.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PurchaseVerificationDeleteManyArgs>(args?: SelectSubset<T, PurchaseVerificationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PurchaseVerifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many PurchaseVerifications
-     * const purchaseVerification = await prisma.purchaseVerification.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PurchaseVerificationUpdateManyArgs>(args: SelectSubset<T, PurchaseVerificationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more PurchaseVerifications and returns the data updated in the database.
-     * @param {PurchaseVerificationUpdateManyAndReturnArgs} args - Arguments to update many PurchaseVerifications.
-     * @example
-     * // Update many PurchaseVerifications
-     * const purchaseVerification = await prisma.purchaseVerification.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more PurchaseVerifications and only return the `id`
-     * const purchaseVerificationWithIdOnly = await prisma.purchaseVerification.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PurchaseVerificationUpdateManyAndReturnArgs>(args: SelectSubset<T, PurchaseVerificationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one PurchaseVerification.
-     * @param {PurchaseVerificationUpsertArgs} args - Arguments to update or create a PurchaseVerification.
-     * @example
-     * // Update or create a PurchaseVerification
-     * const purchaseVerification = await prisma.purchaseVerification.upsert({
-     *   create: {
-     *     // ... data to create a PurchaseVerification
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the PurchaseVerification we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PurchaseVerificationUpsertArgs>(args: SelectSubset<T, PurchaseVerificationUpsertArgs<ExtArgs>>): Prisma__PurchaseVerificationClient<$Result.GetResult<Prisma.$PurchaseVerificationPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of PurchaseVerifications.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationCountArgs} args - Arguments to filter PurchaseVerifications to count.
-     * @example
-     * // Count the number of PurchaseVerifications
-     * const count = await prisma.purchaseVerification.count({
-     *   where: {
-     *     // ... the filter for the PurchaseVerifications we want to count
-     *   }
-     * })
-    **/
-    count<T extends PurchaseVerificationCountArgs>(
-      args?: Subset<T, PurchaseVerificationCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PurchaseVerificationCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a PurchaseVerification.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PurchaseVerificationAggregateArgs>(args: Subset<T, PurchaseVerificationAggregateArgs>): Prisma.PrismaPromise<GetPurchaseVerificationAggregateType<T>>
-
-    /**
-     * Group by PurchaseVerification.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PurchaseVerificationGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PurchaseVerificationGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PurchaseVerificationGroupByArgs['orderBy'] }
-        : { orderBy?: PurchaseVerificationGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PurchaseVerificationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPurchaseVerificationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the PurchaseVerification model
-   */
-  readonly fields: PurchaseVerificationFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for PurchaseVerification.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PurchaseVerificationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the PurchaseVerification model
-   */
-  interface PurchaseVerificationFieldRefs {
-    readonly id: FieldRef<"PurchaseVerification", 'String'>
-    readonly orderId: FieldRef<"PurchaseVerification", 'String'>
-    readonly expiresAt: FieldRef<"PurchaseVerification", 'DateTime'>
-    readonly createdAt: FieldRef<"PurchaseVerification", 'DateTime'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * PurchaseVerification findUnique
-   */
-  export type PurchaseVerificationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter, which PurchaseVerification to fetch.
-     */
-    where: PurchaseVerificationWhereUniqueInput
-  }
-
-  /**
-   * PurchaseVerification findUniqueOrThrow
-   */
-  export type PurchaseVerificationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter, which PurchaseVerification to fetch.
-     */
-    where: PurchaseVerificationWhereUniqueInput
-  }
-
-  /**
-   * PurchaseVerification findFirst
-   */
-  export type PurchaseVerificationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter, which PurchaseVerification to fetch.
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PurchaseVerifications to fetch.
-     */
-    orderBy?: PurchaseVerificationOrderByWithRelationInput | PurchaseVerificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PurchaseVerifications.
-     */
-    cursor?: PurchaseVerificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PurchaseVerifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PurchaseVerifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PurchaseVerifications.
-     */
-    distinct?: PurchaseVerificationScalarFieldEnum | PurchaseVerificationScalarFieldEnum[]
-  }
-
-  /**
-   * PurchaseVerification findFirstOrThrow
-   */
-  export type PurchaseVerificationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter, which PurchaseVerification to fetch.
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PurchaseVerifications to fetch.
-     */
-    orderBy?: PurchaseVerificationOrderByWithRelationInput | PurchaseVerificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for PurchaseVerifications.
-     */
-    cursor?: PurchaseVerificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PurchaseVerifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PurchaseVerifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PurchaseVerifications.
-     */
-    distinct?: PurchaseVerificationScalarFieldEnum | PurchaseVerificationScalarFieldEnum[]
-  }
-
-  /**
-   * PurchaseVerification findMany
-   */
-  export type PurchaseVerificationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter, which PurchaseVerifications to fetch.
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of PurchaseVerifications to fetch.
-     */
-    orderBy?: PurchaseVerificationOrderByWithRelationInput | PurchaseVerificationOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing PurchaseVerifications.
-     */
-    cursor?: PurchaseVerificationWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` PurchaseVerifications from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` PurchaseVerifications.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of PurchaseVerifications.
-     */
-    distinct?: PurchaseVerificationScalarFieldEnum | PurchaseVerificationScalarFieldEnum[]
-  }
-
-  /**
-   * PurchaseVerification create
-   */
-  export type PurchaseVerificationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * The data needed to create a PurchaseVerification.
-     */
-    data: XOR<PurchaseVerificationCreateInput, PurchaseVerificationUncheckedCreateInput>
-  }
-
-  /**
-   * PurchaseVerification createMany
-   */
-  export type PurchaseVerificationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many PurchaseVerifications.
-     */
-    data: PurchaseVerificationCreateManyInput | PurchaseVerificationCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * PurchaseVerification createManyAndReturn
-   */
-  export type PurchaseVerificationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * The data used to create many PurchaseVerifications.
-     */
-    data: PurchaseVerificationCreateManyInput | PurchaseVerificationCreateManyInput[]
-    skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationIncludeCreateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PurchaseVerification update
-   */
-  export type PurchaseVerificationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * The data needed to update a PurchaseVerification.
-     */
-    data: XOR<PurchaseVerificationUpdateInput, PurchaseVerificationUncheckedUpdateInput>
-    /**
-     * Choose, which PurchaseVerification to update.
-     */
-    where: PurchaseVerificationWhereUniqueInput
-  }
-
-  /**
-   * PurchaseVerification updateMany
-   */
-  export type PurchaseVerificationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update PurchaseVerifications.
-     */
-    data: XOR<PurchaseVerificationUpdateManyMutationInput, PurchaseVerificationUncheckedUpdateManyInput>
-    /**
-     * Filter which PurchaseVerifications to update
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * Limit how many PurchaseVerifications to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * PurchaseVerification updateManyAndReturn
-   */
-  export type PurchaseVerificationUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * The data used to update PurchaseVerifications.
-     */
-    data: XOR<PurchaseVerificationUpdateManyMutationInput, PurchaseVerificationUncheckedUpdateManyInput>
-    /**
-     * Filter which PurchaseVerifications to update
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * Limit how many PurchaseVerifications to update.
-     */
-    limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationIncludeUpdateManyAndReturn<ExtArgs> | null
-  }
-
-  /**
-   * PurchaseVerification upsert
-   */
-  export type PurchaseVerificationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * The filter to search for the PurchaseVerification to update in case it exists.
-     */
-    where: PurchaseVerificationWhereUniqueInput
-    /**
-     * In case the PurchaseVerification found by the `where` argument doesn't exist, create a new PurchaseVerification with this data.
-     */
-    create: XOR<PurchaseVerificationCreateInput, PurchaseVerificationUncheckedCreateInput>
-    /**
-     * In case the PurchaseVerification was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PurchaseVerificationUpdateInput, PurchaseVerificationUncheckedUpdateInput>
-  }
-
-  /**
-   * PurchaseVerification delete
-   */
-  export type PurchaseVerificationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-    /**
-     * Filter which PurchaseVerification to delete.
-     */
-    where: PurchaseVerificationWhereUniqueInput
-  }
-
-  /**
-   * PurchaseVerification deleteMany
-   */
-  export type PurchaseVerificationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which PurchaseVerifications to delete
-     */
-    where?: PurchaseVerificationWhereInput
-    /**
-     * Limit how many PurchaseVerifications to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * PurchaseVerification without action
-   */
-  export type PurchaseVerificationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the PurchaseVerification
-     */
-    select?: PurchaseVerificationSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the PurchaseVerification
-     */
-    omit?: PurchaseVerificationOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PurchaseVerificationInclude<ExtArgs> | null
-  }
-
-
-  /**
    * Enums
    */
 
@@ -13460,16 +12282,6 @@ export namespace Prisma {
   };
 
   export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
-
-
-  export const PurchaseVerificationScalarFieldEnum: {
-    id: 'id',
-    orderId: 'orderId',
-    expiresAt: 'expiresAt',
-    createdAt: 'createdAt'
-  };
-
-  export type PurchaseVerificationScalarFieldEnum = (typeof PurchaseVerificationScalarFieldEnum)[keyof typeof PurchaseVerificationScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -13708,7 +12520,6 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     products?: ProductListRelationFilter
     items?: OrderItemListRelationFilter
-    PurchaseVerification?: PurchaseVerificationListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -13720,7 +12531,6 @@ export namespace Prisma {
     user?: UserOrderByWithRelationInput
     products?: ProductOrderByRelationAggregateInput
     items?: OrderItemOrderByRelationAggregateInput
-    PurchaseVerification?: PurchaseVerificationOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -13735,7 +12545,6 @@ export namespace Prisma {
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     products?: ProductListRelationFilter
     items?: OrderItemListRelationFilter
-    PurchaseVerification?: PurchaseVerificationListRelationFilter
   }, "id">
 
   export type OrderOrderByWithAggregationInput = {
@@ -14304,56 +13113,6 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Verification"> | Date | string
   }
 
-  export type PurchaseVerificationWhereInput = {
-    AND?: PurchaseVerificationWhereInput | PurchaseVerificationWhereInput[]
-    OR?: PurchaseVerificationWhereInput[]
-    NOT?: PurchaseVerificationWhereInput | PurchaseVerificationWhereInput[]
-    id?: UuidFilter<"PurchaseVerification"> | string
-    orderId?: UuidFilter<"PurchaseVerification"> | string
-    expiresAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-    createdAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-  }
-
-  export type PurchaseVerificationOrderByWithRelationInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-    order?: OrderOrderByWithRelationInput
-  }
-
-  export type PurchaseVerificationWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
-    AND?: PurchaseVerificationWhereInput | PurchaseVerificationWhereInput[]
-    OR?: PurchaseVerificationWhereInput[]
-    NOT?: PurchaseVerificationWhereInput | PurchaseVerificationWhereInput[]
-    orderId?: UuidFilter<"PurchaseVerification"> | string
-    expiresAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-    createdAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-    order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
-  }, "id">
-
-  export type PurchaseVerificationOrderByWithAggregationInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-    _count?: PurchaseVerificationCountOrderByAggregateInput
-    _max?: PurchaseVerificationMaxOrderByAggregateInput
-    _min?: PurchaseVerificationMinOrderByAggregateInput
-  }
-
-  export type PurchaseVerificationScalarWhereWithAggregatesInput = {
-    AND?: PurchaseVerificationScalarWhereWithAggregatesInput | PurchaseVerificationScalarWhereWithAggregatesInput[]
-    OR?: PurchaseVerificationScalarWhereWithAggregatesInput[]
-    NOT?: PurchaseVerificationScalarWhereWithAggregatesInput | PurchaseVerificationScalarWhereWithAggregatesInput[]
-    id?: UuidWithAggregatesFilter<"PurchaseVerification"> | string
-    orderId?: UuidWithAggregatesFilter<"PurchaseVerification"> | string
-    expiresAt?: DateTimeWithAggregatesFilter<"PurchaseVerification"> | Date | string
-    createdAt?: DateTimeWithAggregatesFilter<"PurchaseVerification"> | Date | string
-  }
-
   export type ProductCreateInput = {
     id?: string
     image?: ProductCreateimageInput | string[]
@@ -14479,7 +13238,6 @@ export namespace Prisma {
     user: UserCreateNestedOneWithoutOrdersInput
     products?: ProductCreateNestedManyWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -14490,7 +13248,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutOrdersInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -14501,7 +13258,6 @@ export namespace Prisma {
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     products?: ProductUpdateManyWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -14512,7 +13268,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutOrdersNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -15132,54 +13887,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PurchaseVerificationCreateInput = {
-    id?: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-    order: OrderCreateNestedOneWithoutPurchaseVerificationInput
-  }
-
-  export type PurchaseVerificationUncheckedCreateInput = {
-    id?: string
-    orderId: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-  }
-
-  export type PurchaseVerificationUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    order?: OrderUpdateOneRequiredWithoutPurchaseVerificationNestedInput
-  }
-
-  export type PurchaseVerificationUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PurchaseVerificationCreateManyInput = {
-    id?: string
-    orderId: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-  }
-
-  export type PurchaseVerificationUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PurchaseVerificationUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    orderId?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15437,17 +14144,7 @@ export namespace Prisma {
     none?: ProductWhereInput
   }
 
-  export type PurchaseVerificationListRelationFilter = {
-    every?: PurchaseVerificationWhereInput
-    some?: PurchaseVerificationWhereInput
-    none?: PurchaseVerificationWhereInput
-  }
-
   export type ProductOrderByRelationAggregateInput = {
-    _count?: SortOrder
-  }
-
-  export type PurchaseVerificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15874,27 +14571,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type PurchaseVerificationCountOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type PurchaseVerificationMaxOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type PurchaseVerificationMinOrderByAggregateInput = {
-    id?: SortOrder
-    orderId?: SortOrder
-    expiresAt?: SortOrder
-    createdAt?: SortOrder
-  }
-
   export type ProductCreateimageInput = {
     set: string[]
   }
@@ -16096,13 +14772,6 @@ export namespace Prisma {
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
-  export type PurchaseVerificationCreateNestedManyWithoutOrderInput = {
-    create?: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput> | PurchaseVerificationCreateWithoutOrderInput[] | PurchaseVerificationUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: PurchaseVerificationCreateOrConnectWithoutOrderInput | PurchaseVerificationCreateOrConnectWithoutOrderInput[]
-    createMany?: PurchaseVerificationCreateManyOrderInputEnvelope
-    connect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-  }
-
   export type ProductUncheckedCreateNestedManyWithoutOrdersInput = {
     create?: XOR<ProductCreateWithoutOrdersInput, ProductUncheckedCreateWithoutOrdersInput> | ProductCreateWithoutOrdersInput[] | ProductUncheckedCreateWithoutOrdersInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutOrdersInput | ProductCreateOrConnectWithoutOrdersInput[]
@@ -16114,13 +14783,6 @@ export namespace Prisma {
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
-  }
-
-  export type PurchaseVerificationUncheckedCreateNestedManyWithoutOrderInput = {
-    create?: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput> | PurchaseVerificationCreateWithoutOrderInput[] | PurchaseVerificationUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: PurchaseVerificationCreateOrConnectWithoutOrderInput | PurchaseVerificationCreateOrConnectWithoutOrderInput[]
-    createMany?: PurchaseVerificationCreateManyOrderInputEnvelope
-    connect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -16158,20 +14820,6 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
-  export type PurchaseVerificationUpdateManyWithoutOrderNestedInput = {
-    create?: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput> | PurchaseVerificationCreateWithoutOrderInput[] | PurchaseVerificationUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: PurchaseVerificationCreateOrConnectWithoutOrderInput | PurchaseVerificationCreateOrConnectWithoutOrderInput[]
-    upsert?: PurchaseVerificationUpsertWithWhereUniqueWithoutOrderInput | PurchaseVerificationUpsertWithWhereUniqueWithoutOrderInput[]
-    createMany?: PurchaseVerificationCreateManyOrderInputEnvelope
-    set?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    disconnect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    delete?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    connect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    update?: PurchaseVerificationUpdateWithWhereUniqueWithoutOrderInput | PurchaseVerificationUpdateWithWhereUniqueWithoutOrderInput[]
-    updateMany?: PurchaseVerificationUpdateManyWithWhereWithoutOrderInput | PurchaseVerificationUpdateManyWithWhereWithoutOrderInput[]
-    deleteMany?: PurchaseVerificationScalarWhereInput | PurchaseVerificationScalarWhereInput[]
-  }
-
   export type ProductUncheckedUpdateManyWithoutOrdersNestedInput = {
     create?: XOR<ProductCreateWithoutOrdersInput, ProductUncheckedCreateWithoutOrdersInput> | ProductCreateWithoutOrdersInput[] | ProductUncheckedCreateWithoutOrdersInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutOrdersInput | ProductCreateOrConnectWithoutOrdersInput[]
@@ -16197,20 +14845,6 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
-  }
-
-  export type PurchaseVerificationUncheckedUpdateManyWithoutOrderNestedInput = {
-    create?: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput> | PurchaseVerificationCreateWithoutOrderInput[] | PurchaseVerificationUncheckedCreateWithoutOrderInput[]
-    connectOrCreate?: PurchaseVerificationCreateOrConnectWithoutOrderInput | PurchaseVerificationCreateOrConnectWithoutOrderInput[]
-    upsert?: PurchaseVerificationUpsertWithWhereUniqueWithoutOrderInput | PurchaseVerificationUpsertWithWhereUniqueWithoutOrderInput[]
-    createMany?: PurchaseVerificationCreateManyOrderInputEnvelope
-    set?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    disconnect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    delete?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    connect?: PurchaseVerificationWhereUniqueInput | PurchaseVerificationWhereUniqueInput[]
-    update?: PurchaseVerificationUpdateWithWhereUniqueWithoutOrderInput | PurchaseVerificationUpdateWithWhereUniqueWithoutOrderInput[]
-    updateMany?: PurchaseVerificationUpdateManyWithWhereWithoutOrderInput | PurchaseVerificationUpdateManyWithWhereWithoutOrderInput[]
-    deleteMany?: PurchaseVerificationScalarWhereInput | PurchaseVerificationScalarWhereInput[]
   }
 
   export type OrderCreateNestedOneWithoutItemsInput = {
@@ -16525,20 +15159,6 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAccountsInput, UserUpdateWithoutAccountsInput>, UserUncheckedUpdateWithoutAccountsInput>
   }
 
-  export type OrderCreateNestedOneWithoutPurchaseVerificationInput = {
-    create?: XOR<OrderCreateWithoutPurchaseVerificationInput, OrderUncheckedCreateWithoutPurchaseVerificationInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutPurchaseVerificationInput
-    connect?: OrderWhereUniqueInput
-  }
-
-  export type OrderUpdateOneRequiredWithoutPurchaseVerificationNestedInput = {
-    create?: XOR<OrderCreateWithoutPurchaseVerificationInput, OrderUncheckedCreateWithoutPurchaseVerificationInput>
-    connectOrCreate?: OrderCreateOrConnectWithoutPurchaseVerificationInput
-    upsert?: OrderUpsertWithoutPurchaseVerificationInput
-    connect?: OrderWhereUniqueInput
-    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutPurchaseVerificationInput, OrderUpdateWithoutPurchaseVerificationInput>, OrderUncheckedUpdateWithoutPurchaseVerificationInput>
-  }
-
   export type NestedUuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16768,7 +15388,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutProductsInput = {
@@ -16778,7 +15397,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutProductsInput = {
@@ -17060,28 +15678,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PurchaseVerificationCreateWithoutOrderInput = {
-    id?: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-  }
-
-  export type PurchaseVerificationUncheckedCreateWithoutOrderInput = {
-    id?: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-  }
-
-  export type PurchaseVerificationCreateOrConnectWithoutOrderInput = {
-    where: PurchaseVerificationWhereUniqueInput
-    create: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput>
-  }
-
-  export type PurchaseVerificationCreateManyOrderInputEnvelope = {
-    data: PurchaseVerificationCreateManyOrderInput | PurchaseVerificationCreateManyOrderInput[]
-    skipDuplicates?: boolean
-  }
-
   export type UserUpsertWithoutOrdersInput = {
     update: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
     create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
@@ -17173,32 +15769,6 @@ export namespace Prisma {
     data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutOrderInput>
   }
 
-  export type PurchaseVerificationUpsertWithWhereUniqueWithoutOrderInput = {
-    where: PurchaseVerificationWhereUniqueInput
-    update: XOR<PurchaseVerificationUpdateWithoutOrderInput, PurchaseVerificationUncheckedUpdateWithoutOrderInput>
-    create: XOR<PurchaseVerificationCreateWithoutOrderInput, PurchaseVerificationUncheckedCreateWithoutOrderInput>
-  }
-
-  export type PurchaseVerificationUpdateWithWhereUniqueWithoutOrderInput = {
-    where: PurchaseVerificationWhereUniqueInput
-    data: XOR<PurchaseVerificationUpdateWithoutOrderInput, PurchaseVerificationUncheckedUpdateWithoutOrderInput>
-  }
-
-  export type PurchaseVerificationUpdateManyWithWhereWithoutOrderInput = {
-    where: PurchaseVerificationScalarWhereInput
-    data: XOR<PurchaseVerificationUpdateManyMutationInput, PurchaseVerificationUncheckedUpdateManyWithoutOrderInput>
-  }
-
-  export type PurchaseVerificationScalarWhereInput = {
-    AND?: PurchaseVerificationScalarWhereInput | PurchaseVerificationScalarWhereInput[]
-    OR?: PurchaseVerificationScalarWhereInput[]
-    NOT?: PurchaseVerificationScalarWhereInput | PurchaseVerificationScalarWhereInput[]
-    id?: UuidFilter<"PurchaseVerification"> | string
-    orderId?: UuidFilter<"PurchaseVerification"> | string
-    expiresAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-    createdAt?: DateTimeFilter<"PurchaseVerification"> | Date | string
-  }
-
   export type OrderCreateWithoutItemsInput = {
     id?: string
     totalCostCents: number
@@ -17206,7 +15776,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     user: UserCreateNestedOneWithoutOrdersInput
     products?: ProductCreateNestedManyWithoutOrdersInput
-    PurchaseVerification?: PurchaseVerificationCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -17216,7 +15785,6 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutOrdersInput
-    PurchaseVerification?: PurchaseVerificationUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -17281,7 +15849,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     products?: ProductUpdateManyWithoutOrdersNestedInput
-    PurchaseVerification?: PurchaseVerificationUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -17291,7 +15858,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutOrdersNestedInput
-    PurchaseVerification?: PurchaseVerificationUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type ProductUpsertWithoutOrderItemsInput = {
@@ -17672,7 +16238,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutUserInput = {
@@ -17682,7 +16247,6 @@ export namespace Prisma {
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutOrdersInput
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-    PurchaseVerification?: PurchaseVerificationUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutUserInput = {
@@ -17976,62 +16540,6 @@ export namespace Prisma {
     cartItems?: CartItemUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type OrderCreateWithoutPurchaseVerificationInput = {
-    id?: string
-    totalCostCents: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutOrdersInput
-    products?: ProductCreateNestedManyWithoutOrdersInput
-    items?: OrderItemCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderUncheckedCreateWithoutPurchaseVerificationInput = {
-    id?: string
-    userId: string
-    totalCostCents: number
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    products?: ProductUncheckedCreateNestedManyWithoutOrdersInput
-    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
-  }
-
-  export type OrderCreateOrConnectWithoutPurchaseVerificationInput = {
-    where: OrderWhereUniqueInput
-    create: XOR<OrderCreateWithoutPurchaseVerificationInput, OrderUncheckedCreateWithoutPurchaseVerificationInput>
-  }
-
-  export type OrderUpsertWithoutPurchaseVerificationInput = {
-    update: XOR<OrderUpdateWithoutPurchaseVerificationInput, OrderUncheckedUpdateWithoutPurchaseVerificationInput>
-    create: XOR<OrderCreateWithoutPurchaseVerificationInput, OrderUncheckedCreateWithoutPurchaseVerificationInput>
-    where?: OrderWhereInput
-  }
-
-  export type OrderUpdateToOneWithWhereWithoutPurchaseVerificationInput = {
-    where?: OrderWhereInput
-    data: XOR<OrderUpdateWithoutPurchaseVerificationInput, OrderUncheckedUpdateWithoutPurchaseVerificationInput>
-  }
-
-  export type OrderUpdateWithoutPurchaseVerificationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    totalCostCents?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutOrdersNestedInput
-    products?: ProductUpdateManyWithoutOrdersNestedInput
-    items?: OrderItemUpdateManyWithoutOrderNestedInput
-  }
-
-  export type OrderUncheckedUpdateWithoutPurchaseVerificationInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    userId?: StringFieldUpdateOperationsInput | string
-    totalCostCents?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    products?: ProductUncheckedUpdateManyWithoutOrdersNestedInput
-    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-  }
-
   export type CartItemCreateManyProductInput = {
     id?: string
     userId: string
@@ -18064,7 +16572,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutProductsInput = {
@@ -18074,7 +16581,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutProductsInput = {
@@ -18174,12 +16680,6 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type PurchaseVerificationCreateManyOrderInput = {
-    id?: string
-    expiresAt: Date | string
-    createdAt?: Date | string
-  }
-
   export type ProductUpdateWithoutOrdersInput = {
     id?: StringFieldUpdateOperationsInput | string
     image?: ProductUpdateimageInput | string[]
@@ -18269,24 +16769,6 @@ export namespace Prisma {
     priceCents?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PurchaseVerificationUpdateWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PurchaseVerificationUncheckedUpdateWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type PurchaseVerificationUncheckedUpdateManyWithoutOrderInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartItemCreateManyDeliveryOptionInput = {
@@ -18458,7 +16940,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutUserInput = {
@@ -18468,7 +16949,6 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutOrdersNestedInput
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
-    PurchaseVerification?: PurchaseVerificationUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutUserInput = {

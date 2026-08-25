@@ -36,7 +36,7 @@ model Order {
   user     User      @relation(fields: [userId], references: [id], onDelete: Restrict)
   products Product[]
   items    OrderItem[]
-  PurchaseVerification PurchaseVerification[]
+
 }
 
 model OrderItem {
@@ -155,14 +155,5 @@ model Verification {
   @@index([identifier])
 }
 
-model PurchaseVerification {
-  id       String   @id @default(uuid()) @db.Uuid
-  orderId  String   @db.Uuid
-  expiresAt DateTime
-  createdAt DateTime @default(now())
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
-  @@index([orderId])
-}
 
