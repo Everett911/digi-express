@@ -9,7 +9,7 @@ import { useFormStatus } from "react-dom";
 import Form from "next/form";
 
 import Image from "next/image";
-import type { Product } from "@prisma/client";
+import type { Product } from "../../../.prisma/client/client";
 
 function ProductForm({ product }: { product?: Product | null }) {
   const [error, action] = useActionState(
