@@ -31,9 +31,6 @@ export function ProductRowActions({
 
       <DropdownMenu.Content>
         <DropdownMenu.Item asChild>
-          <Link href={`/admin/products/${productId}/download`}>Download</Link>
-        </DropdownMenu.Item>
-        <DropdownMenu.Item asChild>
           <Link href={`/admin/products/${productId}/edit`}>Edit</Link>
         </DropdownMenu.Item>
         <ActiveToggleDropdownItem
