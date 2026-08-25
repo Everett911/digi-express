@@ -9,13 +9,27 @@ import Logo from "@/src/assets/images/logo.png";
 import MobileLogo from "@/src/assets/images/mobile-logo.png";
 import HeaderTabs from "./HeaderTabs";
 import ProfileDropdown from "./ProfileDropdown";
-import { type auth } from "@/lib/auth";
-import styles from "./Header.module.css";
 
-type Session = typeof auth.$Infer.Session;
+import styles from "./Header.module.css";
+import { authClient } from "@/lib/auth-client";
+
+type Session = typeof authClient.$Infer.Session;
+type ExtendedUser = {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  image?: string | null;
+  role: "admin" | "customer" | string;
+};
 
 interface HeaderProps {
-  session: Session | null;
+  session: {
+    user: ExtendedUser;
+    session: Session | null;
+  } | null;
   totalQuantity: number;
 }
 

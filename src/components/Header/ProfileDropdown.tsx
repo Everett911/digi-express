@@ -18,10 +18,9 @@ type ExtendedUser = {
   createdAt: Date;
   updatedAt: Date;
   image?: string | null;
-  role: "admin" | "customer" | string; // ✅ Forcefully inject the role attribute here
+  role: "admin" | "customer" | string;
 };
 
-// 2. Override the inferred type shape
 interface ProfileDropdownProps {
   session: {
     user: ExtendedUser;
