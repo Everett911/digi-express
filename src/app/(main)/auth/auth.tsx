@@ -1,13 +1,10 @@
 "use client";
-
 import { useState } from "react";
 import styles from "./auth.module.css";
 import Footer from "@/src/components/Footer/Footer";
-
-import { signIn, signInSocial, signUp } from "@/lib/db/auth.action";
+import { authClient } from "@/lib/auth-client";
 import { CircleX, LoaderCircleIcon } from "lucide-react";
 import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
-import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export default function AuthClientPage() {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -22,14 +19,11 @@ export default function AuthClientPage() {
     setError("");
 
     try {
-      await signInSocial(provider);
-
-      setIsLoading(false);
+      await authClient.signIn.social({
+        provider,
+        callbackURL: "/",
+      });
     } catch (err) {
-      if (isRedirectError(err)) {
-        throw err;
-      }
-
       setError(
         `Error authenticating with ${provider}: ${
           err instanceof Error ? err.message : "Unknown error"
@@ -46,14 +40,25 @@ export default function AuthClientPage() {
 
     try {
       if (isSignIn) {
-        const result = await signIn(email, password);
-        if (!result.data?.user) {
-          setError("Invalid Email or Password");
+        const { error: authError } = await authClient.signIn.email({
+          email,
+          password,
+          callbackURL: "/",
+        });
+
+        if (authError) {
+          setError(authError.message || "Invalid Email or Password");
         }
       } else {
-        const result = await signUp(email, password, name);
-        if (!result.data?.user) {
-          setError("Cannot create account");
+        const { error: authError } = await authClient.signUp.email({
+          email,
+          password,
+          name,
+          callbackURL: "/",
+        });
+
+        if (authError) {
+          setError(authError.message || "Cannot create account");
         }
       }
     } catch (err) {
@@ -78,11 +83,10 @@ export default function AuthClientPage() {
             <p className={styles.subtitle}>
               {isSignIn
                 ? "Sign in to your account to continue"
-                : "Sign up to get started with better-auth"}
+                : "Sign up to get started with shopping"}
             </p>
           </div>
 
-          {/* Error Display */}
           {error && (
             <div className={styles.errorContainer}>
               <div className={styles.flexBox}>
@@ -96,7 +100,6 @@ export default function AuthClientPage() {
             </div>
           )}
 
-          {/* Social Authentication */}
           <div className={styles.socialContainer}>
             <button
               onClick={() => handleSocialAuth("google")}
@@ -106,7 +109,6 @@ export default function AuthClientPage() {
               <SiGoogle size={20} className={styles.iconButton} />
               Continue with Google
             </button>
-
             <button
               onClick={() => handleSocialAuth("github")}
               disabled={isLoading}
@@ -116,7 +118,6 @@ export default function AuthClientPage() {
               Continue with GitHub
             </button>
           </div>
-
           <div className={styles.dividerContainer}>
             <div className={styles.lineWrapper}>
               <div className={styles.horizontalLine} />
@@ -125,8 +126,6 @@ export default function AuthClientPage() {
               <span className={styles.dividerText}>Or continue with</span>
             </div>
           </div>
-
-          {/* Email/Password Form */}
           <form onSubmit={handleEmailAuth} className={styles.formContainer}>
             {!isSignIn && (
               <div className={styles.inputGroup}>
@@ -199,14 +198,13 @@ export default function AuthClientPage() {
             </button>
           </form>
 
-          {/* Toggle between Sign In and Sign Up */}
           <div className={styles.toggleContainer}>
             <button
               type="button"
               onClick={() => {
                 setIsSignIn(!isSignIn);
-                setError(""); // Clear any previous errors
-                setName(""); // Clear name when switching modes
+                setError("");
+                setName("");
               }}
               className={styles.toggleButton}
             >
