@@ -27,7 +27,7 @@ export async function createPaymentIntentAction() {
     }
 
     const productCost = cartItems.reduce(
-      (acc, i) => acc + i.product.priceCents * i.quantity,
+      (acc: number, i) => acc + i.product.priceCents * i.quantity,
       0,
     );
 
