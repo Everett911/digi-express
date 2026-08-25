@@ -1,18 +1,62 @@
 "use client";
 import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./auth.module.css";
 import Footer from "@/src/components/Footer/Footer";
 import { authClient } from "@/lib/auth-client";
 import { CircleX, LoaderCircleIcon } from "lucide-react";
 import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 
+const AUTH_ERROR_MESSAGES: Record<string, string> = {
+  account_not_linked:
+    "This email is already registered with a different sign-in method. Sign in with that method, or use email & password.",
+  access_denied: "Authentication was cancelled.",
+  verification_failed: "Email verification failed or the link has expired.",
+};
+
 export default function AuthClientPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [isSignIn, setIsSignIn] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resendStatus, setResendStatus] = useState("");
+
+  const urlError = searchParams.get("error");
+  const urlErrorMessage = urlError
+    ? AUTH_ERROR_MESSAGES[urlError] ??
+      "Something went wrong during authentication. Please try again."
+    : "";
+  const displayedError = error || urlErrorMessage;
+
+  const handleResendVerification = async () => {
+    if (!email) {
+      setError("Enter your email address first to resend the verification link.");
+      return;
+    }
+    setIsLoading(true);
+    setError("");
+    setResendStatus("");
+    try {
+      await authClient.sendVerificationEmail({
+        email,
+        callbackURL: "/auth",
+      });
+      setResendStatus("Verification email sent. Check your inbox.");
+    } catch (err) {
+      setError(
+        `Could not resend verification email: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`,
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSocialAuth = async (provider: "google" | "github") => {
     setIsLoading(true);
@@ -48,6 +92,8 @@ export default function AuthClientPage() {
 
         if (authError) {
           setError(authError.message || "Invalid Email or Password");
+        } else {
+          router.push("/");
         }
       } else {
         const { error: authError } = await authClient.signUp.email({
@@ -59,6 +105,8 @@ export default function AuthClientPage() {
 
         if (authError) {
           setError(authError.message || "Cannot create account");
+        } else {
+          setNeedsVerification(true);
         }
       }
     } catch (err) {
@@ -87,16 +135,37 @@ export default function AuthClientPage() {
             </p>
           </div>
 
-          {error && (
+          {displayedError && (
             <div className={styles.errorContainer}>
               <div className={styles.flexBox}>
                 <div className={styles.iconWrapper}>
                   <CircleX color="red" size={20} />
                 </div>
                 <div className={styles.textWrapper}>
-                  <p className={styles.errorText}>{error}</p>
+                  <p className={styles.errorText}>{displayedError}</p>
                 </div>
               </div>
+            </div>
+          )}
+
+          {needsVerification && !error && (
+            <div className={styles.noticeContainer}>
+              <p className={styles.noticeText}>
+                We&apos;ve sent a verification link to{" "}
+                <strong>{email}</strong>. Please check your inbox (and spam
+                folder) to activate your account.
+              </p>
+              {resendStatus && (
+                <p className={styles.noticeText}>{resendStatus}</p>
+              )}
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                disabled={isLoading}
+                className={styles.resendButton}
+              >
+                Resend verification email
+              </button>
             </div>
           )}
 

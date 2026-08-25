@@ -265,6 +265,40 @@
     transform: rotate(360deg);
   }
 }
+.noticeContainer {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.noticeText {
+  font-size: 14px;
+  color: #1e40af;
+  margin: 0;
+}
+
+.noticeText + .noticeText {
+  margin-top: 8px;
+}
+
+.resendButton {
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--button-primary);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.resendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .toggleContainer {
   text-align: center;
 }

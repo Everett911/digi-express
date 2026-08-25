@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import AuthClientPage from "./auth";
@@ -7,5 +8,9 @@ export default async function AuthPage() {
     headers: await headers(),
   });
 
-  return <AuthClientPage />;
+  return (
+    <Suspense>
+      <AuthClientPage />
+    </Suspense>
+  );
 }
