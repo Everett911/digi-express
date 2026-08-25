@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = new URL(request.url);
@@ -8,16 +7,27 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const session = await auth.api.getSession({
-    headers: request.headers,
-  });
+  const authUrl = new URL("/api/auth/get-session", request.url);
 
-  if (!session) {
+  try {
+    const res = await fetch(authUrl, {
+      headers: {
+        cookie: request.headers.get("cookie") || "",
+      },
+    });
+
+    const session = await res.json();
+
+    if (!session || !session.user) {
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
+
+    if (session.user.role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  } catch (error) {
+    console.error("Middleware Auth Verification Error:", error);
     return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
-  if (session.user.role !== "admin") {
-    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
