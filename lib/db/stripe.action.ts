@@ -5,6 +5,40 @@ import Stripe from "stripe";
 import { auth } from "../auth";
 import { prisma } from "@/lib/prisma";
 
+type Cart = {
+  product: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    name: string;
+    image: string[];
+    color: string[];
+    size: string[];
+    description: string | null;
+    priceCents: number;
+    brand: string;
+    keywords: string[];
+    isAvailableForPurchase: boolean;
+  };
+  deliveryOption: {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    priceCents: number;
+    deliveryDays: number;
+  };
+} & {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  productId: string;
+  quantity: number;
+  color: string | null;
+  size: string | null;
+  deliveryOptionId: string;
+};
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function createPaymentIntentAction() {
@@ -27,7 +61,7 @@ export async function createPaymentIntentAction() {
     }
 
     const productCost = cartItems.reduce(
-      (acc: number, i) => acc + i.product.priceCents * i.quantity,
+      (acc: number, i: Cart) => acc + i.product.priceCents * i.quantity,
       0,
     );
 
