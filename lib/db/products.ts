@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import { cache } from "@/lib/cache";
-import type { Product } from "@/prisma/generated/client";
+import type { Product } from "@prisma/client";
 import { mapPriceGroupsToPrisma } from "@/lib/utils/priceMapper";
 import { buildProductSearchWhere } from "../utils/productSearch";
 

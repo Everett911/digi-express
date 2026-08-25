@@ -7,7 +7,7 @@ import SizeButton from "@/src/components/Button/SizeButton";
 import { formatCurrency } from "@/src/utils/formatters";
 import QuantitySelector from "@/src/components/QuantitySelector/QuantitySelector";
 import { addItemToCart } from "@/lib/db/cart.action";
-import { Product } from "@/prisma/generated/client";
+import { Product } from "@prisma/client";
 
 export default function ProductDetailContent({
   product,
