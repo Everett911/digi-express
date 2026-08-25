@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect, KeyboardEvent, Activity } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signOut } from "@/lib/db/auth.action";
-import { auth } from "@/lib/auth";
+
+import { authClient } from "@/lib/auth-client";
+import { type auth } from "@/lib/auth";
 import { User, CircleUser } from "lucide-react";
 import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/src/utils/truncatestring";
@@ -43,9 +44,15 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
   const handleSignOut = async () => {
-    await signOut();
-    setIsOpen(false);
-    router.push("/auth");
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          setIsOpen(false);
+          router.push("/auth");
+          router.refresh();
+        },
+      },
+    });
   };
 
   return (
@@ -54,7 +61,6 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
       ref={containerRef}
       onKeyDown={handleKeyDown}
     >
-      {/* Trigger Button */}
       <button
         className={styles.trigger}
         onClick={toggleMenu}
