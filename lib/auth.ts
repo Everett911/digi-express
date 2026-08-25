@@ -17,6 +17,13 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google", "github", "credential"],
+      requireLocalEmailVerified: false,
+    },
+  },
   user: {
     additionalFields: {
       role: {
