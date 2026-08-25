@@ -65,7 +65,7 @@ export async function createPaymentIntentAction() {
       0,
     );
 
-    const shippingCost = cartItems.reduce((max, item) => {
+    const shippingCost = cartItems.reduce((max: number, item: Cart) => {
       const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
       return currentItemShipping > max ? currentItemShipping : max;
     }, 0);

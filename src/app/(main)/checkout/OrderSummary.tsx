@@ -11,8 +11,6 @@ import {
 import QuantitySelector from "@/src/components/QuantitySelector/QuantitySelector";
 import { useState, useTransition } from "react";
 
-// 1. Defined a precise type for a single cart item from your array
-
 type Props = {
   carts:
     | ({
