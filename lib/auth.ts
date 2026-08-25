@@ -7,6 +7,7 @@ const authOptions = {
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
   },
   socialProviders: {
     github: {
