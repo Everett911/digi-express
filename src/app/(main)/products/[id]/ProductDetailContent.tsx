@@ -3,10 +3,11 @@ import { Activity, useState, useTransition } from "react";
 import styles from "./detail.module.css";
 import ColorButton from "@/src/components/Button/ColorButton";
 import SizeButton from "@/src/components/Button/SizeButton";
-import { Product } from "@/.prisma/client/client";
+
 import { formatCurrency } from "@/src/utils/formatters";
 import QuantitySelector from "@/src/components/QuantitySelector/QuantitySelector";
 import { addItemToCart } from "@/lib/db/cart.action";
+import { Product } from "@prisma/client";
 
 export default function ProductDetailContent({
   product,
