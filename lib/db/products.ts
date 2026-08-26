@@ -62,8 +62,9 @@ async function fetchProductsFromDb(
       ? [searchParams.type]
       : searchParams.type || []
   ).map((val) => val.trim().toLowerCase());
+  const isFilteringForMen = types.includes("men");
+  const isFilteringForWomen = types.includes("women");
 
-  // 2. Build the conditions array dynamically (Removes all empty {} bugs)
   const conditions = [
     searchQuery ? buildProductSearchWhere(searchQuery) : null,
     sizes.length > 0 ? { size: { hasSome: sizes } } : null,
@@ -78,6 +79,26 @@ async function fetchProductsFromDb(
             { keywords: { has: t.toUpperCase() } },
             { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
           ]),
+        }
+      : null,
+    isFilteringForMen && !isFilteringForWomen
+      ? {
+          NOT: [
+            { keywords: { has: "women" } },
+            { keywords: { has: "Women" } },
+            { keywords: { has: "WOMEN" } },
+          ],
+        }
+      : null,
+
+    // 3. NEW Strict Women's Filtering Rule
+    isFilteringForWomen && !isFilteringForMen
+      ? {
+          NOT: [
+            { keywords: { has: "men" } },
+            { keywords: { has: "Men" } },
+            { keywords: { has: "MEN" } },
+          ],
         }
       : null,
   ].filter(Boolean) as Prisma.ProductWhereInput[];
