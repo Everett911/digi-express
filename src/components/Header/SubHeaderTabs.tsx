@@ -18,7 +18,7 @@ const HOME_BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
 const BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
 const TYPE_LINKS = [
   { name: "Personal Care", link: "personalcare" },
-  { name: "Footwear", link: "clothing" },
+  { name: "Clothing", link: "clothing" },
   { name: "Accessories", link: "accessories" },
   { name: "Health, Fitness & Wellness", link: "outdoor" },
   { name: "Tech & Gadgets", link: "gadgets" },
@@ -64,7 +64,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
             const displayName = isObject ? item.name : item;
 
             const queryToken = isObject ? item.link : item;
-            const targetUrl = `/products?type=${categoryKey},${queryToken}`;
+            const targetUrl = `/products?type=${categoryKey}&type=${queryToken}`;
 
             return (
               <li key={displayName}>

@@ -46,9 +46,9 @@ async function fetchProductsFromDb(
 
   const types = (
     typeof searchParams.type === "string"
-      ? searchParams.type.split(",")
-      : (searchParams.type || []).flatMap((val) => val.split(","))
-  ).map((val) => val.trim().toLowerCase());
+      ? [searchParams.type]
+      : searchParams.type || []
+  ).map((val) => val.toLowerCase());
 
   const brands = (
     typeof searchParams.brand === "string"
