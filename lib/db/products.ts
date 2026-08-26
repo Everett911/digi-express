@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import { cache } from "@/lib/cache";
-import type { Product } from "@prisma/client";
+import type { Prisma, Product } from "@prisma/client";
 import { mapPriceGroupsToPrisma } from "@/lib/utils/priceMapper";
 import { buildProductSearchWhere } from "../utils/productSearch";
 
@@ -44,12 +44,6 @@ async function fetchProductsFromDb(
       : searchParams.color || []
   ).map((val) => val.toLowerCase());
 
-  const types = (
-    typeof searchParams.type === "string"
-      ? [searchParams.type]
-      : searchParams.type || []
-  ).map((val) => val.toLowerCase());
-
   const brands = (
     typeof searchParams.brand === "string"
       ? [searchParams.brand]
@@ -63,23 +57,33 @@ async function fetchProductsFromDb(
 
   const priceFilters = mapPriceGroupsToPrisma(priceGroups);
 
+  const types = (
+    typeof searchParams.type === "string"
+      ? [searchParams.type]
+      : searchParams.type || []
+  ).map((val) => val.trim().toLowerCase());
+
+  // 2. Build the conditions array dynamically (Removes all empty {} bugs)
+  const conditions = [
+    searchQuery ? buildProductSearchWhere(searchQuery) : null,
+    sizes.length > 0 ? { size: { hasSome: sizes } } : null,
+    colors.length > 0 ? { color: { hasSome: colors } } : null,
+    brands.length > 0 ? { brand: { in: brands } } : null,
+    priceFilters.length > 0 ? { OR: priceFilters } : null,
+
+    types.length > 0
+      ? {
+          OR: types.flatMap((t) => [
+            { keywords: { has: t } },
+            { keywords: { has: t.toUpperCase() } },
+            { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
+          ]),
+        }
+      : null,
+  ].filter(Boolean) as Prisma.ProductWhereInput[];
+
   return await prisma.product.findMany({
-    where: {
-      AND: [
-        searchQuery ? buildProductSearchWhere(searchQuery) : {},
-        sizes.length > 0 ? { size: { hasSome: sizes } } : {},
-        colors.length > 0 ? { color: { hasSome: colors } } : {},
-        types.length > 0
-          ? {
-              OR: types.map((t) => ({
-                keywords: { has: t },
-              })),
-            }
-          : {},
-        brands.length > 0 ? { brand: { in: brands } } : {},
-        priceFilters.length > 0 ? { OR: priceFilters } : {},
-      ],
-    },
+    where: conditions.length > 0 ? { AND: conditions } : {},
     orderBy: { createdAt: "desc" },
   });
 }
