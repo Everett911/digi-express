@@ -57,13 +57,19 @@ async function fetchProductsFromDb(
 
   const priceFilters = mapPriceGroupsToPrisma(priceGroups);
 
-  const types = (
+  const rawTypes = (
     typeof searchParams.type === "string"
       ? [searchParams.type]
       : searchParams.type || []
   ).map((val) => val.trim().toLowerCase());
-  const isFilteringForMen = types.includes("men");
-  const isFilteringForWomen = types.includes("women");
+
+  const isFilteringForMen = rawTypes.includes("men");
+  const isFilteringForWomen = rawTypes.includes("women");
+
+  // Filter out gender tags from generic keyword matching to prevent overlap bugs
+  const structuralKeywords = rawTypes.filter(
+    (t) => t !== "men" && t !== "women",
+  );
 
   const conditions = [
     searchQuery ? buildProductSearchWhere(searchQuery) : null,
@@ -72,33 +78,55 @@ async function fetchProductsFromDb(
     brands.length > 0 ? { brand: { in: brands } } : null,
     priceFilters.length > 0 ? { OR: priceFilters } : null,
 
-    types.length > 0
-      ? {
-          OR: types.flatMap((t) => [
-            { keywords: { has: t } },
-            { keywords: { has: t.toUpperCase() } },
-            { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
-          ]),
-        }
-      : null,
     isFilteringForMen && !isFilteringForWomen
       ? {
-          NOT: [
-            { keywords: { has: "women" } },
-            { keywords: { has: "Women" } },
-            { keywords: { has: "WOMEN" } },
+          AND: [
+            {
+              OR: [
+                { keywords: { has: "men" } },
+                { keywords: { has: "Men" } },
+                { keywords: { has: "MEN" } },
+              ],
+            },
+            {
+              NOT: [
+                { keywords: { has: "women" } },
+                { keywords: { has: "Women" } },
+                { keywords: { has: "WOMEN" } },
+              ],
+            },
           ],
         }
       : null,
 
-    // 3. NEW Strict Women's Filtering Rule
     isFilteringForWomen && !isFilteringForMen
       ? {
-          NOT: [
-            { keywords: { has: "men" } },
-            { keywords: { has: "Men" } },
-            { keywords: { has: "MEN" } },
+          AND: [
+            {
+              OR: [
+                { keywords: { has: "women" } },
+                { keywords: { has: "Women" } },
+                { keywords: { has: "WOMEN" } },
+              ],
+            },
+            {
+              NOT: [
+                { keywords: { has: "men" } },
+                { keywords: { has: "Men" } },
+                { keywords: { has: "MEN" } },
+              ],
+            },
           ],
+        }
+      : null,
+
+    structuralKeywords.length > 0
+      ? {
+          OR: structuralKeywords.flatMap((t) => [
+            { keywords: { has: t } },
+            { keywords: { has: t.toUpperCase() } },
+            { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
+          ]),
         }
       : null,
   ].filter(Boolean) as Prisma.ProductWhereInput[];
