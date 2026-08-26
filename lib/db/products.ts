@@ -69,7 +69,13 @@ async function fetchProductsFromDb(
         searchQuery ? buildProductSearchWhere(searchQuery) : {},
         sizes.length > 0 ? { size: { hasSome: sizes } } : {},
         colors.length > 0 ? { color: { hasSome: colors } } : {},
-        types.length > 0 ? { keywords: { hasSome: types } } : {},
+        types.length > 0
+          ? {
+              OR: types.map((t) => ({
+                keywords: { has: t },
+              })),
+            }
+          : {},
         brands.length > 0 ? { brand: { in: brands } } : {},
         priceFilters.length > 0 ? { OR: priceFilters } : {},
       ],
