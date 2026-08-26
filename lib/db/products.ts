@@ -15,7 +15,7 @@ export const getNewestProducts = cache(
   ["/", "getNewestProducts"],
   {
     revalidate: 60 * 60 * 24,
-    tags: ["products-newest"], //
+    tags: ["products-newest"],
   },
 );
 
@@ -54,7 +54,6 @@ async function fetchProductsFromDb(
     typeof searchParams.priceGroup === "string"
       ? [searchParams.priceGroup]
       : searchParams.priceGroup || [];
-
   const priceFilters = mapPriceGroupsToPrisma(priceGroups);
 
   const rawTypes = (
@@ -66,70 +65,55 @@ async function fetchProductsFromDb(
   const isFilteringForMen = rawTypes.includes("men");
   const isFilteringForWomen = rawTypes.includes("women");
 
-  // Filter out gender tags from generic keyword matching to prevent overlap bugs
   const structuralKeywords = rawTypes.filter(
     (t) => t !== "men" && t !== "women",
   );
 
-  const conditions = [
-    searchQuery ? buildProductSearchWhere(searchQuery) : null,
-    sizes.length > 0 ? { size: { hasSome: sizes } } : null,
-    colors.length > 0 ? { color: { hasSome: colors } } : null,
-    brands.length > 0 ? { brand: { in: brands } } : null,
-    priceFilters.length > 0 ? { OR: priceFilters } : null,
+  const conditions: Prisma.ProductWhereInput[] = [];
 
-    isFilteringForMen && !isFilteringForWomen
-      ? {
-          AND: [
-            {
-              OR: [
-                { keywords: { has: "men" } },
-                { keywords: { has: "Men" } },
-                { keywords: { has: "MEN" } },
-              ],
-            },
-            {
-              NOT: [
-                { keywords: { has: "women" } },
-                { keywords: { has: "Women" } },
-                { keywords: { has: "WOMEN" } },
-              ],
-            },
-          ],
-        }
-      : null,
+  if (searchQuery) conditions.push(buildProductSearchWhere(searchQuery));
+  if (sizes.length > 0) conditions.push({ size: { hasSome: sizes } });
+  if (colors.length > 0) conditions.push({ color: { hasSome: colors } });
+  if (brands.length > 0) conditions.push({ brand: { in: brands } });
+  if (priceFilters.length > 0) conditions.push({ OR: priceFilters });
+  if (isFilteringForMen && !isFilteringForWomen) {
+    conditions.push({
+      keywords: {
+        hasSome: ["men", "Men", "MEN"],
+      },
+    });
+    conditions.push({
+      NOT: {
+        keywords: {
+          hasSome: ["women", "Women", "WOMEN"],
+        },
+      },
+    });
+  } else if (isFilteringForWomen && !isFilteringForMen) {
+    conditions.push({
+      keywords: {
+        hasSome: ["women", "Women", "WOMEN"],
+      },
+    });
+    conditions.push({
+      NOT: {
+        keywords: {
+          hasSome: ["men", "Men", "MEN"],
+        },
+      },
+    });
+  }
 
-    isFilteringForWomen && !isFilteringForMen
-      ? {
-          AND: [
-            {
-              OR: [
-                { keywords: { has: "women" } },
-                { keywords: { has: "Women" } },
-                { keywords: { has: "WOMEN" } },
-              ],
-            },
-            {
-              NOT: [
-                { keywords: { has: "men" } },
-                { keywords: { has: "Men" } },
-                { keywords: { has: "MEN" } },
-              ],
-            },
-          ],
-        }
-      : null,
-
-    structuralKeywords.length > 0
-      ? {
-          OR: structuralKeywords.flatMap((t) => [
-            { keywords: { has: t } },
-            { keywords: { has: t.toUpperCase() } },
-            { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
-          ]),
-        }
-      : null,
-  ].filter(Boolean) as Prisma.ProductWhereInput[];
+  // 3. Match general structural parameters (e.g. clothing, accessories)
+  if (structuralKeywords.length > 0) {
+    conditions.push({
+      OR: structuralKeywords.flatMap((t) => [
+        { keywords: { has: t } },
+        { keywords: { has: t.toUpperCase() } },
+        { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
+      ]),
+    });
+  }
 
   return await prisma.product.findMany({
     where: conditions.length > 0 ? { AND: conditions } : {},
@@ -143,12 +127,16 @@ export async function getProducts(
 ) {
   const resolvedParams = await searchParamsPromise;
 
+  const serializedKey = JSON.stringify(
+    resolvedParams,
+    Object.keys(resolvedParams).sort(),
+  );
+
   return cache(
     async (): Promise<Product[]> => {
       return fetchProductsFromDb(searchQuery, resolvedParams);
     },
-
-    ["products", "search", searchQuery, JSON.stringify(resolvedParams)],
+    ["products", "search", searchQuery, serializedKey],
     {
       revalidate: 60 * 60 * 24,
       tags: ["products"],
