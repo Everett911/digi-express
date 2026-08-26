@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     );
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
-    console.error(`❌ Webhook Signature Verification Failed: ${errorMessage}`);
+    console.error(` Webhook Signature Verification Failed: ${errorMessage}`);
     return NextResponse.json(
       { error: `Webhook Error: ${errorMessage}` },
       { status: 400 },
@@ -150,13 +150,13 @@ export async function POST(req: NextRequest) {
               </div>
             `,
           });
-          console.log(`✅ Confirmation email sent to ${customerEmail}`);
+          console.log(` Confirmation email sent to ${customerEmail}`);
         } catch (emailError: unknown) {
           const emailMessage =
             emailError instanceof Error
               ? emailError.message
               : "Unknown email error";
-          console.error(`⚠️ Resend Email Delivery Failure: ${emailMessage}`);
+          console.error(` Resend Email Delivery Failure: ${emailMessage}`);
         }
       }
 
@@ -171,7 +171,7 @@ export async function POST(req: NextRequest) {
     } catch (error: unknown) {
       const dbErrorMessage =
         error instanceof Error ? error.message : "Unknown DB error";
-      console.error(`❌ Webhook Order Creation Failure: ${dbErrorMessage}`);
+      console.error(` Webhook Order Creation Failure: ${dbErrorMessage}`);
       return NextResponse.json(
         { error: "Failed to create database order" },
         { status: 500 },

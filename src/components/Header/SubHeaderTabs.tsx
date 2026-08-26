@@ -14,20 +14,20 @@ const ESSENTIAL_HEADERS: Record<string, string> = {
   kids: "KID'S ESSENTIAL",
   homewares: "HOMEWARE'S ESSENTIAL",
 };
-
+const HOME_BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
 const BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
 const TYPE_LINKS = [
-  { name: "Grooming & Personal Care", link: "personalcare" },
-  { name: "Apparel & Footwear", link: "clothing" },
-  { name: "Bags & Accessories", link: "accessories" },
+  { name: "Personal Care", link: "personalcare" },
+  { name: "Footwear", link: "clothing" },
+  { name: "Accessories", link: "accessories" },
   { name: "Health, Fitness & Wellness", link: "outdoor" },
   { name: "Tech & Gadgets", link: "gadgets" },
 ];
 const HOME_LINKS = [
-  "Soft Furnishings and Textiles",
-  "Decorative Accessories",
-  "Kitchen and Diningware",
-  "Appliances",
+  { name: "Soft Furnishings and Textiles", link: "furniture" },
+  { name: "Decorative Accessories", link: "decoration" },
+  { name: "Kitchen and Diningware", link: "accessories" },
+  { name: "Appliances", link: "appliances" },
 ];
 
 export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
@@ -35,6 +35,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
   const activeHeader =
     ESSENTIAL_HEADERS[categoryKey] || `${titleTab.toUpperCase()}'S ESSENTIAL`;
   const essentialLinks = categoryKey === "homewares" ? HOME_LINKS : TYPE_LINKS;
+  const brandLinks = categoryKey === "homewares" ? HOME_BRANDS : BRANDS;
 
   return (
     <nav className={styles.container} aria-label={`${titleTab} sub navigation`}>
@@ -62,7 +63,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
             const isObject = typeof item !== "string";
             const displayName = isObject ? item.name : item;
 
-            const queryToken = isObject ? item.link : item.toLowerCase();
+            const queryToken = isObject ? item.link : item;
             const targetUrl = `/products?type=${categoryKey},${queryToken}`;
 
             return (
@@ -79,7 +80,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
       <div className={styles.brand}>
         <span className={styles.brandTitle}>BRANDS</span>
         <ul className={styles.linkList}>
-          {BRANDS.map((brand) => (
+          {brandLinks.map((brand) => (
             <li key={brand}>
               <Link
                 href={`/products?type=${categoryKey}&brand=${brand}` as Route}

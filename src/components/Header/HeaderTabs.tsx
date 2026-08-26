@@ -3,29 +3,23 @@
 import { useState, useRef } from "react";
 import styles from "./HeaderTabs.module.css";
 import SubHeaderTabs from "./SubHeaderTabs";
-import { Route } from "next";
 
 interface TabItem {
   label: string;
-  href: Route;
 }
 
 const tabs: TabItem[] = [
   {
     label: "Men",
-    href: "/products?type=men",
   },
   {
     label: "Women",
-    href: "/products?type=women",
   },
   {
     label: "Kids",
-    href: "/products?type=kids",
   },
   {
     label: "Homewares",
-    href: "/products?type=homewares",
   },
 ];
 
