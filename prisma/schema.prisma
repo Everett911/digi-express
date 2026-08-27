@@ -8,6 +8,8 @@ datasource db {
   provider = "postgresql"
 }
 
+
+
 model Product {
   id         String   @id @default(uuid()) @db.Uuid
   image      String[]

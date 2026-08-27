@@ -14,7 +14,7 @@ const ESSENTIAL_HEADERS: Record<string, string> = {
   kids: "KID'S ESSENTIAL",
   homewares: "HOMEWARE'S ESSENTIAL",
 };
-const HOME_BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
+const HOME_BRANDS = ["Midea", "Panasonic", "Haier", "Whirlpool", "Breville"];
 const BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
 const TYPE_LINKS = [
   { name: "Personal Care", link: "personalcare" },
@@ -64,7 +64,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
             const displayName = isObject ? item.name : item;
 
             const queryToken = isObject ? item.link : item;
-            const targetUrl = `/products?type=${categoryKey}&type=${queryToken}`;
+            const targetUrl = `/products?type=${categoryKey}&type=${queryToken}&type=unisex`;
 
             return (
               <li key={displayName}>

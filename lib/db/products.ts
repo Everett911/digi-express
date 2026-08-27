@@ -104,11 +104,12 @@ async function fetchProductsFromDb(
 
   if (isFilteringForMen && !isFilteringForWomen) {
     conditions.push({ keywords: { hasSome: MEN_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
   } else if (isFilteringForWomen && !isFilteringForMen) {
     conditions.push({ keywords: { hasSome: WOMEN_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
   }
 
-  // 3. Match general structural parameters (e.g. clothing, accessories)
   if (structuralKeywords.length > 0) {
     conditions.push({
       OR: structuralKeywords.flatMap((t) => [
