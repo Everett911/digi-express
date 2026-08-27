@@ -58,9 +58,12 @@ async function fetchProductsFromDb(
 
   const rawTypes = (
     typeof searchParams.type === "string"
-      ? [searchParams.type]
+      ? searchParams.type.split(",")
       : searchParams.type || []
-  ).map((val) => val.trim().toLowerCase());
+  )
+    .flatMap((val) => val.split(","))
+    .map((val) => val.trim().toLowerCase())
+    .filter(Boolean);
 
   const isFilteringForMen = rawTypes.includes("men");
   const isFilteringForWomen = rawTypes.includes("women");
@@ -76,32 +79,35 @@ async function fetchProductsFromDb(
   if (colors.length > 0) conditions.push({ color: { hasSome: colors } });
   if (brands.length > 0) conditions.push({ brand: { in: brands } });
   if (priceFilters.length > 0) conditions.push({ OR: priceFilters });
+  const MEN_TOKENS = [
+    "men",
+    "Men",
+    "MEN",
+    "men's",
+    "Men's",
+    "MEN'S",
+    "mens",
+    "Mens",
+    "MENS",
+  ];
+  const WOMEN_TOKENS = [
+    "women",
+    "Women",
+    "WOMEN",
+    "women's",
+    "Women's",
+    "WOMEN'S",
+    "womens",
+    "Womens",
+    "WOMENS",
+  ];
+
   if (isFilteringForMen && !isFilteringForWomen) {
-    conditions.push({
-      keywords: {
-        hasSome: ["men", "Men", "MEN"],
-      },
-    });
-    conditions.push({
-      NOT: {
-        keywords: {
-          hasSome: ["women", "Women", "WOMEN"],
-        },
-      },
-    });
+    conditions.push({ keywords: { hasSome: MEN_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
   } else if (isFilteringForWomen && !isFilteringForMen) {
-    conditions.push({
-      keywords: {
-        hasSome: ["women", "Women", "WOMEN"],
-      },
-    });
-    conditions.push({
-      NOT: {
-        keywords: {
-          hasSome: ["men", "Men", "MEN"],
-        },
-      },
-    });
+    conditions.push({ keywords: { hasSome: WOMEN_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
   }
 
   // 3. Match general structural parameters (e.g. clothing, accessories)
