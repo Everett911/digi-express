@@ -3,39 +3,23 @@
 import { useState, useRef } from "react";
 import styles from "./HeaderTabs.module.css";
 import SubHeaderTabs from "./SubHeaderTabs";
+import type { TabCategory } from "./types";
 
-interface TabItem {
-  label: string;
-}
-
-const tabs: TabItem[] = [
-  {
-    label: "Men",
-  },
-  {
-    label: "Women",
-  },
-  {
-    label: "Kids",
-  },
-  {
-    label: "Homewares",
-  },
-];
+const TABS: TabCategory[] = ["Men", "Women", "Kids", "Homewares"];
 
 export default function HeaderTabs() {
-  const [activeTab, setActiveTab] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<TabCategory | "">("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleTabClick = (tabId: string) => {
-    setActiveTab((prevActiveTab) => (prevActiveTab === tabId ? "" : tabId));
+  const handleTabClick = (tabId: TabCategory) => {
+    setActiveTab((prev) => (prev === tabId ? "" : tabId));
   };
 
   const handleMouseLeave = () => {
     setActiveTab("");
   };
 
-  if (!tabs.length) return null;
+  if (!TABS.length) return null;
 
   return (
     <div
@@ -44,30 +28,30 @@ export default function HeaderTabs() {
       onMouseLeave={handleMouseLeave}
     >
       <div className={styles.tabList}>
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.label;
+        {TABS.map((tab) => {
+          const isActive = activeTab === tab;
           return (
             <button
-              key={tab.label}
-              onClick={() => handleTabClick(tab.label)}
+              key={tab}
+              onClick={() => handleTabClick(tab)}
               className={`${styles.tabButton} ${isActive ? styles.activeTabButton : ""}`}
               aria-expanded={isActive}
             >
-              {tab.label}
+              {tab}
             </button>
           );
         })}
       </div>
 
       <div className={styles.tabPanel}>
-        {tabs.map((tab) => (
+        {TABS.map((tab) => (
           <div
-            key={tab.label}
+            key={tab}
             className={
-              activeTab === tab.label ? styles.visiblePanel : styles.hiddenPanel
+              activeTab === tab ? styles.visiblePanel : styles.hiddenPanel
             }
           >
-            <SubHeaderTabs titleTab={tab.label} />
+            <SubHeaderTabs titleTab={tab} />
           </div>
         ))}
       </div>

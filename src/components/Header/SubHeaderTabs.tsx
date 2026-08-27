@@ -1,41 +1,37 @@
 "use client";
 
+import { useMemo } from "react";
 import Link from "next/link";
 import styles from "./SubHeaderTabs.module.css";
 import type { Route } from "next";
+import type { TabCategory } from "./types";
+import { getCategoryConfig } from "./headerConfig";
 
 interface SubHeaderProps {
-  titleTab: "Men" | "Women" | "Kids" | "Homewares" | string;
+  titleTab: TabCategory;
 }
 
-const ESSENTIAL_HEADERS: Record<string, string> = {
-  men: "MEN'S ESSENTIAL",
-  women: "WOMEN'S ESSENTIAL",
-  kids: "KID'S ESSENTIAL",
-  homewares: "HOMEWARE'S ESSENTIAL",
-};
-const HOME_BRANDS = ["Midea", "Panasonic", "Haier", "Whirlpool", "Breville"];
-const BRANDS = ["Nike", "Adidas", "Zara", "Uniqlo", "New Balance"];
-const TYPE_LINKS = [
-  { name: "Personal Care", link: "personalcare" },
-  { name: "Clothing", link: "clothing" },
-  { name: "Accessories", link: "accessories" },
-  { name: "Health, Fitness & Wellness", link: "outdoor" },
-  { name: "Tech & Gadgets", link: "gadgets" },
-];
-const HOME_LINKS = [
-  { name: "Soft Furnishings and Textiles", link: "furniture" },
-  { name: "Decorative Accessories", link: "decoration" },
-  { name: "Kitchen and Diningware", link: "accessories" },
-  { name: "Appliances", link: "appliances" },
-];
-
 export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
+  const config = useMemo(() => getCategoryConfig(titleTab), [titleTab]);
   const categoryKey = titleTab.toLowerCase();
-  const activeHeader =
-    ESSENTIAL_HEADERS[categoryKey] || `${titleTab.toUpperCase()}'S ESSENTIAL`;
-  const essentialLinks = categoryKey === "homewares" ? HOME_LINKS : TYPE_LINKS;
-  const brandLinks = categoryKey === "homewares" ? HOME_BRANDS : BRANDS;
+
+  const essentialLinks = useMemo(
+    () =>
+      config.types.map((item) => ({
+        name: item.name,
+        href: `/products?type=${categoryKey}&type=${item.href}`,
+      })),
+    [config.types, categoryKey]
+  );
+
+  const brandLinks = useMemo(
+    () =>
+      config.brands.map((brand) => ({
+        name: brand,
+        href: `/products?type=${categoryKey}&brand=${brand}`,
+      })),
+    [config.brands, categoryKey]
+  );
 
   return (
     <nav className={styles.container} aria-label={`${titleTab} sub navigation`}>
@@ -57,36 +53,25 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
       </ul>
 
       <div className={styles.type}>
-        <span className={styles.typeTitle}>{activeHeader}</span>
+        <span className={styles.typeTitle}>{config.essentialLabel}</span>
         <ul className={styles.linkList}>
-          {essentialLinks.map((item) => {
-            const isObject = typeof item !== "string";
-            const displayName = isObject ? item.name : item;
-
-            const queryToken = isObject ? item.link : item;
-            const targetUrl = `/products?type=${categoryKey}&type=${queryToken}&type=unisex`;
-
-            return (
-              <li key={displayName}>
-                <Link href={targetUrl as Route} className={styles.typeLinks}>
-                  {displayName}
-                </Link>
-              </li>
-            );
-          })}
+          {essentialLinks.map((item) => (
+            <li key={item.name}>
+              <Link href={item.href as Route} className={styles.typeLinks}>
+                {item.name}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
 
       <div className={styles.brand}>
         <span className={styles.brandTitle}>BRANDS</span>
         <ul className={styles.linkList}>
-          {brandLinks.map((brand) => (
-            <li key={brand}>
-              <Link
-                href={`/products?type=${categoryKey}&brand=${brand}` as Route}
-                className={styles.brandName}
-              >
-                {brand}
+          {brandLinks.map((item) => (
+            <li key={item.name}>
+              <Link href={item.href as Route} className={styles.brandName}>
+                {item.name}
               </Link>
             </li>
           ))}
