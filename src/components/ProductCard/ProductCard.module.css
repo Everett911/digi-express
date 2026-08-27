@@ -13,15 +13,12 @@
     box-shadow 0.2s ease;
   cursor: pointer;
   width: 280px;
+  user-select: none;
 }
 @media (max-width: 640px) {
   .card {
     width: 300px;
   }
-}
-
-.card:hover {
-  transform: translateY(-4px);
 }
 
 .imageWrapper {

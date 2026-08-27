@@ -1,13 +1,3 @@
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-.arrivalText {
-  color: var(--text-primary);
-}
-.container {
-  padding: 32px 16px;
-}
 .grid {
   display: flex;
   white-space: nowrap;

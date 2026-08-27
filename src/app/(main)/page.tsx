@@ -6,6 +6,7 @@ import CollectionSection from "@/src/components/Collection/CollectionSection";
 import DealSection from "@/src/components/Deal/DealSection";
 import BrandSection from "@/src/components/Brand/BrandSection";
 import Blog from "@/src/components/Blog/Blog";
+import DraggableGrid from "@/src/components/DraggableGrid/DraggableGrid";
 import {
   ProductCard,
   ProductSkeleton,
@@ -20,11 +21,11 @@ export default async function Home() {
       <Carousel />
       <div className={styles.container}>
         <h2 className={styles.arrivalText}>New Arrivals</h2>
-        <div className={styles.grid}>
+        <DraggableGrid className={styles.grid}>
           <Suspense fallback={<ProductSkeleton />}>
             <ProductCard products={newestProduct} />
           </Suspense>
-        </div>
+        </DraggableGrid>
       </div>
       <CategorySection />
       <CollectionSection />

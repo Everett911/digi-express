@@ -35,6 +35,7 @@ export function ProductCard({ products }: Props) {
                   sizes="(max-width: 360px) 100vw, (max-width: 720px) 50vw, 33vw"
                   style={{ objectFit: "cover" }}
                   loading="eager"
+                  draggable={false}
                 />
               </div>
               <div className={styles.cardContent}>
