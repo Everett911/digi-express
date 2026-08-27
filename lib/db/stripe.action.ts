@@ -1,9 +1,10 @@
 "use server";
 
 import { headers } from "next/headers";
-import Stripe from "stripe";
-import { auth } from "../auth";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
+import Stripe from "stripe";
 
 type Cart = {
   product: {
@@ -38,8 +39,6 @@ type Cart = {
   size: string | null;
   deliveryOptionId: string;
 };
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export async function createPaymentIntentAction() {
   try {

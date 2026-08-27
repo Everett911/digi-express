@@ -2,12 +2,11 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { Resend } from "resend";
+import { stripe } from "@/lib/stripe";
+import { sendEmail } from "@/lib/email";
 import { formatCurrency } from "@/src/utils/formatters";
 import { Order } from "@/src/schemas/orders";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-const resend = new Resend(process.env.RESEND_API_KEY as string);
+import { calculateCartTotals, buildOrderItemData } from "@/lib/checkout";
 
 type CreatedOrder = Order;
 
@@ -73,46 +72,16 @@ export async function POST(req: NextRequest) {
 
         if (cartItems.length === 0) return null;
 
-        const productCost = cartItems.reduce(
-          (acc, i) => acc + i.product.priceCents * i.quantity,
-          0,
-        );
-        const shippingCost = cartItems.reduce((max, item) => {
-          const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
-          return currentItemShipping > max ? currentItemShipping : max;
-        }, 0);
-        const tax = Math.round((productCost + shippingCost) * 0.1);
-        const totalCost = productCost + shippingCost + tax;
+        const { totalCostCents } = calculateCartTotals(cartItems);
+        const orderItems = buildOrderItemData(cartItems);
 
         const orderResult = await tx.order.create({
           data: {
             userId,
-            totalCostCents: totalCost,
-            items: {
-              create: cartItems.map((item) => {
-                let itemImage = "";
-                if (Array.isArray(item.product.image)) {
-                  const firstImg = item.product.image[0];
-                  itemImage = typeof firstImg === "string" ? firstImg : "";
-                } else if (typeof item.product.image === "string") {
-                  itemImage = item.product.image;
-                }
-                return {
-                  productId: item.productId,
-                  quantity: item.quantity,
-                  color: item.color ?? null,
-                  size: item.size ?? null,
-                  image: itemImage,
-                  priceCents: item.product.priceCents,
-                  name: item.product.name,
-                  deliveryDays: item.deliveryOption?.deliveryDays ?? 0,
-                };
-              }),
-            },
+            totalCostCents,
+            items: { create: orderItems },
           },
-          include: {
-            items: true,
-          },
+          include: { items: true },
         });
 
         await tx.cartItem.deleteMany({ where: { userId } });
@@ -122,7 +91,7 @@ export async function POST(req: NextRequest) {
 
       if (createdOrder) {
         try {
-          await resend.emails.send({
+          await sendEmail({
             from: "Digi-Express <digi_express.gmail.com>",
             to: customerEmail,
             subject: `Order Confirmation #${createdOrder.id}`,

@@ -1,4 +1,5 @@
 import { CartItem } from "@prisma/client";
+import { calculateCartTotals } from "@/lib/checkout";
 
 type CartItemWithRelations = CartItem & {
   product: { priceCents: number };
@@ -17,37 +18,14 @@ export async function getPaymentSummary(cart: CartItemWithRelations[]) {
     };
   }
 
-  const productCostCents = cart.reduce(
-    (acc: number, item: CartItemWithRelations) => {
-      return acc + item.product?.priceCents * item.quantity;
-    },
-    0,
-  );
-
-  const shipCostCents = cart.reduce(
-    (max: number, item: CartItemWithRelations) => {
-      const currentItemShipping = item.deliveryOption?.priceCents ?? 0;
-      return currentItemShipping > max ? currentItemShipping : max;
-    },
-    0,
-  );
-  const shippingCostCents = shipCostCents;
-
-  const totalCostBeforeTaxCents = productCostCents + shippingCostCents;
-  const taxCents = Math.round(totalCostBeforeTaxCents * 0.1);
-  const totalCostCents = totalCostBeforeTaxCents + taxCents;
-
-  const totalItems = cart.reduce(
-    (acc: number, item: CartItemWithRelations) => acc + item.quantity,
-    0,
-  );
+  const totals = calculateCartTotals(cart);
 
   return {
-    totalItems,
-    productCostCents,
-    shippingCostCents,
-    totalCostBeforeTaxCents,
-    taxCents,
-    totalCostCents,
+    totalItems: totals.totalItems,
+    productCostCents: totals.productCostCents,
+    shippingCostCents: totals.shippingCostCents,
+    totalCostBeforeTaxCents: totals.productCostCents + totals.shippingCostCents,
+    taxCents: totals.taxCents,
+    totalCostCents: totals.totalCostCents,
   };
 }

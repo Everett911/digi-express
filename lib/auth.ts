@@ -3,8 +3,15 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
 
+const resolveBaseURL = () => {
+  const raw = process.env.BETTER_AUTH_URL;
+  if (!raw) return undefined;
+  if (/^https?:\/\//i.test(raw)) return raw;
+  return `http://${raw}`;
+};
+
 const authOptions = {
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: resolveBaseURL(),
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,
@@ -74,9 +81,8 @@ const authOptions = {
 export const auth = betterAuth({
   ...authOptions,
   trustedOrigins: async (request) => {
-    const origins = [
-      process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
-    ];
+    const baseOrigin = resolveBaseURL();
+    const origins = baseOrigin ? [baseOrigin] : [];
     if (request?.url) {
       try {
         const url = new URL(request.url);
