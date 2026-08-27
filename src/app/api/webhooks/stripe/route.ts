@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
                 <h2>Thank you for your order!</h2>
                 <p>Your payment was successful. We are getting your order ready to ship.</p>
                 <hr />
-                <h3>Order Total: $${formatCurrency(createdOrder.totalCostCents / 100)}</h3>
+                <h3>Order Total: ${formatCurrency(createdOrder.totalCostCents / 100)}</h3>
                 <h4>Items Ordered:</h4>
                 <ul>
                   ${createdOrder.items

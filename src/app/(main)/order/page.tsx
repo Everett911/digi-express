@@ -2,6 +2,8 @@ import { OrderList } from "./OrderList";
 import { getOrderFromSession } from "@/lib/db/order";
 import { Order } from "@/src/schemas/orders";
 
+export const dynamic = "force-dynamic";
+
 async function OrderPage() {
   const orders: Order[] = (await getOrderFromSession()) ?? [];
   return (
