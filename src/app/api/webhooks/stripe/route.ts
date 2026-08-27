@@ -178,4 +178,6 @@ export async function POST(req: NextRequest) {
       );
     }
   }
+
+  return NextResponse.json({ received: true }, { status: 200 });
 }

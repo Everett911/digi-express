@@ -42,7 +42,7 @@ function PurchaseForm({ totalCostCents }: { totalCostCents: number }) {
         if (error.type === "card_error" || error.type === "validation_error") {
           setErrorMessage(error.message ?? "An error occurred with your card.");
         } else {
-          setErrorMessage("An unknown error occurred.");
+          setErrorMessage(error.message ?? "An unknown error occurred.");
         }
       }
     });
