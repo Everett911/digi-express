@@ -92,7 +92,6 @@ export async function POST(req: NextRequest) {
       if (createdOrder) {
         try {
           await sendEmail({
-            from: "Digi-Express <digi_express.gmail.com>",
             to: customerEmail,
             subject: `Order Confirmation #${createdOrder.id}`,
             html: `
