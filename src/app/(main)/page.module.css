@@ -11,7 +11,7 @@
 .grid {
   display: flex;
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: hidden;
   gap: 16px;
   cursor: grab;
@@ -23,6 +23,6 @@
 }
 @media (max-width: 640px) {
   .grid {
-    width: 300px;
+    width: 400px;
   }
 }

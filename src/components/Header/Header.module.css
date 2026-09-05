@@ -135,7 +135,7 @@
   justify-content: start;
   width: 90%;
   max-width: 800px;
-  background-color: var(--foreground);
+  background-color: var(--background);
   padding: 8px 50px;
   border-radius: 12px;
   box-shadow: var(--modern-shadow);
