@@ -67,6 +67,8 @@ async function fetchProductsFromDb(
 
   const isFilteringForMen = rawTypes.includes("men");
   const isFilteringForWomen = rawTypes.includes("women");
+  const isFilteringForKid = rawTypes.includes("kid");
+  const isFilteringForHomewares = rawTypes.includes("homewares");
 
   const structuralKeywords = rawTypes.filter(
     (t) => t !== "men" && t !== "women",
@@ -101,13 +103,73 @@ async function fetchProductsFromDb(
     "Womens",
     "WOMENS",
   ];
+  const KID_TOKENS = [
+    "kid",
+    "Kid",
+    "KID",
+    "kid's",
+    "Kid's",
+    "KID'S",
+    "kids",
+    "Kids",
+    "KIDS",
+  ];
+  const HOMEWARE_TOKENS = [
+    "women",
+    "Women",
+    "WOMEN",
+    "women's",
+    "Women's",
+    "WOMEN'S",
+    "womens",
+    "Womens",
+    "WOMENS",
+  ];
 
   if (isFilteringForMen && !isFilteringForWomen) {
     conditions.push({ keywords: { hasSome: MEN_TOKENS } });
     conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
   } else if (isFilteringForWomen && !isFilteringForMen) {
     conditions.push({ keywords: { hasSome: WOMEN_TOKENS } });
     conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
+  } else if (isFilteringForKid && !isFilteringForMen && !isFilteringForWomen) {
+    conditions.push({ keywords: { hasSome: KID_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
+  } else if (
+    isFilteringForHomewares &&
+    !isFilteringForMen &&
+    !isFilteringForWomen
+  ) {
+    conditions.push({ keywords: { hasSome: HOMEWARE_TOKENS } });
+    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
+    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
+  } else {
+    // Optional: Handle multi-category selections or default state
+    const activeTokens = [];
+    const inactiveTokens = [];
+
+    if (isFilteringForMen) activeTokens.push(...MEN_TOKENS);
+    else inactiveTokens.push(...MEN_TOKENS);
+    if (isFilteringForWomen) activeTokens.push(...WOMEN_TOKENS);
+    else inactiveTokens.push(...WOMEN_TOKENS);
+    if (isFilteringForKid) activeTokens.push(...KID_TOKENS);
+    else inactiveTokens.push(...KID_TOKENS);
+    if (isFilteringForHomewares) activeTokens.push(...HOMEWARE_TOKENS);
+    else inactiveTokens.push(...HOMEWARE_TOKENS);
+
+    if (activeTokens.length > 0) {
+      conditions.push({ keywords: { hasSome: activeTokens } });
+    }
+    if (inactiveTokens.length > 0) {
+      conditions.push({ NOT: { keywords: { hasSome: inactiveTokens } } });
+    }
   }
 
   if (structuralKeywords.length > 0) {
