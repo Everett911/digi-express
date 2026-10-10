@@ -1,7 +1,7 @@
 import type { CategoryConfig, CategoryConfigMap, TabCategory } from "./types";
 
 export const STATIC_LINKS = [
-  { name: "Personal Care", href: "personalcare" },
+  { name: "Personal Care", href: "personal care" },
   { name: "Clothing", href: "clothing" },
   { name: "Accessories", href: "accessories" },
   { name: "Health, Fitness & Wellness", href: "other" },

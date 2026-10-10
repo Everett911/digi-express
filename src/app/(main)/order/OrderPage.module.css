@@ -13,7 +13,7 @@
 }
 
 .orderHeader {
-  background-color: #ffffff;
+  background-color: var(--surface);
   border: 1px solid var(--border-default);
   display: flex;
   align-items: center;
@@ -77,7 +77,7 @@
   border-top: none;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  background-color: #ffffff;
+  background-color: var(--surface);
   display: grid;
   grid-template-columns: 110px 1fr 220px;
   column-gap: 35px;

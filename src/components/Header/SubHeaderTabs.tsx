@@ -11,15 +11,35 @@ interface SubHeaderProps {
   titleTab: TabCategory;
 }
 
+// Builds a /products URL scoped to the department, encoding values such as
+// "New Balance" or "Under $75".
+function productsHref(category: string, params: [string, string][] = []) {
+  const query = new URLSearchParams([["type", category], ...params]);
+  return `/products?${query.toString()}` as Route;
+}
+
 export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
   const config = useMemo(() => getCategoryConfig(titleTab), [titleTab]);
   const categoryKey = titleTab.toLowerCase();
+
+  const quickLinks = useMemo(
+    () => [
+      { name: "NEW ARRIVAL", href: productsHref(categoryKey, [["search", "new"]]) },
+      { name: "BESTSELLER", href: productsHref(categoryKey, [["search", "best"]]) },
+      {
+        name: "DISCOUNTED",
+        href: productsHref(categoryKey, [["priceGroup", "Under $75"]]),
+      },
+      { name: "ALL PRODUCTS", href: "/products" as Route },
+    ],
+    [categoryKey]
+  );
 
   const essentialLinks = useMemo(
     () =>
       config.types.map((item) => ({
         name: item.name,
-        href: `/products?type=${categoryKey}&type=${item.href}`,
+        href: productsHref(categoryKey, [["type", item.href]]),
       })),
     [config.types, categoryKey]
   );
@@ -28,7 +48,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
     () =>
       config.brands.map((brand) => ({
         name: brand,
-        href: `/products?type=${categoryKey}&brand=${brand}`,
+        href: productsHref(categoryKey, [["brand", brand]]),
       })),
     [config.brands, categoryKey]
   );
@@ -36,20 +56,11 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
   return (
     <nav className={styles.container} aria-label={`${titleTab} sub navigation`}>
       <ul className={styles.titlelinks}>
-        <li>
-          <Link href={"/products?search=new" as Route}>NEW ARRIVAL</Link>
-        </li>
-        <li>
-          <Link href={"/products?search=best" as Route}>BESTSELLER</Link>
-        </li>
-        <li>
-          <Link href={"/products?priceGroup=Under $75" as Route}>
-            DISCOUNTED
-          </Link>
-        </li>
-        <li>
-          <Link href={"/products" as Route}>ALL PRODUCTS</Link>
-        </li>
+        {quickLinks.map((item) => (
+          <li key={item.name}>
+            <Link href={item.href}>{item.name}</Link>
+          </li>
+        ))}
       </ul>
 
       <div className={styles.type}>
@@ -57,7 +68,7 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
         <ul className={styles.linkList}>
           {essentialLinks.map((item) => (
             <li key={item.name}>
-              <Link href={item.href as Route} className={styles.typeLinks}>
+              <Link href={item.href} className={styles.typeLinks}>
                 {item.name}
               </Link>
             </li>
@@ -70,13 +81,17 @@ export default function SubHeaderTabs({ titleTab }: SubHeaderProps) {
         <ul className={styles.linkList}>
           {brandLinks.map((item) => (
             <li key={item.name}>
-              <Link href={item.href as Route} className={styles.brandName}>
+              <Link href={item.href} className={styles.brandName}>
                 {item.name}
               </Link>
             </li>
           ))}
         </ul>
       </div>
+
+      <Link href={productsHref(categoryKey)} className={styles.shopAll}>
+        Shop all {titleTab} <span aria-hidden="true">→</span>
+      </Link>
     </nav>
   );
 }

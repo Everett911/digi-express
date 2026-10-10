@@ -15,6 +15,7 @@ const authOptions = {
   database: prismaAdapter(prisma, { provider: "postgresql" }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
   socialProviders: {
     github: {
@@ -30,11 +31,16 @@ const authOptions = {
     accountLinking: {
       enabled: true,
       trustedProviders: ["google", "github", "credential"],
-      requireLocalEmailVerified: false,
+      // Only link a social login into an email/password account whose owner
+      // proved they control the address. Otherwise someone could register
+      // a victim's email first and keep access after the victim links Google.
+      requireLocalEmailVerified: true,
     },
   },
   emailVerification: {
     sendOnSignUp: true,
+    // Unverified users who try to sign in get a fresh link.
+    sendOnSignIn: true,
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
       await sendEmail({
@@ -64,15 +70,9 @@ const authOptions = {
         required: false,
         returned: true,
         defaultValue: "customer",
-      },
-    },
-  },
-  session: {
-    additionalFields: {
-      cartId: {
-        type: "string",
-        required: false,
-        input: true,
+        // Never accept role from sign-up or update-user requests, or anyone
+        // could make themselves an admin.
+        input: false,
       },
     },
   },

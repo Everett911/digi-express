@@ -8,10 +8,35 @@ import { getCartFromSession } from "@/lib/db/cart";
 import { getPaymentSummary } from "./paymentSummaryCalculator";
 import PurchaseSection from "./PurchaseSection";
 import { createPaymentIntentAction } from "@/lib/db/stripe.action";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import StatusPage, {
+  statusActionClass,
+} from "@/src/components/StatusPage/StatusPage";
 
 export default async function CheckoutPage() {
   const deliveryOptions = await getDeliveryOptions();
   const cart = await getCartFromSession();
+  if (!cart) redirect("/auth");
+
+  if (cart.length === 0) {
+    return (
+      <>
+        <CheckoutHeader totalQuantity={0} />
+        <StatusPage
+          code="Cart"
+          title="Your cart is empty"
+          message="Add a few things you love and they'll show up here."
+          action={
+            <Link href="/products" className={statusActionClass}>
+              Continue shopping
+            </Link>
+          }
+        />
+        <Footer />
+      </>
+    );
+  }
 
   const paymentSummary = await getPaymentSummary(cart ?? []);
   const totalQuantity = cart?.reduce((acc, item) => acc + item.quantity, 0);

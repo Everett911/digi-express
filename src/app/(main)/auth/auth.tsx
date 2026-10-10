@@ -90,7 +90,10 @@ export default function AuthClientPage() {
           callbackURL: "/",
         });
 
-        if (authError) {
+        if (authError?.status === 403) {
+          // Email not verified yet; the server has just sent a new link.
+          setNeedsVerification(true);
+        } else if (authError) {
           setError(authError.message || "Invalid Email or Password");
         } else {
           router.push("/");

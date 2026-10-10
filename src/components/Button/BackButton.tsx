@@ -13,7 +13,11 @@ export default function BackButton() {
       onClick={() => router.back()} // 2. Triggers literal browser back action
       className={styles.backButton}
     >
-      <ChevronLeft className={styles.backIcon} color="#3467cc" size="30" />
+      <ChevronLeft
+        className={styles.backIcon}
+        style={{ color: "var(--brand)" }}
+        size="30"
+      />
       Back
     </button>
   );

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 import { deleteOrder } from "../_actions/orders";
 import RowActions from "../_components/RowActions";
+import OrderStatusSelect from "../_components/OrderStatusSelect";
 import { EmptyState, PageHeader, Pagination, Panel, SrOnly } from "../_components/ui";
 import table from "../_components/table.module.css";
 import { requireAdminPage } from "../_lib/auth";
@@ -27,6 +28,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         id: true,
         createdAt: true,
         totalCostCents: true,
+        status: true,
         user: { select: { name: true, email: true } },
         items: { select: { name: true, quantity: true } },
       },
@@ -55,6 +57,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                   <Table.ColumnHeaderCell>Date</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell>Qty</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell>Total</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Status</Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className={table.actions}>
                     <SrOnly>Actions</SrOnly>
                   </Table.ColumnHeaderCell>
@@ -97,6 +100,13 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       </Table.Cell>
                       <Table.Cell className={`${table.number} ${table.strong}`}>
                         {formatCurrency(order.totalCostCents / 100)}
+                      </Table.Cell>
+                      <Table.Cell>
+                        <OrderStatusSelect
+                          orderId={order.id}
+                          status={order.status}
+                          label={`Status of order from ${order.user.email}`}
+                        />
                       </Table.Cell>
                       <Table.Cell className={table.actions}>
                         <RowActions

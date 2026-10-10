@@ -46,7 +46,7 @@ export default function HeaderSearch({ initialQuery }: HeaderSearchProps) {
         disabled={isPending}
         aria-label="Submit search"
       >
-        <Search size={18} color="#ffffff" />
+        <Search size={18} style={{ color: "var(--text-on-dark)" }} />
       </button>
     </form>
   );

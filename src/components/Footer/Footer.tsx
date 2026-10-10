@@ -30,7 +30,9 @@ export default function Footer() {
     setActiveTabIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
-  const iconColor = "#3467cc";
+  // SVG color attributes cannot read CSS variables, so color via style.
+  const iconColor = "currentColor";
+  const iconStyle = { color: "var(--brand)" };
   const iconSize = 20;
 
   return (
@@ -94,9 +96,17 @@ export default function Footer() {
                   <button onClick={() => handleTabClick(index)}>
                     <span className={styles.icon}>
                       {isOpen ? (
-                        <Minus color={iconColor} size={iconSize} />
+                        <Minus
+                          color={iconColor}
+                          style={iconStyle}
+                          size={iconSize}
+                        />
                       ) : (
-                        <Plus color={iconColor} size={iconSize} />
+                        <Plus
+                          color={iconColor}
+                          style={iconStyle}
+                          size={iconSize}
+                        />
                       )}
                     </span>
                   </button>

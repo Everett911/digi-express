@@ -1,12 +1,32 @@
 :root {
+  --max-width-desktop: 1200px;
+
+  /* Color roles. Navy = buttons and headings; brand blue =
+     links, icons, prices and focus. Use these instead of raw hex values. */
+
+  /* Surfaces */
   --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
   --foreground: #0f172a;
 
+  /* Text */
   --text-primary: #0f172a;
   --text-secondary: #475569;
+  --text-subtle: #64748b;
+  --text-disabled: #94a3b8;
   --text-link: #1f3a60;
-  --text-tretiary: #ffffff;
+  --text-on-dark: #ffffff;
+  --text-tretiary: var(--text-on-dark); /* legacy name */
 
+  /* Brand blue: links, icons, prices, active states */
+  --brand: #3467cc;
+  --brand-hover: #2a55ab;
+  --brand-soft: #eef4ff;
+  --brand-soft-border: #bfdbfe;
+  --focus-ring: var(--brand);
+
+  /* Buttons (navy) */
   --button-primary: #1f3a60;
   --button-primary-hover: #162a45;
   --button-primary-text: #ffffff;
@@ -17,12 +37,20 @@
   --button-secondary-border: #cbd5e1;
   --button-secondary-text: #0f172a;
 
+  /* Borders */
+  --border-default: #e2e8f0;
+  --border-strong: #cbd5e1;
+
   --footer-border: #1e293b;
   --footer-background: #0f172a;
 
-  --success: #10b981;
+  /* Status */
+  --success: #059669;
   --error: #991b1b;
-  --border-default: #e2e8f0;
+  --error-soft: #fef2f2;
+  --error-border: #fecaca;
+  --notify: #ef4444;
+
   --modern-shadow:
     0 4px 6px -1px rgba(15, 23, 42, 0.04),
     0 10px 15px -3px rgba(15, 23, 42, 0.06);

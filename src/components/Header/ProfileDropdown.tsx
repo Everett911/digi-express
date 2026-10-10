@@ -69,9 +69,17 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
         type="button"
       >
         {!session ? (
-          <User size={23} color="#3467cc" className={styles.icon} />
+          <User
+            size={23}
+            style={{ color: "var(--brand)" }}
+            className={styles.icon}
+          />
         ) : (
-          <CircleUser size={25} color="#3467cc" className={styles.icon} />
+          <CircleUser
+            size={25}
+            style={{ color: "var(--brand)" }}
+            className={styles.icon}
+          />
         )}
       </button>
 

@@ -87,7 +87,7 @@ export function Header({ session, totalQuantity }: HeaderProps) {
               disabled={isPending}
               aria-label="Submit search"
             >
-              <Search size={20} color="#ffffff" />
+              <Search size={20} style={{ color: "var(--text-on-dark)" }} />
             </button>
             <button
               type="button"
@@ -95,7 +95,11 @@ export function Header({ session, totalQuantity }: HeaderProps) {
               onClick={toggleSearchbar}
               aria-label="Close search"
             >
-              <X size={20} color="#3467cc" className={styles.closeIcon} />
+              <X
+                size={20}
+                style={{ color: "var(--brand)" }}
+                className={styles.closeIcon}
+              />
             </button>
           </form>
         </div>
@@ -144,7 +148,7 @@ export function Header({ session, totalQuantity }: HeaderProps) {
               aria-expanded={isSearchOpen}
               aria-label="Open search"
             >
-              <Search size={22} color="#3467cc" />
+              <Search size={22} style={{ color: "var(--brand)" }} />
             </button>
           )}
 
@@ -154,7 +158,7 @@ export function Header({ session, totalQuantity }: HeaderProps) {
             aria-label="Shopping Cart"
           >
             <div className={styles.cartQuantity}>{totalQuantity}</div>
-            <ShoppingCart size={22} color="#3467cc" />
+            <ShoppingCart size={22} style={{ color: "var(--brand)" }} />
           </Link>
 
           <ProfileDropdown session={session} />

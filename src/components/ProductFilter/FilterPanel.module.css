@@ -1,69 +1,236 @@
-.expandButton {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.wrapper {
   width: 100%;
-
-  padding: 16px 24px;
-  border: 1px solid var(--border-default);
-  border-radius: 10px;
-  background: #ffffff;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  color: var(--text-primary);
-  margin: 10px auto;
-}
-
-.filterContainer {
-  width: 100%;
-  background-color: #ffffff;
-  border: 1px solid var(--border-default);
-  border-radius: 10px;
-  padding: 16px 24px;
-  box-sizing: border-box;
-  font-family: inherit;
+  margin: 10px 0 20px;
   transition: opacity 0.2s ease;
-  margin-bottom: 20px;
-  margin-top: 10px;
 }
 
 .pending {
   opacity: 0.6;
 }
 
-.header {
+/* Toolbar: filter toggle + sort */
+.toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--border-default);
-  padding-bottom: 16px;
-  margin-bottom: 16px;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.collapseButton {
-  background: transparent;
-  border: none;
+.expandButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--surface);
+  font-family: inherit;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--text-secondary);
   cursor: pointer;
-  padding: 0;
+  color: var(--text-primary);
+  transition: border-color 0.15s ease;
 }
 
-.collapseButton:hover {
+.expandButton:hover {
+  border-color: var(--button-secondary-border);
+}
+
+.badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font-size: 11px;
+  line-height: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.sortLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Native select styling differs per browser and offsets Montserrat, so draw
+   our own arrow and center the text with a fixed height instead of padding. */
+.sortSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  height: 44px;
+  min-width: 190px;
+  margin: 0;
+  padding: 0 36px 0 14px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background-color: var(--surface);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: normal;
+  text-align: left;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.sortSelect:hover {
+  border-color: var(--button-secondary-border);
+}
+
+/* No blue focus ring: a darker neutral border still shows keyboard focus. */
+.sortSelect:focus,
+.sortSelect:focus-visible {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 3px var(--border-default);
+}
+
+.sortSelect option {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-primary);
+  background: var(--surface);
+}
+
+/* Neutral highlight for the selected/hovered option where the browser
+   allows styling it (Firefox, and Chrome's customizable select). */
+.sortSelect option:checked,
+.sortSelect option:hover,
+.sortSelect option:focus {
+  background: var(--button-secondary-hover);
   color: var(--text-primary);
 }
 
-.productCount {
+/* Chrome 135+: replace the OS dropdown (blue highlight on Windows) with a
+   stylable one. Other browsers ignore this and keep the native list. */
+@supports (appearance: base-select) {
+  .sortSelect,
+  .sortSelect::picker(select) {
+    appearance: base-select;
+  }
+
+  .sortSelect {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sortSelect::picker-icon {
+    display: none;
+  }
+
+  .sortSelect::picker(select) {
+    margin-top: 6px;
+    padding: 6px;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: var(--modern-shadow);
+  }
+
+  .sortSelect option {
+    padding: 10px 12px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .sortSelect option:checked {
+    font-weight: 600;
+  }
+
+  .sortSelect option::checkmark {
+    display: none;
+  }
+}
+
+/* Active filter chips */
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px 6px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--surface);
+  font-family: inherit;
   font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--text-secondary);
+}
+
+.clearAll {
+  background: none;
+  border: none;
+  padding: 6px 4px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-link);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Expanded panel */
+.filterContainer {
+  width: 100%;
+  background-color: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 24px;
+  box-sizing: border-box;
+  margin-top: 12px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .panelGrid {
@@ -75,30 +242,27 @@
 
 @media (min-width: 768px) {
   .panelGrid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
 }
 
 .columnTitle {
+  padding: 0;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--text-primary);
   margin: 0 0 16px 0;
-}
-
-.columnDescription {
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 0 0 16px 0;
-  max-width: 180px;
 }
 
 .sizeGrid {
@@ -110,6 +274,7 @@
 
 .sizeButton {
   height: 40px;
+  font-family: inherit;
   font-size: 12px;
   font-weight: 500;
   background-color: var(--background);
@@ -123,8 +288,7 @@
 }
 
 .sizeButton:hover {
-  border-color: var(--border-hover);
-  color: var(--text-secondary);
+  border-color: var(--text-secondary);
 }
 
 .sizeButtonActive {
@@ -147,6 +311,7 @@
   gap: 10px;
   background: transparent;
   border: none;
+  font-family: inherit;
   font-size: 12px;
   cursor: pointer;
   padding: 0;
@@ -164,12 +329,17 @@
 
 .colorSwatchBorder {
   border: 1px solid var(--border-default);
+  box-sizing: border-box;
+}
+
+.colorSwatchUnknown {
+  background: conic-gradient(var(--border-default) 0 25%, var(--surface) 0 50%, var(--border-default) 0 75%, var(--surface) 0);
 }
 
 .colorSwatchActive {
   box-shadow:
     0 0 0 2px var(--background),
-    0 0 0 4px var(--border-hover);
+    0 0 0 4px var(--text-secondary);
   transform: scale(1.05);
 }
 
@@ -204,7 +374,70 @@
   height: 16px;
   border-radius: 4px;
   border: 1px solid var(--border-default);
-  margin-right: 12px;
+  margin: 0 12px 0 0;
   cursor: pointer;
   accent-color: var(--text-primary);
+}
+
+.optionCount {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.disabled .checkboxInput {
+  cursor: not-allowed;
+}
+
+.showMore {
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-link);
+  cursor: pointer;
+}
+
+.expandButton:focus-visible,
+.chip:focus-visible,
+.clearAll:focus-visible,
+.sizeButton:focus-visible,
+.colorRowButton:focus-visible,
+.showMore:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .sortLabel span {
+    display: none;
+  }
+
+  .sortSelect {
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrapper,
+  .chevron,
+  .sizeButton,
+  .colorSwatch {
+    transition: none;
+  }
+
+  .filterContainer {
+    animation: none;
+  }
 }

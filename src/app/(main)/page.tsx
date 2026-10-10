@@ -18,7 +18,7 @@ import { getNewestProducts } from "@/lib/db/products";
 export default async function Home() {
   const newestProduct = await getNewestProducts();
   return (
-    <main className="styles.main">
+    <main>
       <Carousel />
       <div className={styles.container}>
         <SectionTitle>New Arrivals</SectionTitle>

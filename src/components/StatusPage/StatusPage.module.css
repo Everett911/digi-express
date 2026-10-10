@@ -1,0 +1,45 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 96px 16px;
+  text-align: center;
+}
+
+.code {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--brand);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.message {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.action {
+  margin-top: 8px;
+  padding: 12px 24px;
+  border: 1px solid var(--button-primary-border);
+  border-radius: 6px;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.action:hover {
+  background: var(--button-primary-hover);
+}

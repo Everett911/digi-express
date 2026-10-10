@@ -6,6 +6,7 @@ import type { Order, OrderItem } from "@/src/schemas/orders";
 import Image from "next/image";
 import { addDays, formatDate } from "@/src/utils/formatters";
 import { addItemToCart } from "@/lib/db/cart.action";
+import { MAX_CART_QUANTITY } from "@/src/schemas/cart";
 import { RotateCcwSquareIcon } from "lucide-react";
 
 type Props = {
@@ -21,15 +22,15 @@ export function OrderItemDetails({ order }: Props) {
         const handleAddToCart = () => {
           startTransition(async () => {
             try {
-              await addItemToCart({
-                productId: item.id,
-                quantity: item.quantity,
+              const result = await addItemToCart({
+                productId: item.productId,
+                quantity: Math.min(item.quantity, MAX_CART_QUANTITY),
                 size: item.size,
                 color: item.color,
               });
-            } catch (err: unknown) {
-              const message = err instanceof Error ? err.message : String(err);
-              alert(message || "Something went wrong.");
+              if (!result.success) alert(result.error);
+            } catch {
+              alert("Something went wrong.");
             }
           });
         };
@@ -54,10 +55,15 @@ export function OrderItemDetails({ order }: Props) {
               <div className={styles.productQuantity}>
                 Quantity: {item.quantity}
               </div>
-              <button className={styles.buyAgainButton}>
+              <button
+                type="button"
+                className={styles.buyAgainButton}
+                onClick={handleAddToCart}
+                disabled={isPending}
+              >
                 <RotateCcwSquareIcon color="white" size={20} />
-                <span className="buy-again-message" onClick={handleAddToCart}>
-                  Add to Cart
+                <span className="buy-again-message">
+                  {isPending ? "Adding..." : "Add to Cart"}
                 </span>
               </button>
             </div>

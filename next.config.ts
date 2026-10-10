@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
     },
   },
   typedRoutes: true,
+  images: {
+    // Product photos uploaded from the admin dashboard (Vercel Blob).
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+    ],
+  },
   turbopack: {
     root: path.resolve(__dirname),
     rules: {
