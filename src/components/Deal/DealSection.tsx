@@ -2,13 +2,14 @@
 import Image from "next/image";
 import Deal from "@/src/assets/images/Deal.png";
 import Gift from "@/src/assets/images/Gift.png";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 
 import styles from "./DealSection.module.css";
 
 function DealSection() {
   return (
     <div className={styles.section}>
-      <span className={styles.text}>Featured Deals</span>
+      <SectionTitle>Featured Deals</SectionTitle>
       <div className={styles.container}>
         <div className={styles.leftWrapper}>
           <Image

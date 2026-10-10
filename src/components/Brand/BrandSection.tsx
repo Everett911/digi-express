@@ -14,6 +14,7 @@ import {
   SiDior, // Dior
 } from "@icons-pack/react-simple-icons";
 import { ChevronDown, X } from "lucide-react";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 
 import styles from "./BrandSection.module.css";
 import { Route } from "next";
@@ -110,7 +111,7 @@ export default function BrandSection() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.topSection}>
-          <h2 className={styles.title}>Shop by Brand</h2>
+          <SectionTitle>Shop by Brand</SectionTitle>
           <Link href="/products" className={styles.seeAllWrapper}>
             <span className={styles.seeAll}>See All</span>
           </Link>

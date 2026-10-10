@@ -5,8 +5,10 @@ import { prisma } from "@/lib/prisma";
 import fs from "fs/promises";
 import path from "path";
 import { notFound, redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { formatCurrency } from "@/src/utils/formatters";
+import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
+import { assertAdmin } from "../_lib/auth";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -33,14 +35,37 @@ const editSchema = z.object({
   color: z.array(z.string()),
   size: z.array(z.string()),
   keywords: z.array(z.string()),
-
-  image: z
-    .array(z.instanceof(File))
-    .optional()
-    .transform((files) => files?.filter((file) => file.size > 0) ?? []),
 });
 
+// Number of numbered fields ("image_0", "image_1", ...) in the form.
+function countSlots(formData: FormData, prefix: string) {
+  let count = 0;
+  while (formData.has(`${prefix}_${count}`)) count++;
+  return count;
+}
+
+async function saveProductImage(file: File) {
+  const filename = `${crypto.randomUUID()}-${file.name}`;
+  const relativePath = `/products/${filename}`;
+  await fs.writeFile(
+    path.join("public", relativePath),
+    Buffer.from(await file.arrayBuffer()),
+  );
+  return relativePath;
+}
+
+// Pages and the cached product lists/search results that read from them.
+function revalidateProducts() {
+  revalidatePath("/");
+  revalidatePath("/products");
+  revalidatePath("/admin", "layout");
+  updateTag("products");
+  updateTag("products-newest");
+}
+
 export async function addProduct(prevState: unknown, formData: FormData) {
+  await assertAdmin();
+
   const extractFormArray = (prefix: string) => {
     const items = [];
     let index = 0;
@@ -76,16 +101,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
   await fs.mkdir("public/products", { recursive: true });
 
   const imagePaths = await Promise.all(
-    data.image.map(async (imageFile) => {
-      const filename = `${crypto.randomUUID()}-${imageFile.name}`;
-      const relativePath = `/products/${filename}`;
-      const absolutePath = path.join("public", relativePath);
-
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      await fs.writeFile(absolutePath, buffer);
-
-      return relativePath;
-    }),
+    data.image.slice(0, MAX_PRODUCT_IMAGES).map(saveProductImage),
   );
 
   try {
@@ -107,8 +123,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
     return { error: (err as Error).message ?? String(err) };
   }
 
-  revalidatePath("/");
-  revalidatePath("/products");
+  revalidateProducts();
   redirect("/admin/products");
 }
 
@@ -116,15 +131,26 @@ export async function toggleProductAvailability(
   id: string,
   isAvailableForPurchase: boolean,
 ) {
+  await assertAdmin();
+
   await prisma.product.update({
     where: { id },
     data: { isAvailableForPurchase },
   });
-  revalidatePath("/");
-  revalidatePath("/products");
+  revalidateProducts();
 }
 
 export async function deleteProduct(id: string) {
+  await assertAdmin();
+
+  // Order items reference products with onDelete: Restrict.
+  const orderItemCount = await prisma.orderItem.count({
+    where: { productId: id },
+  });
+  if (orderItemCount > 0) {
+    return { error: "Products that have been ordered can't be deleted." };
+  }
+
   const product = await prisma.product.delete({ where: { id } });
   if (product == null) return notFound();
 
@@ -142,8 +168,7 @@ export async function deleteProduct(id: string) {
       }
     }),
   );
-  revalidatePath("/");
-  revalidatePath("/products");
+  revalidateProducts();
 }
 
 export async function updateProduct(
@@ -151,6 +176,8 @@ export async function updateProduct(
   prevState: unknown,
   formData: FormData,
 ) {
+  await assertAdmin();
+
   const extractFormArray = (prefix: string) => {
     const items = [];
     let index = 0;
@@ -174,7 +201,6 @@ export async function updateProduct(
     description: formData.get("description"),
     brand: formData.get("brand"),
     priceCents: rawPrice,
-    image: extractFormArray("image"),
     color: extractFormArray("color"),
     size: extractFormArray("size"),
     keywords: extractFormArray("keyword"),
@@ -190,53 +216,52 @@ export async function updateProduct(
   const product = await prisma.product.findUnique({ where: { id } });
   if (product == null) return notFound();
 
-  let imagePaths: string[] = Array.isArray(product.image) ? product.image : [];
+  // Each image slot either keeps its current photo, replaces it with a new
+  // upload, or is removed. Only paths that belong to this product are kept.
+  const currentImages = Array.isArray(product.image) ? product.image : [];
+  const slotCount = Math.min(
+    MAX_PRODUCT_IMAGES,
+    Math.max(countSlots(formData, "image"), countSlots(formData, "keepImage")),
+  );
 
-  if (data.image && data.image.length > 0) {
-    await fs.mkdir("public/products", { recursive: true });
-    const filesArray = Array.isArray(data.image) ? data.image : [data.image];
+  await fs.mkdir("public/products", { recursive: true });
+  const imagePaths: string[] = [];
+  for (let index = 0; index < slotCount; index++) {
+    const upload = formData.get(`image_${index}`);
+    const keep = formData.get(`keepImage_${index}`);
 
-    if (product.image) {
-      const oldImages = Array.isArray(product.image)
-        ? product.image
-        : [product.image];
-      for (const oldImagePath of oldImages) {
-        if (oldImagePath) {
-          const absoluteOldPath = path.join("public", oldImagePath);
-          try {
-            await fs.access(absoluteOldPath);
-            await fs.unlink(absoluteOldPath);
-          } catch (error) {
-            console.warn(
-              `Could not delete old image: ${absoluteOldPath}`,
-              error,
-            );
-          }
-        }
-      }
+    if (upload instanceof File && upload.size > 0) {
+      imagePaths.push(await saveProductImage(upload));
+    } else if (typeof keep === "string" && currentImages.includes(keep)) {
+      imagePaths.push(keep);
     }
-
-    const uploadedPaths = await Promise.all(
-      filesArray.map(async (imageFile) => {
-        if (!(imageFile instanceof File) || imageFile.size === 0) return "";
-        const filename = `${crypto.randomUUID()}-${imageFile.name}`;
-        const relativePath = `/products/${filename}`;
-        const absolutePath = path.join("public", relativePath);
-
-        const buffer = Buffer.from(await imageFile.arrayBuffer());
-        await fs.writeFile(absolutePath, buffer);
-        return relativePath;
-      }),
-    );
-
-    imagePaths = uploadedPaths.filter(Boolean);
   }
+
+  if (imagePaths.length === 0) {
+    return {
+      formErrors: [],
+      fieldErrors: { image: ["At least one image is required"] },
+    };
+  }
+
+  // Delete files for photos that were replaced or removed.
+  await Promise.all(
+    currentImages
+      .filter((oldPath) => oldPath && !imagePaths.includes(oldPath))
+      .map(async (oldPath) => {
+        const absoluteOldPath = path.join("public", oldPath);
+        try {
+          await fs.unlink(absoluteOldPath);
+        } catch (error) {
+          console.warn(`Could not delete old image: ${absoluteOldPath}`, error);
+        }
+      }),
+  );
 
   try {
     await prisma.product.update({
       where: { id },
       data: {
-        isAvailableForPurchase: false,
         name: data.name,
         brand: data.brand,
         priceCents: data.priceCents,
@@ -252,7 +277,6 @@ export async function updateProduct(
     return { error: (err as Error).message ?? String(err) };
   }
 
-  revalidatePath("/");
-  revalidatePath("/products");
+  revalidateProducts();
   redirect("/admin/products");
 }

@@ -1,0 +1,9 @@
+.formBody {
+  padding: 24px;
+}
+
+@media (max-width: 640px) {
+  .formBody {
+    padding: 16px;
+  }
+}

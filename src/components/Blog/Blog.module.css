@@ -13,9 +13,8 @@
   gap: 0;
 }
 
-.titleSection {
-  color: var(--text-primary);
-  padding: 10px 30px;
+.header {
+  padding: 0 16px;
 }
 
 .title {

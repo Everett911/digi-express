@@ -1,14 +1,12 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { assertAdmin } from "../_lib/auth";
 
 export async function deleteOrder(id: string) {
-  const order = await prisma.order.delete({
-    where: { id },
-  });
+  await assertAdmin();
 
-  if (order == null) return notFound();
-
-  return order;
+  await prisma.order.delete({ where: { id } });
+  revalidatePath("/admin", "layout");
 }

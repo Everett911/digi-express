@@ -1,0 +1,51 @@
+/* Shared cell styles for the admin tables. */
+.primary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--button-secondary-hover);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.muted {
+  font-size: 13px;
+  color: var(--admin-muted);
+}
+
+.truncate {
+  display: block;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.actions {
+  width: 48px;
+  text-align: right;
+}

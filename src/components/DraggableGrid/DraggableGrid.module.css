@@ -1,18 +1,28 @@
 .grid {
   display: flex;
-  white-space: nowrap;
-  overflow-x: hidden;
-  overflow-y: hidden;
   gap: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
   cursor: grab;
   user-select: none;
-  scroll-behavior: smooth;
+  -webkit-user-select: none;
+  /* Hide the scrollbar but keep the grid scrollable (drag, swipe, trackpad). */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.grid:active {
+.grid::-webkit-scrollbar {
+  display: none;
+}
+.grid > * {
+  flex-shrink: 0;
+}
+
+/* Set by useDragScroll while the mouse is dragging. */
+.grid[data-dragging="true"] {
   cursor: grabbing;
+  /* Smooth scrolling makes every drag step animate, which feels laggy. */
+  scroll-behavior: auto;
 }
-@media (max-width: 640px) {
-  .grid {
-    width: 300px;
-  }
+.grid[data-dragging="true"] * {
+  cursor: grabbing;
 }

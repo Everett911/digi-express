@@ -1,28 +1,34 @@
-import AdminProductsHeader from "../_components/AdminProductsHeader";
-import styles from "./page.module.css";
-import ButtonLink from "../_components/ButtonLink";
 import { Suspense } from "react";
-import { ProductTable, ProductTableSkeleton } from "./PageTable";
+import { Plus } from "lucide-react";
+import { ButtonLink, PageHeader, Panel } from "../_components/ui";
+import { requireAdminPage } from "../_lib/auth";
+import { parsePage } from "../_lib/pagination";
+import { ProductTable, ProductTableSkeleton } from "./ProductTable";
 
 interface PageProps {
-  searchParams: Promise<{ page?: string; limit?: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export default async function AdminProductsPage({ searchParams }: PageProps) {
-  const parsedParams = await searchParams;
-  const currentPage = Number(parsedParams.page) || 1;
-  const currentLimit = Number(parsedParams.limit) || 10;
+  await requireAdminPage();
+  const page = parsePage((await searchParams).page);
 
   return (
     <>
-      <div className={styles.container}>
-        <AdminProductsHeader>Products</AdminProductsHeader>
-        <ButtonLink>Add Products</ButtonLink>
-      </div>
-
-      <Suspense key={currentPage} fallback={<ProductTableSkeleton />}>
-        <ProductTable page={currentPage} limit={currentLimit} />
-      </Suspense>
+      <PageHeader
+        title="Products"
+        description="Add, edit and publish the products in your store."
+        action={
+          <ButtonLink href="/admin/products/new" icon={Plus}>
+            Add product
+          </ButtonLink>
+        }
+      />
+      <Panel>
+        <Suspense key={page} fallback={<ProductTableSkeleton />}>
+          <ProductTable page={page} />
+        </Suspense>
+      </Panel>
     </>
   );
 }

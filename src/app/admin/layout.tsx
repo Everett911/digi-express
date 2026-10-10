@@ -1,11 +1,11 @@
-import { Nav, NavLink } from "@/src/components/Nav/Nav";
-import styles from "./page.module.css";
 import { Theme } from "@radix-ui/themes";
 import Image from "next/image";
 import Link from "next/link";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { Store } from "lucide-react";
+import AdminNav from "./_components/AdminNav";
+import { requireAdminPage } from "./_lib/auth";
+import styles from "./layout.module.css";
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({
@@ -13,35 +13,45 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session || session.user.role !== "admin") {
-    redirect("/auth");
-  }
+  const { user } = await requireAdminPage();
+  const displayName = user.name || user.email;
+
   return (
-    <>
-      <Nav>
-        <Link href={"/"}>
-          <Image
-            src={"/logo.png"}
-            alt="header logo"
-            height={50}
-            width={150}
-            style={{ objectFit: "contain" }}
-            className={styles.imgLogo}
-          />
-        </Link>
-        <div>
-          <NavLink href="/admin">Dashboard</NavLink>
-          <NavLink href="/admin/products">Products</NavLink>
-          <NavLink href="/admin/users">Customers</NavLink>
-          <NavLink href="/admin/orders">Sales</NavLink>
-        </div>
-      </Nav>
-      <Theme accentColor="blue">
-        <div className={styles.container}>{children}</div>
-      </Theme>
-    </>
+    <Theme accentColor="blue" hasBackground={false}>
+      <div className={styles.shell}>
+        <aside className={styles.sidebar}>
+          <Link href="/admin" className={styles.brand}>
+            <Image
+              src="/logo.png"
+              alt="Digi Express admin"
+              height={40}
+              width={120}
+              style={{ objectFit: "contain" }}
+              priority
+            />
+          </Link>
+
+          <AdminNav />
+
+          <div className={styles.sidebarFooter}>
+            <div className={styles.user}>
+              <span className={styles.avatar} aria-hidden>
+                {displayName.charAt(0).toUpperCase()}
+              </span>
+              <div className={styles.userText}>
+                <span className={styles.userName}>{displayName}</span>
+                <span className={styles.userRole}>Administrator</span>
+              </div>
+            </div>
+            <Link href="/" className={styles.storeLink}>
+              <Store size={16} aria-hidden />
+              <span>View store</span>
+            </Link>
+          </div>
+        </aside>
+
+        <main className={styles.main}>{children}</main>
+      </div>
+    </Theme>
   );
 }

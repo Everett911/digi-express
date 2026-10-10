@@ -25,12 +25,6 @@
   color: var(--text-primary);
 }
 
-.title {
-  display: block;
-  color: var(--text-primary);
-  margin-bottom: 24px;
-}
-
 /* Dropdown (mobile only) */
 .dropdown {
   display: none;

@@ -7,6 +7,7 @@ import DealSection from "@/src/components/Deal/DealSection";
 import BrandSection from "@/src/components/Brand/BrandSection";
 import Blog from "@/src/components/Blog/Blog";
 import DraggableGrid from "@/src/components/DraggableGrid/DraggableGrid";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 import {
   ProductCard,
   ProductSkeleton,
@@ -20,7 +21,7 @@ export default async function Home() {
     <main className="styles.main">
       <Carousel />
       <div className={styles.container}>
-        <h2 className={styles.arrivalText}>New Arrivals</h2>
+        <SectionTitle>New Arrivals</SectionTitle>
         <DraggableGrid className={styles.grid}>
           <Suspense fallback={<ProductSkeleton />}>
             <ProductCard products={newestProduct} />

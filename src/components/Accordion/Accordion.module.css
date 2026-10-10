@@ -70,3 +70,17 @@
   font-family: inherit;
   white-space: pre-wrap;
 }
+
+.descriptionItem {
+  margin: 0 0 12px;
+  max-width: 75ch;
+}
+
+.descriptionItem:last-child {
+  margin-bottom: 0;
+}
+
+.descriptionLabel {
+  display: block;
+  color: var(--text-primary);
+}
