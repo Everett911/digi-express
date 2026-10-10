@@ -1,77 +1,143 @@
-import AdminUsersHeader from "../_components/AdminProductsHeader";
-import styles from "./page.module.css";
-import { DropdownMenu, Table } from "@radix-ui/themes";
+import { Table } from "@radix-ui/themes";
 import { prisma } from "@/lib/prisma";
-
-import { DeleteDropdownItem } from "./_actions/UserActions";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
-import { MoreVertical } from "lucide-react";
+import { deleteUser } from "../_actions/users";
+import RowActions from "../_components/RowActions";
+import {
+  EmptyState,
+  PageHeader,
+  Pagination,
+  Panel,
+  SrOnly,
+  StatusBadge,
+} from "../_components/ui";
+import table from "../_components/table.module.css";
+import { requireAdminPage } from "../_lib/auth";
+import { formatShortDate } from "../_lib/format";
+import { PAGE_SIZE, pageCount, parsePage } from "../_lib/pagination";
 
-export default function AdminUsersPage() {
-  return (
-    <>
-      <div className={styles.container}>
-        <AdminUsersHeader>Costumer</AdminUsersHeader>
-      </div>
-      <UserTable />
-    </>
-  );
+interface PageProps {
+  searchParams: Promise<{ page?: string }>;
 }
 
-async function UserTable() {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      email: true,
-      orders: true,
-    },
-    orderBy: { name: "asc" },
-  });
-  if (users.length === 0) return <p> No Users Found</p>;
-  return (
-    <Table.Root>
-      <Table.Header>
-        <Table.Row>
-          <Table.ColumnHeaderCell>Email</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Orders</Table.ColumnHeaderCell>
-          <Table.ColumnHeaderCell>Value</Table.ColumnHeaderCell>
+export default async function AdminUsersPage({ searchParams }: PageProps) {
+  const session = await requireAdminPage();
+  const page = parsePage((await searchParams).page);
 
-          <Table.ColumnHeaderCell>
-            <span className={styles.span}>Actions</span>
-          </Table.ColumnHeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {users.map((user) => (
-          <Table.Row key={user.id}>
-            <Table.Cell>{user.email}</Table.Cell>
-            <Table.Cell>{formatNumber(user.orders.length)}</Table.Cell>
-            <Table.Cell>
-              {formatCurrency(
-                user.orders.reduce(
-                  (sum, o) => (o.totalCostCents + sum) / 100,
-                  0,
-                ),
-              )}
-            </Table.Cell>
-            <Table.Cell>
-              <DropdownMenu.Root modal={false}>
-                <DropdownMenu.Trigger>
-                  <button
-                    style={{ border: "none", backgroundColor: "transparent" }}
-                  >
-                    <MoreVertical />
-                    <span className={styles.span}>Action</span>
-                  </button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DeleteDropdownItem id={user.id} disabled={false} />
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
-            </Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+  const [total, users] = await Promise.all([
+    prisma.user.count(),
+    prisma.user.findMany({
+      skip: (page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        _count: { select: { orders: true } },
+      },
+    }),
+  ]);
+
+  // Total spent for just the customers on this page, summed in the database.
+  const spending = await prisma.order.groupBy({
+    by: ["userId"],
+    where: { userId: { in: users.map((user) => user.id) } },
+    _sum: { totalCostCents: true },
+  });
+  const spentByUser = new Map(
+    spending.map((row) => [row.userId, row._sum.totalCostCents ?? 0]),
+  );
+
+  return (
+    <>
+      <PageHeader
+        title="Customers"
+        description={`${formatNumber(total)} registered ${total === 1 ? "account" : "accounts"}.`}
+      />
+      <Panel>
+        {total === 0 ? (
+          <EmptyState
+            title="No customers yet"
+            description="Accounts appear here when people sign up."
+          />
+        ) : (
+          <>
+            <Table.Root variant="ghost">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>Customer</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Role</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Joined</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Orders</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Total spent</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell className={table.actions}>
+                    <SrOnly>Actions</SrOnly>
+                  </Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {users.map((user) => {
+                  const orderCount = user._count.orders;
+                  const isSelf = user.id === session.user.id;
+
+                  return (
+                    <Table.Row key={user.id} align="center">
+                      <Table.RowHeaderCell>
+                        <div className={table.stack}>
+                          <span className={table.strong}>
+                            {user.name || user.email}
+                          </span>
+                          {user.name && (
+                            <span className={table.muted}>{user.email}</span>
+                          )}
+                        </div>
+                      </Table.RowHeaderCell>
+                      <Table.Cell>
+                        <StatusBadge
+                          tone={user.role === "admin" ? "accent" : "neutral"}
+                        >
+                          {user.role === "admin" ? "Admin" : "Customer"}
+                        </StatusBadge>
+                      </Table.Cell>
+                      <Table.Cell className={table.number}>
+                        {formatShortDate(user.createdAt)}
+                      </Table.Cell>
+                      <Table.Cell className={table.number}>
+                        {formatNumber(orderCount)}
+                      </Table.Cell>
+                      <Table.Cell className={`${table.number} ${table.strong}`}>
+                        {formatCurrency((spentByUser.get(user.id) ?? 0) / 100)}
+                      </Table.Cell>
+                      <Table.Cell className={table.actions}>
+                        <RowActions
+                          label={`Actions for ${user.email}`}
+                          onDelete={deleteUser.bind(null, user.id)}
+                          deleteConfirm={`Delete ${user.email}? This can't be undone.`}
+                          deleteBlockedReason={
+                            isSelf
+                              ? "You can't delete your own account."
+                              : orderCount > 0
+                                ? "Customers with orders can't be deleted."
+                                : undefined
+                          }
+                        />
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table.Root>
+            <Pagination
+              basePath="/admin/users"
+              page={page}
+              totalPages={pageCount(total)}
+            />
+          </>
+        )}
+      </Panel>
+    </>
   );
 }

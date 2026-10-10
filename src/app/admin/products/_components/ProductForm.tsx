@@ -10,6 +10,17 @@ import Form from "next/form";
 
 import Image from "next/image";
 import type { Product } from "@prisma/client";
+import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
+
+type ImageSlot = {
+  key: string;
+  existing: string | null;
+  preview: string | null;
+};
+
+function newSlot(existing: string | null): ImageSlot {
+  return { key: crypto.randomUUID(), existing, preview: null };
+}
 
 function ProductForm({ product }: { product?: Product | null }) {
   const [error, action] = useActionState(
@@ -26,8 +37,13 @@ function ProductForm({ product }: { product?: Product | null }) {
   const [sizes, setSizes] = useState<string[]>(product?.size ?? [""]);
   const [keywords, setKeywords] = useState<string[]>(product?.keywords ?? [""]);
 
-  const [images, setImages] = useState<string[]>(
-    product?.image?.length ? product.image : [""],
+  // One slot per photo: the saved image (if any) and a preview of a newly
+  // picked file. Keys stay stable so file inputs keep their files when a
+  // slot above them is removed.
+  const [imageSlots, setImageSlots] = useState<ImageSlot[]>(() =>
+    product?.image?.length
+      ? product.image.map((existing) => newSlot(existing))
+      : [newSlot(null)],
   );
 
   const addColorField = () => setColors([...(colors || []), ""]);
@@ -35,26 +51,29 @@ function ProductForm({ product }: { product?: Product | null }) {
   const addKeywordField = () => setKeywords([...(keywords || []), ""]);
 
   const addImageField = () => {
-    if (images.length < 3) {
-      setImages([...images, ""]);
+    if (imageSlots.length < MAX_PRODUCT_IMAGES) {
+      setImageSlots([...imageSlots, newSlot(null)]);
     }
   };
 
+  const removeImageField = (key: string) => {
+    const slot = imageSlots.find((s) => s.key === key);
+    if (slot?.preview) URL.revokeObjectURL(slot.preview);
+    setImageSlots(imageSlots.filter((s) => s.key !== key));
+  };
+
   const handleImageChange = (
-    index: number,
+    key: string,
     event: ChangeEvent<HTMLInputElement>,
   ) => {
-    const files = event.target.files;
-    if (files && files[0]) {
-      const updatedImages = [...images];
-
-      if (updatedImages[index].startsWith("blob:")) {
-        URL.revokeObjectURL(updatedImages[index]);
-      }
-
-      updatedImages[index] = URL.createObjectURL(files[0]);
-      setImages(updatedImages);
-    }
+    const file = event.target.files?.[0];
+    setImageSlots(
+      imageSlots.map((slot) => {
+        if (slot.key !== key) return slot;
+        if (slot.preview) URL.revokeObjectURL(slot.preview);
+        return { ...slot, preview: file ? URL.createObjectURL(file) : null };
+      }),
+    );
   };
 
   return (
@@ -161,34 +180,68 @@ function ProductForm({ product }: { product?: Product | null }) {
         </div>
 
         <div className={styles.formContainer}>
-          <span className={styles.label}>Images</span>
-          {images.map((_, index) => (
-            <div key={index} className={styles.inputGroup}>
-              <label htmlFor={`image-${index}`}>Image #{index + 1}</label>
-              <input
-                id={`image-${index}`}
-                type="file"
-                name={`image_${index}`}
-                className={styles.input}
-                onChange={(e) => handleImageChange(index, e)}
-                required={product == null}
-              />
+          <span className={styles.label}>
+            Images ({imageSlots.length} of {MAX_PRODUCT_IMAGES})
+          </span>
+          <p className={styles.helpText}>
+            The first image is the one shown in product lists. Add photos from
+            different angles, close-ups of details, or the product in use.
+          </p>
+          {imageSlots.map((slot, index) => {
+            const shown = slot.preview ?? slot.existing;
+            return (
+              <div key={slot.key} className={styles.inputGroup}>
+                <label htmlFor={`image-${slot.key}`}>
+                  Image #{index + 1}
+                  {index === 0 && " (main image)"}
+                </label>
+                {slot.existing && (
+                  <input
+                    type="hidden"
+                    name={`keepImage_${index}`}
+                    value={slot.existing}
+                  />
+                )}
+                <input
+                  id={`image-${slot.key}`}
+                  type="file"
+                  accept="image/*"
+                  name={`image_${index}`}
+                  className={styles.input}
+                  onChange={(e) => handleImageChange(slot.key, e)}
+                  required={product == null || !slot.existing}
+                />
 
-              {product?.image?.[index] && (
-                <Activity mode="visible">
+                {shown && (
                   <Image
-                    src={product.image[index]}
+                    src={shown}
                     height="200"
                     width="200"
-                    alt={`Current product image ${index + 1}`}
-                    className="object-cover rounded"
+                    alt={`Product image ${index + 1}`}
+                    className={styles.imagePreview}
+                    unoptimized={shown.startsWith("blob:")}
                   />
-                </Activity>
-              )}
-            </div>
-          ))}
+                )}
+                {slot.preview && slot.existing && (
+                  <span className={styles.helpText}>
+                    This photo replaces the current one when you save.
+                  </span>
+                )}
 
-          {images.length < 3 && (
+                {imageSlots.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeImageField(slot.key)}
+                    className={styles.removeButton}
+                  >
+                    Remove image #{index + 1}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+
+          {imageSlots.length < MAX_PRODUCT_IMAGES && (
             <button
               type="button"
               onClick={addImageField}

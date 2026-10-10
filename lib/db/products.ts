@@ -2,7 +2,7 @@ import { prisma } from "../prisma";
 import { cache } from "@/lib/cache";
 import type { Prisma, Product } from "@prisma/client";
 import { mapPriceGroupsToPrisma } from "@/lib/utils/priceMapper";
-import { buildProductSearchWhere } from "../utils/productSearch";
+import { searchProducts } from "../utils/productSearch";
 
 export const getNewestProducts = cache(
   async (): Promise<Product[]> => {
@@ -28,10 +28,32 @@ type AllowedSearchParams = {
   brand?: string | string[];
 };
 
+export type ProductListResult = {
+  products: Product[];
+  // Set when the search corrected a misspelling, e.g. "snekers" -> "sneaker".
+  correctedQuery: string | null;
+};
+
+const DEPARTMENTS = [
+  { aliases: ["men", "men's", "mens"], exclusive: false },
+  { aliases: ["women", "women's", "womens"], exclusive: false },
+  { aliases: ["kid", "kid's", "kids"], exclusive: true },
+  { aliases: ["homeware", "homewares"], exclusive: true },
+];
+
+// Keywords are stored with inconsistent casing ("men", "Men", "MEN").
+function keywordVariants(words: string[]) {
+  return words.flatMap((word) => [
+    word,
+    word.charAt(0).toUpperCase() + word.slice(1),
+    word.toUpperCase(),
+  ]);
+}
+
 async function fetchProductsFromDb(
   searchQuery: string,
   searchParams: AllowedSearchParams,
-): Promise<Product[]> {
+): Promise<ProductListResult> {
   const sizes = (
     typeof searchParams.size === "string"
       ? [searchParams.size]
@@ -65,134 +87,81 @@ async function fetchProductsFromDb(
     .map((val) => val.trim().toLowerCase())
     .filter(Boolean);
 
-  const isFilteringForMen = rawTypes.includes("men");
-  const isFilteringForWomen = rawTypes.includes("women");
-  const isFilteringForKid = rawTypes.includes("kid");
-  const isFilteringForHomewares = rawTypes.includes("homewares");
-
-  const structuralKeywords = rawTypes.filter(
-    (t) => t !== "men" && t !== "women",
+  // A product belongs to a department through its keywords. Men and women
+  // overlap so unisex products appear in both; kids and home items only
+  // appear under their own department.
+  const selectedDepartments = DEPARTMENTS.filter((department) =>
+    department.aliases.some((alias) => rawTypes.includes(alias)),
   );
+  const allAliases = DEPARTMENTS.flatMap((department) => department.aliases);
+  const structuralKeywords = rawTypes.filter((t) => !allAliases.includes(t));
 
-  const conditions: Prisma.ProductWhereInput[] = [];
+  const conditions: Prisma.ProductWhereInput[] = [
+    { isAvailableForPurchase: true },
+  ];
 
-  if (searchQuery) conditions.push(buildProductSearchWhere(searchQuery));
+  // Ranked IDs from the text search; null means "no search, don't rank".
+  const search = searchQuery ? await searchProducts(searchQuery) : null;
+  const correctedQuery = search?.correctedQuery ?? null;
+  if (search) {
+    if (search.ids.length === 0) return { products: [], correctedQuery };
+    conditions.push({ id: { in: search.ids } });
+  }
   if (sizes.length > 0) conditions.push({ size: { hasSome: sizes } });
   if (colors.length > 0) conditions.push({ color: { hasSome: colors } });
   if (brands.length > 0) conditions.push({ brand: { in: brands } });
   if (priceFilters.length > 0) conditions.push({ OR: priceFilters });
-  const MEN_TOKENS = [
-    "men",
-    "Men",
-    "MEN",
-    "men's",
-    "Men's",
-    "MEN'S",
-    "mens",
-    "Mens",
-    "MENS",
-  ];
-  const WOMEN_TOKENS = [
-    "women",
-    "Women",
-    "WOMEN",
-    "women's",
-    "Women's",
-    "WOMEN'S",
-    "womens",
-    "Womens",
-    "WOMENS",
-  ];
-  const KID_TOKENS = [
-    "kid",
-    "Kid",
-    "KID",
-    "kid's",
-    "Kid's",
-    "KID'S",
-    "kids",
-    "Kids",
-    "KIDS",
-  ];
-  const HOMEWARE_TOKENS = [
-    "women",
-    "Women",
-    "WOMEN",
-    "women's",
-    "Women's",
-    "WOMEN'S",
-    "womens",
-    "Womens",
-    "WOMENS",
-  ];
 
-  if (isFilteringForMen && !isFilteringForWomen) {
-    conditions.push({ keywords: { hasSome: MEN_TOKENS } });
-    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
-  } else if (isFilteringForWomen && !isFilteringForMen) {
-    conditions.push({ keywords: { hasSome: WOMEN_TOKENS } });
-    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
-  } else if (isFilteringForKid && !isFilteringForMen && !isFilteringForWomen) {
-    conditions.push({ keywords: { hasSome: KID_TOKENS } });
-    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: HOMEWARE_TOKENS } } });
-  } else if (
-    isFilteringForHomewares &&
-    !isFilteringForMen &&
-    !isFilteringForWomen
-  ) {
-    conditions.push({ keywords: { hasSome: HOMEWARE_TOKENS } });
-    conditions.push({ NOT: { keywords: { hasSome: MEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: WOMEN_TOKENS } } });
-    conditions.push({ NOT: { keywords: { hasSome: KID_TOKENS } } });
-  } else {
-    // Optional: Handle multi-category selections or default state
-    const activeTokens = [];
-    const inactiveTokens = [];
-
-    if (isFilteringForMen) activeTokens.push(...MEN_TOKENS);
-    else inactiveTokens.push(...MEN_TOKENS);
-    if (isFilteringForWomen) activeTokens.push(...WOMEN_TOKENS);
-    else inactiveTokens.push(...WOMEN_TOKENS);
-    if (isFilteringForKid) activeTokens.push(...KID_TOKENS);
-    else inactiveTokens.push(...KID_TOKENS);
-    if (isFilteringForHomewares) activeTokens.push(...HOMEWARE_TOKENS);
-    else inactiveTokens.push(...HOMEWARE_TOKENS);
-
-    if (activeTokens.length > 0) {
-      conditions.push({ keywords: { hasSome: activeTokens } });
-    }
-    if (inactiveTokens.length > 0) {
-      conditions.push({ NOT: { keywords: { hasSome: inactiveTokens } } });
+  if (selectedDepartments.length > 0) {
+    conditions.push({
+      keywords: {
+        hasSome: selectedDepartments.flatMap((department) =>
+          keywordVariants(department.aliases),
+        ),
+      },
+    });
+    const excluded = DEPARTMENTS.filter(
+      (department) =>
+        department.exclusive && !selectedDepartments.includes(department),
+    );
+    if (excluded.length > 0) {
+      conditions.push({
+        NOT: {
+          keywords: {
+            hasSome: excluded.flatMap((department) =>
+              keywordVariants(department.aliases),
+            ),
+          },
+        },
+      });
     }
   }
 
   if (structuralKeywords.length > 0) {
     conditions.push({
-      OR: structuralKeywords.flatMap((t) => [
-        { keywords: { has: t } },
-        { keywords: { has: t.toUpperCase() } },
-        { keywords: { has: t.charAt(0).toUpperCase() + t.slice(1) } },
-      ]),
+      keywords: { hasSome: keywordVariants(structuralKeywords) },
     });
   }
 
-  return await prisma.product.findMany({
-    where: conditions.length > 0 ? { AND: conditions } : {},
+  const products = await prisma.product.findMany({
+    where: { AND: conditions },
     orderBy: { createdAt: "desc" },
   });
+
+  if (!search) return { products, correctedQuery };
+
+  const rank = new Map(search.ids.map((id, index) => [id, index]));
+  products.sort((a, b) => rank.get(a.id)! - rank.get(b.id)!);
+  return { products, correctedQuery };
 }
 
 export async function getProducts(
   searchQuery: string,
   searchParamsPromise: Promise<AllowedSearchParams>,
-) {
+): Promise<ProductListResult> {
   const resolvedParams = await searchParamsPromise;
+  // "Shoes" and " shoes " give the same results, so share one cache entry.
+  const normalizedQuery = searchQuery.trim().replace(/\s+/g, " ").toLowerCase();
 
   const serializedKey = JSON.stringify(
     resolvedParams,
@@ -200,10 +169,12 @@ export async function getProducts(
   );
 
   return cache(
-    async (): Promise<Product[]> => {
-      return fetchProductsFromDb(searchQuery, resolvedParams);
+    async (): Promise<ProductListResult> => {
+      return fetchProductsFromDb(normalizedQuery, resolvedParams);
     },
-    ["products", "search", searchQuery, serializedKey],
+    // Bump the version when the filtering logic or result shape changes,
+    // so old cache entries are skipped.
+    ["products", "search", "v5", normalizedQuery, serializedKey],
     {
       revalidate: 60 * 60 * 24,
       tags: ["products"],

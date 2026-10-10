@@ -15,3 +15,6 @@ export const ProductSchema = z.object({
 });
 
 export type Product = z.infer<typeof ProductSchema>;
+
+// Most photos a product can have; used by the admin form and the save actions.
+export const MAX_PRODUCT_IMAGES = 6;

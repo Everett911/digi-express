@@ -34,21 +34,41 @@ async function ProductList({
   searchQuery: string;
   searchParams: PageProps["searchParams"];
 }) {
-  const products = await getProducts(searchQuery, searchParams);
+  const { products, correctedQuery } = await getProducts(
+    searchQuery,
+    searchParams,
+  );
 
-  if (products.length === 0) {
-    return (
-      <div className={styles.searchNoFound}>
-        <h3>No items found</h3>
-        <p>
-          We couldn&apos;t find any products matching your search term or active
-          filters.
+  return (
+    <>
+      {correctedQuery ? (
+        <p className={styles.searchStatus}>
+          No results for &ldquo;{searchQuery}&rdquo;. Showing results for
+          &ldquo;<strong>{correctedQuery}</strong>&rdquo; instead.
         </p>
-      </div>
-    );
-  }
+      ) : (
+        searchQuery && (
+          <p className={styles.searchStatus}>
+            Showing results for: &ldquo;<strong>{searchQuery}</strong>&rdquo;
+          </p>
+        )
+      )}
 
-  return <ProductCard products={products} />;
+      <div className={styles.grid}>
+        {products.length === 0 ? (
+          <div className={styles.searchNoFound}>
+            <h3>No items found</h3>
+            <p>
+              We couldn&apos;t find any products matching your search term or
+              active filters.
+            </p>
+          </div>
+        ) : (
+          <ProductCard products={products} />
+        )}
+      </div>
+    </>
+  );
 }
 
 export default async function ProductsPage({ searchParams }: PageProps) {
@@ -73,17 +93,15 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         </p>
       )}
 
-      {searchQuery && (
-        <p className={styles.searchStatus}>
-          Showing results for: &ldquo;<strong>{searchQuery}</strong>&rdquo;
-        </p>
-      )}
-
-      <div className={styles.grid}>
-        <Suspense fallback={<ProductSkeleton />}>
-          <ProductList searchQuery={searchQuery} searchParams={searchParams} />
-        </Suspense>
-      </div>
+      <Suspense
+        fallback={
+          <div className={styles.grid}>
+            <ProductSkeleton />
+          </div>
+        }
+      >
+        <ProductList searchQuery={searchQuery} searchParams={searchParams} />
+      </Suspense>
     </main>
   );
 }

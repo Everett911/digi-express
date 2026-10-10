@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 import styles from "./Blog.module.css";
 import Image from "next/image";
 import first from "@/src/assets/images/Blog1.png";
@@ -10,7 +11,9 @@ import forth from "@/src/assets/images/Blog4.png";
 function Blog() {
   return (
     <div className={styles.section}>
-      <h2 className={styles.titleSection}>Latest Blogs</h2>
+      <div className={styles.header}>
+        <SectionTitle>Latest Blogs</SectionTitle>
+      </div>
       <div className={styles.container}>
         <div className={styles.wrapperBox}>
           <button className={styles.button}>Fitness</button>

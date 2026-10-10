@@ -13,6 +13,7 @@ import {
   ChevronDown,
   X,
 } from "lucide-react";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 import styles from "./CategorySection.module.css";
 import { Route } from "next";
 
@@ -99,7 +100,7 @@ export default function CategorySection() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.headerColumn}>
-          <span className={styles.title}>Shop by Category</span>
+          <SectionTitle>Shop by Category</SectionTitle>
           <Link href="/products" className={styles.seeAll}>
             See all
           </Link>

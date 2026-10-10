@@ -44,3 +44,9 @@
 
   background-color: rgba(52, 103, 204, 0.1);
 }
+
+/* The swatch fill hides the background tint, so ring the chosen color. */
+.colorButton.active {
+  outline: 2px solid #3467cc;
+  outline-offset: 2px;
+}

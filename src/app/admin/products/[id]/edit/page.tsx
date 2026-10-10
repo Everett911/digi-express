@@ -1,29 +1,29 @@
-import AdminProductsHeader from "@/src/app/admin/_components/AdminProductsHeader";
-import ProductForm from "../../_components/ProductForm";
 import { notFound } from "next/navigation";
-import { prisma } from "../../../../../../lib/prisma";
+import { prisma } from "@/lib/prisma";
+import { PageHeader, Panel } from "../../../_components/ui";
+import { requireAdminPage } from "../../../_lib/auth";
+import ProductForm from "../../_components/ProductForm";
+import styles from "../../form.module.css";
 
 export default async function EditProductPage({
   params,
 }: {
-  params: Promise<{ id?: string }>;
+  params: Promise<{ id: string }>;
 }) {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-  if (!id) {
-    notFound();
-  }
+  await requireAdminPage();
+  const { id } = await params;
 
   const product = await prisma.product.findUnique({ where: { id } });
-  if (!product) {
-    console.log("no product id");
-    notFound();
-  }
+  if (!product) notFound();
 
   return (
     <>
-      <AdminProductsHeader>Update Product</AdminProductsHeader>
-      <ProductForm product={product} />
+      <PageHeader title="Edit product" description={product.name} />
+      <Panel>
+        <div className={styles.formBody}>
+          <ProductForm product={product} />
+        </div>
+      </Panel>
     </>
   );
 }

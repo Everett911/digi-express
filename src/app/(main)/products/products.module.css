@@ -22,9 +22,9 @@
   margin: 24px 0;
   color: var(--text-secondary);
   font-size: 14px;
-  position: absolute;
-  left: 30%;
-  top: 40%;
+  position: relative;
+  left: 150%;
+  top: 90%;
 }
 
 .grid {

@@ -1,14 +1,22 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { assertAdmin } from "../_lib/auth";
 
 export async function deleteUser(id: string) {
-  const user = await prisma.user.delete({
-    where: { id },
-  });
+  const session = await assertAdmin();
+  if (session.user.id === id) {
+    return { error: "You can't delete your own account." };
+  }
 
-  if (user == null) return notFound();
+  // Orders reference users with onDelete: Restrict, so only customers
+  // without orders can be removed.
+  const orderCount = await prisma.order.count({ where: { userId: id } });
+  if (orderCount > 0) {
+    return { error: "Customers with orders can't be deleted." };
+  }
 
-  return user;
+  await prisma.user.delete({ where: { id } });
+  revalidatePath("/admin", "layout");
 }

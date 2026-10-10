@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useTransition, useEffect, Activity } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { X, ShoppingCart, Search } from "lucide-react";
 import Logo from "@/src/assets/images/logo.png";
 import MobileLogo from "@/src/assets/images/mobile-logo.png";
 import HeaderTabs from "./HeaderTabs";
+import HeaderSearch from "./HeaderSearch";
 import ProfileDropdown from "./ProfileDropdown";
 
 import styles from "./Header.module.css";
@@ -23,6 +24,9 @@ interface HeaderProps {
 export function Header({ session, totalQuantity }: HeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  // Product pages swap the department tabs for an always-visible search box.
+  const isProductPage = pathname.startsWith("/products");
   const [isPending, startTransition] = useTransition();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -97,7 +101,9 @@ export function Header({ session, totalQuantity }: HeaderProps) {
         </div>
       </Activity>
 
-      <div className={styles.header}>
+      <div
+        className={`${styles.header} ${isProductPage ? styles.headerWithSearch : ""}`}
+      >
         <div className={styles.leftSection}>
           <Link href="/" className={styles.headerLink} aria-label="Home">
             <Image
@@ -115,20 +121,32 @@ export function Header({ session, totalQuantity }: HeaderProps) {
           </Link>
         </div>
 
-        <nav className={styles.middleSection} aria-label="Main navigation">
-          <HeaderTabs />
-        </nav>
+        {isProductPage ? (
+          <div className={styles.middleSearch}>
+            {/* key resets the box when the search changes from elsewhere */}
+            <HeaderSearch
+              key={currentSearchParam}
+              initialQuery={currentSearchParam}
+            />
+          </div>
+        ) : (
+          <nav className={styles.middleSection} aria-label="Main navigation">
+            <HeaderTabs />
+          </nav>
+        )}
 
         <div className={styles.rightSection}>
-          <button
-            type="button"
-            className={styles.searchButton}
-            onClick={toggleSearchbar}
-            aria-expanded={isSearchOpen}
-            aria-label="Open search"
-          >
-            <Search size={22} color="#3467cc" />
-          </button>
+          {!isProductPage && (
+            <button
+              type="button"
+              className={styles.searchButton}
+              onClick={toggleSearchbar}
+              aria-expanded={isSearchOpen}
+              aria-label="Open search"
+            >
+              <Search size={22} color="#3467cc" />
+            </button>
+          )}
 
           <Link
             className={`${styles.cartLink} ${styles.headerLink}`}

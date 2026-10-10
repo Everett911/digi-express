@@ -33,6 +33,20 @@
   margin-left: 12%;
 }
 
+/* Product pages: equal side columns keep the search box centred */
+.headerWithSearch {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 700px) 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+.middleSearch {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
 .rightSection {
   display: flex;
   align-items: center;
@@ -217,5 +231,10 @@
 
   .rightSection {
     gap: 8px;
+  }
+
+  .headerWithSearch {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 12px;
   }
 }
