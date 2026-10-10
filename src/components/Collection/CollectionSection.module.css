@@ -84,7 +84,7 @@
   overflow: hidden;
   border-radius: 20px;
   box-shadow: var(--modern-shadow);
-  background-color: #3367cb;
+  background-color: var(--brand);
 }
 .deliverImage {
   object-fit: contain;

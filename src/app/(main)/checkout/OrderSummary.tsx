@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import type { Prisma } from "@prisma/client";
 import { formatCurrency } from "@/src/utils/formatters";
 import type { DeliveryOption } from "@/src/schemas/deliveryOptions";
 import styles from "./OrderSummary.module.css";
@@ -7,46 +8,17 @@ import {
   deleteCartItem,
   updateCartItemQuantity,
   updateDeliveryOption,
+  type CartActionResult,
 } from "@/lib/db/cart.action";
 import QuantitySelector from "@/src/components/QuantitySelector/QuantitySelector";
 import { useState, useTransition } from "react";
 
+type CartLine = Prisma.CartItemGetPayload<{
+  include: { product: true; deliveryOption: true };
+}>;
+
 type Props = {
-  carts:
-    | ({
-        product: {
-          name: string;
-          id: string;
-          color: string[];
-          size: string[];
-          createdAt: Date;
-          updatedAt: Date;
-          priceCents: number;
-          image: string[];
-          description: string | null;
-          brand: string;
-          keywords: string[];
-          isAvailableForPurchase: boolean;
-        };
-        deliveryOption: {
-          id: string;
-          createdAt: Date;
-          updatedAt: Date;
-          deliveryDays: number;
-          priceCents: number;
-        };
-      } & {
-        id: string;
-        userId: string;
-        productId: string;
-        quantity: number;
-        color: string | null;
-        size: string | null;
-        deliveryOptionId: string;
-        createdAt: Date;
-        updatedAt: Date;
-      })[]
-    | undefined;
+  carts: CartLine[] | undefined;
   deliveryOptions: DeliveryOption[];
 };
 
@@ -70,43 +42,20 @@ function CartItemRow({
   cart,
   deliveryOptions,
 }: {
-  cart: {
-    product: {
-      name: string;
-      id: string;
-      color: string[];
-      size: string[];
-      createdAt: Date;
-      updatedAt: Date;
-      priceCents: number;
-      image: string[];
-      description: string | null;
-      brand: string;
-      keywords: string[];
-      isAvailableForPurchase: boolean;
-    };
-    deliveryOption: {
-      id: string;
-      createdAt: Date;
-      updatedAt: Date;
-      deliveryDays: number;
-      priceCents: number;
-    };
-  } & {
-    id: string;
-    userId: string;
-    productId: string;
-    quantity: number;
-    color: string | null;
-    size: string | null;
-    deliveryOptionId: string;
-    createdAt: Date;
-    updatedAt: Date;
-  };
+  cart: CartLine;
   deliveryOptions: DeliveryOption[];
 }) {
   const [quantity, setQuantity] = useState<number>(cart.quantity);
+  const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+
+  const run = (action: () => Promise<CartActionResult>) => {
+    setError("");
+    startTransition(async () => {
+      const result = await action();
+      if (!result.success) setError(result.error);
+    });
+  };
 
   return (
     <div
@@ -141,11 +90,7 @@ function CartItemRow({
               type="button"
               className={styles.updateLink}
               disabled={isPending}
-              onClick={() => {
-                startTransition(() => {
-                  updateCartItemQuantity(cart.product.id, quantity);
-                });
-              }}
+              onClick={() => run(() => updateCartItemQuantity(cart.id, quantity))}
             >
               Update
             </button>
@@ -153,15 +98,16 @@ function CartItemRow({
               type="button"
               className={styles.deleteLink}
               disabled={isPending}
-              onClick={() => {
-                startTransition(() => {
-                  deleteCartItem(cart.product.id);
-                });
-              }}
+              onClick={() => run(() => deleteCartItem(cart.id))}
             >
               Delete
             </button>
           </div>
+          {error && (
+            <p className={styles.actionError} role="alert">
+              {error}
+            </p>
+          )}
         </div>
       </div>
 
@@ -175,11 +121,9 @@ function CartItemRow({
               disabled={isPending}
               checked={cart.deliveryOptionId === option.id}
               className={styles.radioInput}
-              onChange={() => {
-                startTransition(() => {
-                  updateDeliveryOption(cart.product.id, option.id);
-                });
-              }}
+              onChange={() =>
+                run(() => updateDeliveryOption(cart.id, option.id))
+              }
             />
             <div className={styles.optionLabel}>
               <span className={styles.deliveryDate}>

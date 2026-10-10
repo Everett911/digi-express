@@ -2,13 +2,15 @@
 
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import fs from "fs/promises";
-import path from "path";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
-import { formatCurrency } from "@/src/utils/formatters";
 import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
 import { assertAdmin } from "../_lib/auth";
+import {
+  deleteProductImages,
+  isImageFile,
+  saveProductImage,
+} from "@/lib/productImages";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -20,8 +22,8 @@ const addSchema = z.object({
   image: z
     .array(fileSchema)
     .nonempty({ message: "At least one image is required" })
-    .refine((arr) => arr.every((file) => file.size > 0), {
-      message: "Images cannot be empty files",
+    .refine((arr) => arr.every(isImageFile), {
+      message: "Every upload must be a non-empty image file",
     }),
   color: z.array(z.string().min(1)).default([]),
   size: z.array(z.string().min(1)).default([]),
@@ -42,16 +44,6 @@ function countSlots(formData: FormData, prefix: string) {
   let count = 0;
   while (formData.has(`${prefix}_${count}`)) count++;
   return count;
-}
-
-async function saveProductImage(file: File) {
-  const filename = `${crypto.randomUUID()}-${file.name}`;
-  const relativePath = `/products/${filename}`;
-  await fs.writeFile(
-    path.join("public", relativePath),
-    Buffer.from(await file.arrayBuffer()),
-  );
-  return relativePath;
 }
 
 // Pages and the cached product lists/search results that read from them.
@@ -97,8 +89,6 @@ export async function addProduct(prevState: unknown, formData: FormData) {
   }
 
   const data = result.data;
-
-  await fs.mkdir("public/products", { recursive: true });
 
   const imagePaths = await Promise.all(
     data.image.slice(0, MAX_PRODUCT_IMAGES).map(saveProductImage),
@@ -154,20 +144,7 @@ export async function deleteProduct(id: string) {
   const product = await prisma.product.delete({ where: { id } });
   if (product == null) return notFound();
 
-  const imagePaths = Array.isArray(product.image)
-    ? product.image
-    : [product.image];
-
-  await Promise.all(
-    imagePaths.map(async (imagePath) => {
-      const absolutePath = path.join("public", imagePath);
-      try {
-        await fs.unlink(absolutePath);
-      } catch (err) {
-        if ((err as NodeJS.ErrnoException).code !== "ENOENT") throw err;
-      }
-    }),
-  );
+  await deleteProductImages(product.image);
   revalidateProducts();
 }
 
@@ -224,13 +201,18 @@ export async function updateProduct(
     Math.max(countSlots(formData, "image"), countSlots(formData, "keepImage")),
   );
 
-  await fs.mkdir("public/products", { recursive: true });
   const imagePaths: string[] = [];
   for (let index = 0; index < slotCount; index++) {
     const upload = formData.get(`image_${index}`);
     const keep = formData.get(`keepImage_${index}`);
 
     if (upload instanceof File && upload.size > 0) {
+      if (!isImageFile(upload)) {
+        return {
+          formErrors: [],
+          fieldErrors: { image: ["Uploads must be image files"] },
+        };
+      }
       imagePaths.push(await saveProductImage(upload));
     } else if (typeof keep === "string" && currentImages.includes(keep)) {
       imagePaths.push(keep);
@@ -243,20 +225,6 @@ export async function updateProduct(
       fieldErrors: { image: ["At least one image is required"] },
     };
   }
-
-  // Delete files for photos that were replaced or removed.
-  await Promise.all(
-    currentImages
-      .filter((oldPath) => oldPath && !imagePaths.includes(oldPath))
-      .map(async (oldPath) => {
-        const absoluteOldPath = path.join("public", oldPath);
-        try {
-          await fs.unlink(absoluteOldPath);
-        } catch (error) {
-          console.warn(`Could not delete old image: ${absoluteOldPath}`, error);
-        }
-      }),
-  );
 
   try {
     await prisma.product.update({
@@ -276,6 +244,11 @@ export async function updateProduct(
     console.error("prisma.product.update error:", err);
     return { error: (err as Error).message ?? String(err) };
   }
+
+  // Only once the product points at its new photos, delete the old ones.
+  await deleteProductImages(
+    currentImages.filter((oldPath) => oldPath && !imagePaths.includes(oldPath)),
+  );
 
   revalidateProducts();
   redirect("/admin/products");

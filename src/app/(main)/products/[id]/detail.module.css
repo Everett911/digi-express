@@ -13,11 +13,11 @@
   justify-content: start;
   gap: 4px;
   text-align: center;
-  color: #3467cc;
+  color: var(--brand);
   margin: 10px;
 }
 .backLink {
-  color: #3467cc;
+  color: var(--brand);
   text-decoration: none;
   font-weight: 500;
   font-size: 16px;
@@ -52,7 +52,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background-color: #ffffff;
+  background-color: var(--surface);
   padding: 16px;
   border: 2px solid var(--border-default);
   border-radius: 8px;
@@ -70,7 +70,7 @@
 .price {
   font-size: 28px;
   font-weight: 700;
-  color: #3467cc;
+  color: var(--brand);
 }
 
 .sizeTitle {
@@ -90,7 +90,7 @@
 .description {
   font-size: 17px;
   line-height: 1.7;
-  color: #4a5568;
+  color: var(--text-secondary);
   margin-bottom: 32px;
 }
 
@@ -101,8 +101,8 @@
 }
 
 .actionButton {
-  background-color: #3467cc;
-  color: white;
+  background-color: var(--button-primary);
+  color: var(--button-primary-text);
   border: none;
   padding: 15px 0;
   width: 100%;
@@ -114,7 +114,7 @@
 }
 
 .actionButton:hover {
-  background-color: #254da1;
+  background-color: var(--button-primary-hover);
 }
 
 .currentCrumb {
@@ -133,7 +133,7 @@
 }
 
 .brand:hover {
-  color: #3467cc;
+  color: var(--brand);
   text-decoration: underline;
 }
 
@@ -170,7 +170,7 @@
 }
 
 .actionButton:disabled {
-  background-color: #94a3b8;
+  background-color: var(--text-disabled);
   cursor: not-allowed;
 }
 
@@ -184,40 +184,61 @@
   border-top: 1px solid var(--border-default);
   padding-top: 16px;
 }
-
 .deliveryTitle {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-weight: 600;
   color: var(--text-primary);
 }
-
 .deliveryList {
   list-style: none;
   margin: 0;
   padding: 0;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
 }
-
-.deliveryList li {
+.deliveryOption {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 6px 0;
-  font-size: 15px;
-  color: var(--text-secondary);
+  padding: 12px 14px;
 }
-
-.deliveryList li span:first-child {
+.deliveryOption + .deliveryOption {
+  border-top: 1px solid var(--border-default);
+}
+.deliveryWhen {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.deliveryDate {
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-primary);
 }
-
-.deliveryNote {
-  margin: 8px 0 0;
+.deliveryName {
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-subtle);
+}
+.deliveryPrice {
+  flex-shrink: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.deliveryFree {
+  color: var(--success);
+}
+.deliveryNote {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--text-subtle);
 }
 
 .sectionTitle {
@@ -231,7 +252,7 @@
   box-sizing: border-box;
   margin: 40px 0 8px;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: var(--surface);
   border: 2px solid var(--border-default);
   border-radius: 8px;
 }
@@ -265,7 +286,7 @@
 }
 
 .specLink {
-  color: #3467cc;
+  color: var(--brand);
   font-weight: 600;
 }
 
@@ -285,8 +306,8 @@
 }
 
 .tag:hover {
-  border-color: #3467cc;
-  color: #3467cc;
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
 .related {

@@ -27,7 +27,9 @@ interface BrandItem {
 }
 
 export default function BrandSection() {
-  const iconColor = "#3467cc";
+  // SVG color attributes cannot read CSS variables, so color via style.
+  const iconColor = "currentColor";
+  const iconStyle = { color: "var(--brand)" };
   const iconSize = 50;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,61 +37,65 @@ export default function BrandSection() {
   const categories: BrandItem[] = [
     {
       id: "1",
-      icon: <SiNike size={iconSize} color={iconColor} />,
+      icon: <SiNike size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=nike",
       name: "Nike",
     },
     {
       id: "2",
-      icon: <SiAdidas size={iconSize} color={iconColor} />,
+      icon: <SiAdidas size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=adidas",
       name: "Adidas",
     },
     {
       id: "3",
-      icon: <SiPuma size={iconSize} color={iconColor} />,
+      icon: <SiPuma size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=puma",
       name: "Puma",
     },
     {
       id: "4",
-      icon: <SiUnderarmour size={iconSize} color={iconColor} />,
+      icon: (
+        <SiUnderarmour size={iconSize} color={iconColor} style={iconStyle} />
+      ),
       href: "/products?brand=underarmor",
       name: "Under Armour",
     },
     {
       id: "5",
-      icon: <SiReebok size={iconSize} color={iconColor} />,
+      icon: <SiReebok size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=reebok",
       name: "Reebok",
     },
     {
       id: "6",
-      icon: <SiNewbalance size={iconSize} color={iconColor} />,
+      icon: (
+        <SiNewbalance size={iconSize} color={iconColor} style={iconStyle} />
+      ),
       href: "/products?brand=newbalance",
       name: "New Balance",
     },
     {
       id: "7",
-      icon: <SiZara size={iconSize} color={iconColor} />,
+      icon: <SiZara size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=zara",
       name: "Zara",
     },
     {
       id: "8",
-      icon: <SiHandm size={iconSize} color={iconColor} />,
+      icon: <SiHandm size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=hm",
       name: "H&M",
     },
     {
       id: "9",
-      icon: <SiUniqlo size={iconSize} color={iconColor} />,
+      icon: <SiUniqlo size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=uniqlo",
       name: "Uniqlo",
     },
     {
       id: "10",
-      icon: <SiDior size={iconSize} color={iconColor} />,
+      icon: <SiDior size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=dior",
       name: "Dior",
     },
@@ -97,7 +103,10 @@ export default function BrandSection() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -124,11 +133,7 @@ export default function BrandSection() {
             onClick={toggleDropdown}
           >
             <span>{dropdownOpen ? "Hide Brands" : "Select a Brand"}</span>
-            {dropdownOpen ? (
-              <X size={20} />
-            ) : (
-              <ChevronDown size={20} />
-            )}
+            {dropdownOpen ? <X size={20} /> : <ChevronDown size={20} />}
           </button>
           <div
             className={`${styles.dropdownMenu} ${
@@ -142,9 +147,7 @@ export default function BrandSection() {
                 className={styles.dropdownItem}
                 onClick={() => setDropdownOpen(false)}
               >
-                <span className={styles.dropdownItemIcon}>
-                  {category.icon}
-                </span>
+                <span className={styles.dropdownItemIcon}>{category.icon}</span>
                 <span>{category.name}</span>
               </Link>
             ))}

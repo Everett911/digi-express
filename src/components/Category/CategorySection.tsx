@@ -25,7 +25,9 @@ interface CategoryItem {
 }
 
 export default function CategorySection() {
-  const iconColor = "#3467cc";
+  // SVG color attributes cannot read CSS variables, so color via style.
+  const iconColor = "currentColor";
+  const iconStyle = { color: "var(--brand)" };
   const iconSize = 20;
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -34,49 +36,51 @@ export default function CategorySection() {
     {
       id: "1",
       name: "Personal Care",
-      icon: <Sparkles size={iconSize} color={iconColor} />,
+      icon: <Sparkles size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=personal-care",
     },
     {
       id: "2",
       name: "Accessories",
-      icon: <Watch size={iconSize} color={iconColor} />,
+      icon: <Watch size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=accessories",
     },
     {
       id: "3",
       name: "Clothing",
-      icon: <Shirt size={iconSize} color={iconColor} />,
+      icon: <Shirt size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=clothing",
     },
     {
       id: "4",
       name: "Furniture",
-      icon: <Sofa size={iconSize} color={iconColor} />,
+      icon: <Sofa size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=furniture",
     },
     {
       id: "5",
       name: "Outdoors",
-      icon: <FlameKindling size={iconSize} color={iconColor} />,
+      icon: (
+        <FlameKindling size={iconSize} color={iconColor} style={iconStyle} />
+      ),
       href: "/products?type=outdoors",
     },
     {
       id: "6",
       name: "Toys",
-      icon: <Panda size={iconSize} color={iconColor} />,
+      icon: <Panda size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=toys",
     },
     {
       id: "7",
       name: "Shoes",
-      icon: <Footprints size={iconSize} color={iconColor} />,
+      icon: <Footprints size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=shoes",
     },
     {
       id: "8",
       name: "Bags",
-      icon: <Briefcase size={iconSize} color={iconColor} />,
+      icon: <Briefcase size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=bags",
     },
   ];

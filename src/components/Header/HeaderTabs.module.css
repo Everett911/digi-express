@@ -11,16 +11,27 @@
   color: var(--text-primary);
   background: none;
   border: none;
+  /* reserve the underline space so the active tab doesn't shift */
+  border-bottom: 2px solid transparent;
   cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .tabButton:hover {
   color: var(--text-link);
 }
 
+.tabButton:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
 .activeTabButton {
   color: var(--text-link);
-  border-bottom: 2px solid #2563eb;
+  border-bottom-color: var(--brand);
 }
 
 .tabPanel {
@@ -34,25 +45,16 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   box-shadow: var(--modern-shadow);
+  animation: slideDown 0.3s ease-out;
 }
 
-.hiddenPanel,
 .visiblePanel {
   display: flex;
-
+  position: relative;
   border-top: 1px solid var(--border-default);
   width: 100%;
-  animation: slideDown 0.4s ease-out;
 }
 
-.hiddenPanel {
-  display: none;
-}
-
-.visiblePanel {
-  position: relative;
-  visibility: visible;
-}
 @keyframes slideDown {
   from {
     transform: translateY(-20px);
@@ -61,5 +63,15 @@
   to {
     transform: translateY(0px);
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabPanel {
+    animation: none;
+  }
+
+  .tabButton {
+    transition: none;
   }
 }

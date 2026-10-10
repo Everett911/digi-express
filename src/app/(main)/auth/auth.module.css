@@ -27,16 +27,16 @@
 .title {
   font-size: 30px;
   font-weight: 700;
-  color: #111827;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .subtitle {
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 .errorContainer {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: var(--error-soft);
+  border: 1px solid var(--error-border);
   border-radius: 8px;
   padding: 16px;
 }
@@ -52,7 +52,7 @@
 .errorIcon {
   height: 20px;
   width: 20px;
-  color: #f87171;
+  color: var(--error);
 }
 
 .textWrapper {
@@ -61,7 +61,7 @@
 
 .errorText {
   font-size: 14px;
-  color: #991b1b;
+  color: var(--error);
   margin: 0;
 }
 
@@ -95,21 +95,21 @@
 }
 
 .googleButton {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   background-color: var(--foreground);
-  color: #374151;
+  color: var(--text-secondary);
 }
 
 .googleButton:hover:not(:disabled) {
-  background-color: #f9fafb;
+  background-color: var(--background);
 }
 
 .googleButton:focus {
   outline: none;
   box-shadow:
-    0 0 0 2px #fff,
-    0 0 0 4px #1a3263;
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--focus-ring);
 }
 
 .githubButton {
@@ -187,16 +187,16 @@
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-secondary);
   margin-bottom: 4px;
 }
 
 .textInput {
   width: 100%;
   padding: 8px 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
-  color: #000000;
+  color: var(--text-primary);
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   font-size: 14px;
   outline: none;
@@ -221,7 +221,7 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   font-size: 14px;
   font-weight: 500;
-  color: #ffffff;
+  color: var(--text-on-dark);
   background-color: var(--button-primary);
   cursor: pointer;
   transition: background-color 0.2s;
@@ -234,7 +234,7 @@
 .submitButton:focus {
   outline: none;
   box-shadow:
-    0 0 0 2px #fff,
+    0 0 0 2px var(--surface),
     0 0 0 4px var(--button-primary-hover);
 }
 
@@ -254,7 +254,7 @@
   margin-right: 12px;
   height: 20px;
   width: 20px;
-  color: #ffffff;
+  color: var(--text-on-dark);
 }
 
 @keyframes spin {
@@ -266,15 +266,15 @@
   }
 }
 .noticeContainer {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background-color: var(--brand-soft);
+  border: 1px solid var(--brand-soft-border);
   border-radius: 8px;
   padding: 16px;
 }
 
 .noticeText {
   font-size: 14px;
-  color: #1e40af;
+  color: var(--text-link);
   margin: 0;
 }
 

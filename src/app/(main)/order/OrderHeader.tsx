@@ -2,6 +2,13 @@ import type { Order } from "@/src/schemas/orders";
 import { formatCurrency, formatDate } from "@/src/utils/formatters";
 import styles from "./OrderPage.module.css";
 
+const STATUS_LABELS: Record<Order["status"], string> = {
+  PAID: "Paid",
+  SHIPPED: "Shipped",
+  DELIVERED: "Delivered",
+  CANCELLED: "Cancelled",
+};
+
 export function OrderHeader({ order }: { order: Order }) {
   return (
     <div className={styles.orderHeader}>
@@ -13,6 +20,10 @@ export function OrderHeader({ order }: { order: Order }) {
         <div className={styles.orderTotal}>
           <div className={styles.orderHeaderLabel}>Total:</div>
           <div>{formatCurrency(order.totalCostCents / 100)}</div>
+        </div>
+        <div className={styles.orderTotal}>
+          <div className={styles.orderHeaderLabel}>Status:</div>
+          <div>{STATUS_LABELS[order.status]}</div>
         </div>
       </div>
 

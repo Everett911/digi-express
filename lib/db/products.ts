@@ -1,7 +1,11 @@
 import { prisma } from "../prisma";
 import { cache } from "@/lib/cache";
 import type { Prisma, Product } from "@prisma/client";
-import { mapPriceGroupsToPrisma } from "@/lib/utils/priceMapper";
+import {
+  mapPriceGroupsToPrisma,
+  PRICE_GROUPS,
+  priceGroupToRange,
+} from "@/lib/utils/priceMapper";
 import { searchProducts } from "../utils/productSearch";
 
 export const getNewestProducts = cache(
@@ -26,7 +30,30 @@ type AllowedSearchParams = {
   priceGroup?: string | string[];
   type?: string | string[];
   brand?: string | string[];
+  sort?: string;
 };
+
+export const SORT_OPTIONS = [
+  { value: "newest", label: "Newest" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "name", label: "Name: A to Z" },
+] as const;
+
+export type SortOption = (typeof SORT_OPTIONS)[number]["value"];
+
+const ORDER_BY: Record<SortOption, Prisma.ProductOrderByWithRelationInput> = {
+  newest: { createdAt: "desc" },
+  "price-asc": { priceCents: "asc" },
+  "price-desc": { priceCents: "desc" },
+  name: { name: "asc" },
+};
+
+function parseSort(value: string | undefined): SortOption | null {
+  return SORT_OPTIONS.some((option) => option.value === value)
+    ? (value as SortOption)
+    : null;
+}
 
 export type ProductListResult = {
   products: Product[];
@@ -109,7 +136,9 @@ async function fetchProductsFromDb(
   }
   if (sizes.length > 0) conditions.push({ size: { hasSome: sizes } });
   if (colors.length > 0) conditions.push({ color: { hasSome: colors } });
-  if (brands.length > 0) conditions.push({ brand: { in: brands } });
+  // Brands are stored with inconsistent casing ("zara", "Daniel Wellington").
+  if (brands.length > 0)
+    conditions.push({ brand: { in: brands, mode: "insensitive" } });
   if (priceFilters.length > 0) conditions.push({ OR: priceFilters });
 
   if (selectedDepartments.length > 0) {
@@ -143,12 +172,14 @@ async function fetchProductsFromDb(
     });
   }
 
+  const sort = parseSort(searchParams.sort);
   const products = await prisma.product.findMany({
     where: { AND: conditions },
-    orderBy: { createdAt: "desc" },
+    orderBy: ORDER_BY[sort ?? "newest"],
   });
 
-  if (!search) return { products, correctedQuery };
+  // Keep search relevance order unless the shopper picked a sort.
+  if (!search || sort) return { products, correctedQuery };
 
   const rank = new Map(search.ids.map((id, index) => [id, index]));
   products.sort((a, b) => rank.get(a.id)! - rank.get(b.id)!);
@@ -174,7 +205,7 @@ export async function getProducts(
     },
     // Bump the version when the filtering logic or result shape changes,
     // so old cache entries are skipped.
-    ["products", "search", "v5", normalizedQuery, serializedKey],
+    ["products", "search", "v6", normalizedQuery, serializedKey],
     {
       revalidate: 60 * 60 * 24,
       tags: ["products"],
@@ -182,10 +213,88 @@ export async function getProducts(
   )();
 }
 
-export async function getProductCount() {
-  const [onactiveCount, offactiveCount] = await Promise.all([
-    prisma.product.count({ where: { isAvailableForPurchase: true } }),
-    prisma.product.count({ where: { isAvailableForPurchase: false } }),
-  ]);
-  return { onactiveCount, offactiveCount };
+export type FilterOption = { value: string; count: number };
+
+export type FilterOptions = {
+  sizes: FilterOption[];
+  colors: FilterOption[];
+  brands: FilterOption[];
+  keywords: FilterOption[];
+  priceGroups: FilterOption[];
+};
+
+type CountRow = { value: string; count: bigint };
+
+// Placeholder stored when a product has no brand, size or color.
+const EMPTY_VALUE = "none";
+const SIZE_ORDER = ["xxs", "xs", "s", "m", "l", "xl", "xxl", "xxxl"];
+const DEPARTMENT_ALIASES = DEPARTMENTS.flatMap((d) => d.aliases);
+
+function toOptions(rows: CountRow[]): FilterOption[] {
+  return rows
+    .map((row) => ({ value: row.value, count: Number(row.count) }))
+    .filter((row) => row.value && row.value !== EMPTY_VALUE);
 }
+
+function sizeRank(value: string) {
+  const index = SIZE_ORDER.indexOf(value);
+  return index === -1 ? SIZE_ORDER.length : index;
+}
+
+// Filter choices built from what is actually in the database, with product
+// counts, so the panel never offers a value that can't match anything.
+export const getFilterOptions = cache(
+  async (): Promise<FilterOptions> => {
+    const [sizes, colors, keywords, brands, prices] = await Promise.all([
+      prisma.$queryRaw<CountRow[]>`
+        SELECT lower(trim(v)) AS value, count(DISTINCT p.id) AS count
+        FROM "Product" p, unnest(p."size") AS v
+        WHERE p."isAvailableForPurchase" = true
+        GROUP BY 1 ORDER BY 2 DESC, 1`,
+      prisma.$queryRaw<CountRow[]>`
+        SELECT lower(trim(v)) AS value, count(DISTINCT p.id) AS count
+        FROM "Product" p, unnest(p."color") AS v
+        WHERE p."isAvailableForPurchase" = true
+        GROUP BY 1 ORDER BY 2 DESC, 1`,
+      prisma.$queryRaw<CountRow[]>`
+        SELECT lower(trim(v)) AS value, count(DISTINCT p.id) AS count
+        FROM "Product" p, unnest(p."keywords") AS v
+        WHERE p."isAvailableForPurchase" = true
+        GROUP BY 1 ORDER BY 2 DESC, 1`,
+      prisma.$queryRaw<CountRow[]>`
+        SELECT lower(trim(brand)) AS value, count(*) AS count
+        FROM "Product"
+        WHERE "isAvailableForPurchase" = true
+        GROUP BY 1 ORDER BY 2 DESC, 1`,
+      prisma.product.findMany({
+        where: { isAvailableForPurchase: true },
+        select: { priceCents: true },
+      }),
+    ]);
+
+    const priceGroups = PRICE_GROUPS.map((group) => {
+      const range = priceGroupToRange(group);
+      const min = typeof range?.gte === "number" ? range.gte : -Infinity;
+      const max = typeof range?.lt === "number" ? range.lt : Infinity;
+      const count = prices.filter(
+        ({ priceCents }) => priceCents >= min && priceCents < max,
+      ).length;
+      return { value: group, count };
+    });
+
+    return {
+      sizes: toOptions(sizes).sort(
+        (a, b) => sizeRank(a.value) - sizeRank(b.value),
+      ),
+      colors: toOptions(colors),
+      brands: toOptions(brands),
+      // Departments have their own header tabs, so leave them out here.
+      keywords: toOptions(keywords).filter(
+        (k) => !DEPARTMENT_ALIASES.includes(k.value),
+      ),
+      priceGroups,
+    };
+  },
+  ["products", "filter-options", "v1"],
+  { revalidate: 60 * 60 * 24, tags: ["products"] },
+);

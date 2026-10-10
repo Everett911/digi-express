@@ -4,136 +4,255 @@
 }
 
 .card {
-  background: transparent;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  flex: 1;
+  width: 100%;
+  /* Scrolling rows on the homepage set nowrap; card text should wrap. */
+  white-space: normal;
+  background: transparent;
+  border-radius: 10px;
   cursor: pointer;
-  width: 280px;
   user-select: none;
 }
+
+.card:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 4px;
+}
+
+/* Card widths per layout (see CardLayout in ProductCard.tsx). The card
+   stretches to the tallest card in its row so prices line up. */
+.row,
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  width: 280px;
+  flex-shrink: 0;
+}
 @media (max-width: 640px) {
-  .card {
+  .row {
     width: 300px;
+    max-width: calc(100vw - 48px);
   }
 }
+
+.grid {
+  width: 100%;
+  min-width: 0;
+}
+
+/* ---- Photo ---- */
 
 .imageWrapper {
   position: relative;
   width: 100%;
   height: 280px;
-}
-.image {
-  object-fit: scale-down;
-  display: inline-block;
+  overflow: hidden;
 }
 
+.image {
+  object-fit: cover;
+}
+
+/* The second photo sits on top and fades in when the shopper points at or
+   tabs to the card. Touch screens keep the first photo. */
+.hoverImage {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+@media (hover: hover) {
+  .card:hover .hoverImage {
+    opacity: 1;
+  }
+}
+
+.card:focus-visible .hoverImage {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hoverImage {
+    transition: none;
+  }
+}
+
+.imagePlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--button-secondary-hover);
+  color: var(--button-secondary-border);
+}
+
+.newTag {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---- Details ---- */
+
 .cardContent {
-  padding: 6px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  padding: 12px 2px 4px;
+}
+
+.brand {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-subtle);
+  text-transform: capitalize;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .productName {
-  font-size: 16px;
+  margin: 0;
+  font-size: 15px;
   font-weight: 600;
+  line-height: 1.35;
   color: var(--text-primary);
-  margin: 0 0 8px 0;
-  line-height: 1.4;
-  display: flex;
-  flex: 1; /* Allows the text block to grow and fill empty card space */
-  flex-direction: column;
-  word-break: break-word; /* Breaks long words (like URLs) so they don't clip */
-  white-space: normal;
+  /* Two lines at most so cards in a row stay level. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
 }
 
-.ratingWrapper {
+.options {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 0px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  min-height: 16px;
+}
+
+.swatches {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  /* Keeps white and pale swatches visible on the white card. */
+  box-shadow: inset 0 0 0 1px rgb(15 23 42 / 0.15);
+}
+
+.moreColors {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-subtle);
+}
+
+.sizes {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-subtle);
+  white-space: nowrap;
 }
 
 .price {
-  font-size: 18px;
+  margin: auto 0 0;
+  padding-top: 10px;
+  font-size: 17px;
   font-weight: 700;
-  color: #3467cc;
-  margin: auto 0 16px 0;
+  color: var(--brand);
 }
 
-.noResults {
-  text-align: center;
-  padding: 64px 16px;
-  color: var(--text-secondary);
-  background-color: var(--background);
-  border: 2px dashed var(--border-default);
-  margin-top: 32px;
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
+
+.noProducts {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+/* ---- Loading placeholder ---- */
 
 .skeletonCard {
   pointer-events: none;
-  gap: 16px;
 }
 
-.skeletonImage,
-.skeletonText {
-  background: var(--background);
-  position: relative;
-  overflow: hidden;
-  animation: pulse 1.5s infinite ease-in-out;
-  padding: 16 32px;
-}
-
-.skeletonImage {
-  width: 320px;
-  height: 280px;
-}
-
-.skeletonText {
+.skeletonBlock {
+  background: var(--surface-muted);
   border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeletonBlock.imageWrapper {
+  border-radius: 0;
+}
+
+.skeletonBrand {
+  width: 35%;
+  height: 13px;
+  margin-bottom: 8px;
 }
 
 .skeletonTitle {
   width: 85%;
-  height: 22px;
-  margin: 0 0 8px 0;
-}
-
-.skeletonRatingRow {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: auto; /* Pushes price to the bottom */
-}
-
-.skeletonStars {
-  width: 100px;
   height: 18px;
 }
 
-.skeletonCount {
-  width: 30px;
+.skeletonOptions {
+  width: 45%;
   height: 14px;
+  margin-top: 12px;
 }
 
 .skeletonPrice {
-  width: 50%;
-  height: 24px;
-  margin: 12px 0 16px 0;
+  width: 30%;
+  height: 20px;
+  margin-top: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonBlock {
+    animation: none;
+  }
 }
 
 @keyframes pulse {
-  0% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
-  }
-  100% {
-    opacity: 1;
+    opacity: 0.45;
   }
 }

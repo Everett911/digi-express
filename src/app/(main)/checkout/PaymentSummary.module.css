@@ -1,5 +1,5 @@
 .paymentSummary {
-  background-color: #ffffff;
+  background-color: var(--surface);
   border: 1px solid var(--border-default);
   border-radius: 12px;
   padding: 16px;

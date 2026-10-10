@@ -1,3 +1,6 @@
+// Flat sales tax applied to products plus shipping.
+export const TAX_RATE = 0.1;
+
 export interface CartItemForTotals {
   product: {
     priceCents: number;
@@ -44,7 +47,7 @@ export function calculateCartTotals(
   }, 0);
 
   const taxCents = Math.round(
-    (productCostCents + shippingCostCents) * 0.1,
+    (productCostCents + shippingCostCents) * TAX_RATE,
   );
   const totalCostCents = productCostCents + shippingCostCents + taxCents;
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -82,8 +85,9 @@ export function buildOrderItemData(
     return {
       productId: item.product.id,
       quantity: item.quantity,
-      color: item.color ?? null,
-      size: item.size ?? null,
+      // Cart lines store "" for "no colour/size"; orders store null.
+      color: item.color || null,
+      size: item.size || null,
       image: itemImage,
       priceCents: item.product.priceCents,
       name: item.product.name,

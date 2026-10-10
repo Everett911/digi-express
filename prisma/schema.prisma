@@ -23,22 +23,27 @@ model Product {
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
   updatedAt  DateTime @updatedAt @db.Timestamptz(3)
   isAvailableForPurchase Boolean @default(true)
-  orders    Order[]
   cartItems CartItem[]
   orderItems OrderItem[]
 }
 
+enum OrderStatus {
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
 model Order {
-  id             String   @id @default(uuid()) @db.Uuid
+  id             String      @id @default(uuid()) @db.Uuid
   userId         String
   totalCostCents Int
-  createdAt      DateTime @default(now()) @db.Timestamptz(3)
-  updatedAt      DateTime @updatedAt @db.Timestamptz(3)
+  status         OrderStatus @default(PAID)
+  createdAt      DateTime    @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime    @updatedAt @db.Timestamptz(3)
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Restrict)
-  products Product[]
-  items    OrderItem[]
-
+  user  User        @relation(fields: [userId], references: [id], onDelete: Restrict)
+  items OrderItem[]
 }
 
 model OrderItem {
@@ -78,8 +83,10 @@ model CartItem {
   userId           String
   productId        String   @db.Uuid
   quantity         Int
-  color            String?
-  size             String?
+  // "" when the product has no colour or size. Postgres treats NULLs as
+  // distinct, so NULL here would let the unique key below hold duplicates.
+  color            String   @default("")
+  size             String   @default("")
   deliveryOptionId String
   createdAt        DateTime @default(now()) @db.Timestamptz(3)
   updatedAt        DateTime @updatedAt @db.Timestamptz(3)
@@ -91,7 +98,7 @@ model CartItem {
   @@index([userId])
   @@index([productId])
   @@index([deliveryOptionId])
-  @@unique([userId, productId])
+  @@unique([userId, productId, color, size])
 }
 
 model User {

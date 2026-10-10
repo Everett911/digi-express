@@ -1,7 +1,3 @@
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
 .container {
   padding: 32px 16px;
 }
@@ -17,9 +13,4 @@
 }
 .grid:active {
   cursor: grabbing;
-}
-@media (max-width: 640px) {
-  .grid {
-    width: 400px;
-  }
 }

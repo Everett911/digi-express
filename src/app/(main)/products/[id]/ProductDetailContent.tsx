@@ -16,16 +16,21 @@ import { Product } from "@prisma/client";
 export type DeliveryEstimate = {
   id: string;
   priceCents: number;
+  deliveryDays: number;
   arrival: string;
 };
+
+function deliveryName(days: number) {
+  if (days <= 1) return "Next-day delivery";
+  if (days <= 3) return `Express delivery, ${days} days`;
+  return `Standard delivery, ${days} days`;
+}
 
 type CartStatus =
   | { kind: "idle" }
   | { kind: "added"; quantity: number }
   | { kind: "signedOut" }
   | { kind: "error"; message: string };
-
-const SIGNED_OUT_MESSAGE = "You must be logged in";
 
 export default function ProductDetailContent({
   product,
@@ -64,26 +69,22 @@ export default function ProductDetailContent({
           size: selectedSize,
           color: selectedColor,
         });
-        if (result && !result.success) {
-          setStatus({
-            kind: "error",
-            message: result.error ?? "Couldn't add this item to your cart.",
-          });
+        if (!result.success) {
+          setStatus(
+            result.signedOut
+              ? { kind: "signedOut" }
+              : { kind: "error", message: result.error },
+          );
           return;
         }
         setStatus({ kind: "added", quantity });
         // Refresh the header so the cart count updates.
         router.refresh();
-      } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : String(err);
-        if (message.includes(SIGNED_OUT_MESSAGE)) {
-          setStatus({ kind: "signedOut" });
-        } else {
-          setStatus({
-            kind: "error",
-            message: message || "Couldn't add this item to your cart.",
-          });
-        }
+      } catch {
+        setStatus({
+          kind: "error",
+          message: "Couldn't add this item to your cart.",
+        });
       }
     });
   };
@@ -211,18 +212,31 @@ export default function ProductDetailContent({
           </p>
           <ul className={styles.deliveryList}>
             {deliveryEstimates.map((estimate) => (
-              <li key={estimate.id}>
-                <span>
+              <li key={estimate.id} className={styles.deliveryOption}>
+                <span className={styles.deliveryWhen}>
+                  <span className={styles.deliveryDate}>
+                    Arrives {estimate.arrival}
+                  </span>
+                  <span className={styles.deliveryName}>
+                    {deliveryName(estimate.deliveryDays)}
+                  </span>
+                </span>
+                <span
+                  className={
+                    estimate.priceCents === 0
+                      ? `${styles.deliveryPrice} ${styles.deliveryFree}`
+                      : styles.deliveryPrice
+                  }
+                >
                   {estimate.priceCents === 0
                     ? "Free"
                     : formatCurrency(estimate.priceCents / 100)}
                 </span>
-                <span>Arrives {estimate.arrival}</span>
               </li>
             ))}
           </ul>
           <p className={styles.deliveryNote}>
-            Choose your delivery option at checkout.
+            You can choose your delivery option at checkout.
           </p>
         </div>
       )}

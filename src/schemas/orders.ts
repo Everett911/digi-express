@@ -20,6 +20,7 @@ export const orderSchema = z.object({
   updatedAt: z.date(),
   userId: z.string(),
   totalCostCents: z.number().int(),
+  status: z.enum(["PAID", "SHIPPED", "DELIVERED", "CANCELLED"]),
   items: z.array(orderItemSchema),
 });
 

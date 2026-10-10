@@ -7,7 +7,7 @@
 /* Main Viewport Slider Container */
 .mainSwiper {
   width: 100%;
-  background-color: #f3f4f6;
+  background-color: var(--surface-muted);
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -35,7 +35,7 @@
   aspect-ratio: 1 / 1;
   border-radius: 6px;
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: var(--surface-muted);
   cursor: pointer;
   border: 2px solid transparent;
   opacity: 0.4;
@@ -45,6 +45,6 @@
 /* Localized active class driven by React State instead of Swiper markup hashes */
 .thumbSlideInnerActive {
   opacity: 1 !important;
-  border-color: #000000 !important;
+  border-color: var(--text-primary) !important;
   transform: scale(0.97);
 }

@@ -1,233 +1,325 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useOptimistic, useState, useTransition } from "react";
 import styles from "./FilterPanel.module.css";
-import { SlidersHorizontalIcon, X } from "lucide-react";
-import { Route } from "next";
+import { SlidersHorizontalIcon, X, ChevronDown } from "lucide-react";
+import type { Route } from "next";
+import type { FilterOption, FilterOptions } from "@/lib/db/products";
+
+type SortChoice = { value: string; label: string };
 
 type Props = {
-  productCount: {
-    onactiveCount: number;
-    offactiveCount: number;
-  };
+  options: FilterOptions;
+  sortOptions: readonly SortChoice[];
 };
 
-export default function FilterPanel({ productCount }: Props) {
+type FilterKey = "size" | "color" | "priceGroup" | "type" | "brand";
+
+const FILTER_LABELS: Record<FilterKey, string> = {
+  size: "Size",
+  color: "Color",
+  priceGroup: "Price",
+  type: "Type",
+  brand: "Brand",
+};
+
+const DEPARTMENTS = ["men", "women", "kids", "homewares", "homeware"];
+
+// Swatches for the color names stored in the database. Unknown colors fall
+// back to a neutral swatch rather than being hidden.
+const COLOR_HEX: Record<string, string> = {
+  black: "#000000",
+  white: "#ffffff",
+  gray: "#7e8388",
+  grey: "#7e8388",
+  beige: "#f3e5d8",
+  tan: "#d2b48c",
+  camel: "#c19a6b",
+  brown: "#8b4513",
+  "dark brown": "#5c3317",
+  brandy: "#87413f",
+  red: "#e52521",
+  pink: "#ff8dc6",
+  yellow: "#ffcc00",
+  gold: "#d4af37",
+  green: "#00a859",
+  blue: "#2351a9",
+  "navy blue": "#1f2a5a",
+  navy: "#1f2a5a",
+  purple: "#92278f",
+};
+const LIGHT_COLORS = new Set(["white", "beige"]);
+
+// Long lists show this many options until "Show more" is pressed.
+const COLLAPSED_LIMIT = 8;
+
+function titleCase(value: string) {
+  return value.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+const sameValue = (a: string, b: string) => a.toLowerCase() === b.toLowerCase();
+
+export default function FilterPanel({ options, sortOptions }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
+  const [expanded, setExpanded] = useState<Partial<Record<FilterKey, boolean>>>(
+    {}
+  );
 
-  const selectedSizes = searchParams.getAll("size");
-  const selectedColors = searchParams.getAll("color");
-  const selectedPrices = searchParams.getAll("priceGroup");
-  const selectedTypes = searchParams.getAll("type");
-  const selectedBrands = searchParams.getAll("brand");
+  // Selections update instantly while the new product list loads.
+  const [optimisticQuery, setOptimisticQuery] = useOptimistic(
+    searchParams.toString()
+  );
+  const params = new URLSearchParams(optimisticQuery);
 
-  const toggleArrayItem = (
-    value: string,
-    currentList: string[],
-    paramKey: string,
-  ) => {
-    const params = new URLSearchParams(searchParams.toString());
+  const selected = (key: FilterKey) => params.getAll(key);
+  const isSelected = (key: FilterKey, value: string) =>
+    selected(key).some((item) => sameValue(item, value));
 
-    const nextList = currentList.includes(value)
-      ? currentList.filter((item) => item !== value)
-      : [...currentList, value];
-
-    params.delete(paramKey);
-    nextList.forEach((val) => params.append(paramKey, val));
-
+  const navigate = (next: URLSearchParams) => {
+    const query = next.toString();
     startTransition(() => {
-      router.push(`${pathname}?${params.toString()}` as Route, {
+      setOptimisticQuery(query);
+      router.push((query ? `${pathname}?${query}` : pathname) as Route, {
         scroll: false,
       });
     });
   };
 
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-  const colors = [
-    { name: "Black", hex: "#000000" },
-    { name: "Grey", hex: "#7E8388" },
-    { name: "White", hex: "#FFFFFF", border: true },
-    { name: "Beige", hex: "#F3E5D8" },
-    { name: "Brown", hex: "#8B4513" },
-    { name: "Red", hex: "#E52521" },
-    { name: "Pink", hex: "#FF8DC6" },
-    { name: "Yellow", hex: "#FFCC00" },
-    { name: "Green", hex: "#00A859" },
-    { name: "Blue", hex: "#2351A9" },
-    { name: "Purple", hex: "#92278F" },
-  ];
-  const priceRanges = [
-    "Under $75",
-    "$76 - $100",
-    "$101 - $125",
-    "$126 - $150",
-    "Over $150",
-  ];
-  const Keywords = [
-    "Personal Care",
+  const toggle = (key: FilterKey, value: string) => {
+    const next = new URLSearchParams(optimisticQuery);
+    const current = next.getAll(key);
+    const updated = current.some((item) => sameValue(item, value))
+      ? current.filter((item) => !sameValue(item, value))
+      : [...current, value];
 
-    "Shoes",
-    "Accessories",
-    "Clothings",
-    "Bags",
-    "Sports",
-    "Outdoors",
-    "Toys",
-    "Furnitures",
-    "Appliances",
-    "Tech Gadgets",
-  ];
-  const brands = [
-    "New Balance",
-    "Zara",
-    "Uniqlo",
-    "Dior",
-    "H&M",
-    "Nike",
-    "Adidas",
-    "Puma",
-    "Under Armor",
-    "Reebok",
-  ];
+    next.delete(key);
+    updated.forEach((item) => next.append(key, item));
+    navigate(next);
+  };
 
-  if (!isOpen) {
-    return (
-      <button onClick={() => setIsOpen(true)} className={styles.expandButton}>
-        <SlidersHorizontalIcon size={20} />({productCount.onactiveCount}{" "}
-        products)
+  const setSort = (value: string) => {
+    const next = new URLSearchParams(optimisticQuery);
+    if (value === "newest") next.delete("sort");
+    else next.set("sort", value);
+    navigate(next);
+  };
+
+  // Clears filters but keeps the search term.
+  const clearAll = () => {
+    const next = new URLSearchParams();
+    const search = params.get("search");
+    if (search) next.set("search", search);
+    const sort = params.get("sort");
+    if (sort) next.set("sort", sort);
+    navigate(next);
+  };
+
+  const activeFilters = (Object.keys(FILTER_LABELS) as FilterKey[]).flatMap(
+    (key) =>
+      selected(key).map((value) => ({
+        key,
+        value,
+        label:
+          key === "type" && DEPARTMENTS.includes(value.toLowerCase())
+            ? `Department: ${titleCase(value)}`
+            : `${FILTER_LABELS[key]}: ${key === "size" ? value.toUpperCase() : titleCase(value)}`,
+      }))
+  );
+
+  const renderShowMore = (key: FilterKey, list: FilterOption[]) =>
+    list.length > COLLAPSED_LIMIT && (
+      <button
+        type="button"
+        className={styles.showMore}
+        onClick={() => setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))}
+        aria-expanded={!!expanded[key]}
+      >
+        {expanded[key] ? "Show less" : `Show ${list.length - COLLAPSED_LIMIT} more`}
       </button>
     );
-  }
+
+  const visible = (key: FilterKey, list: FilterOption[]) =>
+    expanded[key] ? list : list.slice(0, COLLAPSED_LIMIT);
+
+  const renderCheckboxes = (key: FilterKey, list: FilterOption[]) => (
+    <>
+      <div className={styles.checkboxList}>
+        {visible(key, list).map((option) => {
+          const checked = isSelected(key, option.value);
+          return (
+            <label
+              key={option.value}
+              className={`${styles.checkboxLabel} ${option.count === 0 && !checked ? styles.disabled : ""}`}
+            >
+              <input
+                type="checkbox"
+                checked={checked}
+                disabled={option.count === 0 && !checked}
+                onChange={() => toggle(key, option.value)}
+                className={styles.checkboxInput}
+              />
+              <span className={checked ? styles.labelActive : undefined}>
+                {key === "priceGroup" ? option.value : titleCase(option.value)}
+              </span>
+              <span className={styles.optionCount}>{option.count}</span>
+            </label>
+          );
+        })}
+      </div>
+      {renderShowMore(key, list)}
+    </>
+  );
+
+  const currentSort = params.get("sort") ?? "newest";
 
   return (
-    <div
-      className={`${styles.filterContainer} ${isPending ? styles.pending : ""}`}
+    <section
+      className={`${styles.wrapper} ${isPending ? styles.pending : ""}`}
+      aria-label="Product filters"
+      aria-busy={isPending}
     >
-      <div className={styles.header}>
+      <div className={styles.toolbar}>
         <button
-          onClick={() => setIsOpen(false)}
-          className={styles.collapseButton}
+          type="button"
+          onClick={() => setIsOpen((prev) => !prev)}
+          className={styles.expandButton}
+          aria-expanded={isOpen}
+          aria-controls="filter-panel"
         >
-          <X />
+          <SlidersHorizontalIcon size={18} />
+          Filters
+          {activeFilters.length > 0 && (
+            <span className={styles.badge}>{activeFilters.length}</span>
+          )}
+          <ChevronDown
+            size={16}
+            className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
+          />
         </button>
-        <span className={styles.productCount}>
-          ({productCount.onactiveCount} products)
-        </span>
+
+        <label className={styles.sortLabel}>
+          <span>Sort by</span>
+          <select
+            className={styles.sortSelect}
+            value={currentSort}
+            onChange={(e) => setSort(e.target.value)}
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
-      <div className={styles.panelGrid}>
-        {/* SIZE GRID SECTION */}
-        <div className={styles.column}>
-          <h4 className={styles.columnTitle}>SIZE</h4>
-          <p className={styles.columnDescription}>
-            Most of our shoes only come in full sizes. If youre a half size,
-            select your nearest whole size too.
-          </p>
-          <div className={styles.sizeGrid}>
-            {sizes.map((size) => {
-              const active = selectedSizes.includes(size);
-              return (
-                <button
-                  key={size}
-                  type="button"
-                  onClick={() => toggleArrayItem(size, selectedSizes, "size")}
-                  className={`${styles.sizeButton} ${active ? styles.sizeButtonActive : ""}`}
-                >
-                  {size}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {activeFilters.length > 0 && (
+        <ul className={styles.chipList} aria-label="Active filters">
+          {activeFilters.map((filter) => (
+            <li key={`${filter.key}-${filter.value}`}>
+              <button
+                type="button"
+                className={styles.chip}
+                onClick={() => toggle(filter.key, filter.value)}
+                aria-label={`Remove ${filter.label}`}
+              >
+                {filter.label}
+                <X size={14} />
+              </button>
+            </li>
+          ))}
+          <li>
+            <button type="button" className={styles.clearAll} onClick={clearAll}>
+              Clear all
+            </button>
+          </li>
+        </ul>
+      )}
 
-        <div className={styles.column}>
-          <h4 className={styles.columnTitle}>COLOR</h4>
-          <div className={styles.colorGrid}>
-            {colors.map((color) => {
-              const active = selectedColors.includes(color.name);
-              return (
-                <button
-                  key={color.name}
-                  type="button"
-                  onClick={() =>
-                    toggleArrayItem(color.name, selectedColors, "color")
-                  }
-                  className={styles.colorRowButton}
-                >
-                  <span
-                    style={{ backgroundColor: color.hex }}
-                    className={`${styles.colorSwatch} ${color.border ? styles.colorSwatchBorder : ""} ${active ? styles.colorSwatchActive : ""}`}
-                  />
-                  <span
-                    className={active ? styles.labelActive : styles.labelNormal}
-                  >
-                    {color.name}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      {isOpen && (
+        <div id="filter-panel" className={styles.filterContainer}>
+          <div className={styles.panelGrid}>
+            {options.sizes.length > 0 && (
+              <fieldset className={styles.column}>
+                <legend className={styles.columnTitle}>Size</legend>
+                <div className={styles.sizeGrid}>
+                  {options.sizes.map((option) => {
+                    const active = isSelected("size", option.value);
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => toggle("size", option.value)}
+                        aria-pressed={active}
+                        title={`${option.count} products`}
+                        className={`${styles.sizeButton} ${active ? styles.sizeButtonActive : ""}`}
+                      >
+                        {option.value.toUpperCase()}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+            )}
 
-        <div className={styles.column}>
-          <h4 className={styles.columnTitle}>PRICE</h4>
-          <div className={styles.checkboxList}>
-            {priceRanges.map((price) => (
-              <label key={price} className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={selectedPrices.includes(price)}
-                  onChange={() =>
-                    toggleArrayItem(price, selectedPrices, "priceGroup")
-                  }
-                  className={styles.checkboxInput}
-                />
-                {price}
-              </label>
-            ))}
-          </div>
-        </div>
-        <div className={styles.column}>
-          <h4 className={styles.columnTitle}>PRODUCT TYPE</h4>
-          <div className={styles.checkboxList}>
-            {Keywords.map((type) => (
-              <label key={type} className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={selectedTypes.includes(type)}
-                  onChange={() => toggleArrayItem(type, selectedTypes, "type")}
-                  className={styles.checkboxInput}
-                />
-                {type}
-              </label>
-            ))}
-          </div>
-        </div>
+            {options.colors.length > 0 && (
+              <fieldset className={styles.column}>
+                <legend className={styles.columnTitle}>Color</legend>
+                <div className={styles.colorGrid}>
+                  {visible("color", options.colors).map((option) => {
+                    const active = isSelected("color", option.value);
+                    const hex = COLOR_HEX[option.value];
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => toggle("color", option.value)}
+                        aria-pressed={active}
+                        className={styles.colorRowButton}
+                      >
+                        <span
+                          style={hex ? { backgroundColor: hex } : undefined}
+                          className={`${styles.colorSwatch} ${!hex ? styles.colorSwatchUnknown : ""} ${!hex || LIGHT_COLORS.has(option.value) ? styles.colorSwatchBorder : ""} ${active ? styles.colorSwatchActive : ""}`}
+                        />
+                        <span
+                          className={active ? styles.labelActive : styles.labelNormal}
+                        >
+                          {titleCase(option.value)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {renderShowMore("color", options.colors)}
+              </fieldset>
+            )}
 
-        <div className={styles.column}>
-          <h4 className={styles.columnTitle}>Brand</h4>
-          <div className={styles.checkboxList}>
-            {brands.map((brand) => (
-              <label key={brand} className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={selectedBrands.includes(brand)}
-                  onChange={() =>
-                    toggleArrayItem(brand, selectedBrands, "brand")
-                  }
-                  className={styles.checkboxInput}
-                />
-                {brand}
-              </label>
-            ))}
+            <fieldset className={styles.column}>
+              <legend className={styles.columnTitle}>Price</legend>
+              {renderCheckboxes("priceGroup", options.priceGroups)}
+            </fieldset>
+
+            {options.keywords.length > 0 && (
+              <fieldset className={styles.column}>
+                <legend className={styles.columnTitle}>Product type</legend>
+                {renderCheckboxes("type", options.keywords)}
+              </fieldset>
+            )}
+
+            {options.brands.length > 0 && (
+              <fieldset className={styles.column}>
+                <legend className={styles.columnTitle}>Brand</legend>
+                {renderCheckboxes("brand", options.brands)}
+              </fieldset>
+            )}
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </section>
   );
 }
