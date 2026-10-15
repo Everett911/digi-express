@@ -1,9 +1,5 @@
-import { describe, expect, it } from "vitest";
-import {
-  mapPriceGroupsToPrisma,
-  PRICE_GROUPS,
-  priceGroupToRange,
-} from "./priceMapper";
+import { describe, expect, it } from "vite-plus/test";
+import { mapPriceGroupsToPrisma, PRICE_GROUPS, priceGroupToRange } from "./priceMapper";
 
 describe("priceGroupToRange", () => {
   it("parses each filter bucket into a [min, max) range in cents", () => {
