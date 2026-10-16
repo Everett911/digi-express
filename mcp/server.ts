@@ -8,6 +8,7 @@ import { registerOrderTools } from "./tools/orders";
 import { registerProductTools } from "./tools/products";
 import { registerStatsTools } from "./tools/stats";
 import { registerUserTools } from "./tools/users";
+import { registerStorefrontTools } from "./tools/storefront";
 
 // MCP_READ_ONLY=true leaves out every tool that writes to the database.
 const readOnly = process.env.MCP_READ_ONLY === "true";
@@ -22,6 +23,7 @@ registerCartTools(server);
 registerStatsTools(server);
 registerResources(server);
 registerPrompts(server);
+registerStorefrontTools(server);
 
 async function main() {
   await server.connect(new StdioServerTransport());
