@@ -27,6 +27,10 @@ function ProductForm({ product }: { product?: Product | null }) {
     product == null ? addProduct : updateProduct.bind(null, product.id),
     null,
   );
+  // addProduct and updateProduct return different error shapes; this gives
+  // one per-field lookup that works for both.
+  const fieldErrors: Partial<Record<string, string[]>> =
+    (error && "fieldErrors" in error && error.fieldErrors) || {};
   const [price, setPrice] = useState<number | undefined>(
     product?.priceCents !== undefined && product?.priceCents !== null
       ? Number(product.priceCents)
@@ -41,9 +45,7 @@ function ProductForm({ product }: { product?: Product | null }) {
   // picked file. Keys stay stable so file inputs keep their files when a
   // slot above them is removed.
   const [imageSlots, setImageSlots] = useState<ImageSlot[]>(() =>
-    product?.image?.length
-      ? product.image.map((existing) => newSlot(existing))
-      : [newSlot(null)],
+    product?.image?.length ? product.image.map((existing) => newSlot(existing)) : [newSlot(null)],
   );
 
   const addColorField = () => setColors([...(colors || []), ""]);
@@ -62,10 +64,7 @@ function ProductForm({ product }: { product?: Product | null }) {
     setImageSlots(imageSlots.filter((s) => s.key !== key));
   };
 
-  const handleImageChange = (
-    key: string,
-    event: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleImageChange = (key: string, event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     setImageSlots(
       imageSlots.map((slot) => {
@@ -89,16 +88,8 @@ function ProductForm({ product }: { product?: Product | null }) {
             required
             defaultValue={product?.name}
           />
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.name
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.name}
-            </span>
+          <Activity mode={fieldErrors.name ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.name}</span>
           </Activity>
         </div>
 
@@ -111,32 +102,20 @@ function ProductForm({ product }: { product?: Product | null }) {
             step="0.01"
             required
             className={styles.input}
-            onChange={(e) =>
-              setPrice(e.target.value ? parseFloat(e.target.value) : undefined)
-            }
+            onChange={(e) => setPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
             defaultValue={
               product?.priceCents !== undefined && product?.priceCents !== null
                 ? product.priceCents
                 : undefined
             }
           />
-          <div className={styles.totalText}>
-            Preview: {formatCurrency(previewPrice)}
-          </div>
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.priceCents
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.priceCents}
-            </span>
+          <div className={styles.totalText}>Preview: {formatCurrency(previewPrice)}</div>
+          <Activity mode={fieldErrors.priceCents ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.priceCents}</span>
           </Activity>
         </div>
         <div className={styles.formContainer}>
-          <label htmlFor="name">Brand</label>
+          <label htmlFor="brand">Brand</label>
           <input
             type="text"
             id="brand"
@@ -145,16 +124,8 @@ function ProductForm({ product }: { product?: Product | null }) {
             required
             defaultValue={product?.brand}
           />
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.name
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.name}
-            </span>
+          <Activity mode={fieldErrors.brand ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.brand}</span>
           </Activity>
         </div>
         <div className={styles.formContainer}>
@@ -166,16 +137,8 @@ function ProductForm({ product }: { product?: Product | null }) {
             required
             defaultValue={product?.description ?? ""}
           />
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.description
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.description}
-            </span>
+          <Activity mode={fieldErrors.description ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.description}</span>
           </Activity>
         </div>
 
@@ -184,8 +147,8 @@ function ProductForm({ product }: { product?: Product | null }) {
             Images ({imageSlots.length} of {MAX_PRODUCT_IMAGES})
           </span>
           <p className={styles.helpText}>
-            The first image is the one shown in product lists. Add photos from
-            different angles, close-ups of details, or the product in use.
+            The first image is the one shown in product lists. Add photos from different angles,
+            close-ups of details, or the product in use.
           </p>
           {imageSlots.map((slot, index) => {
             const shown = slot.preview ?? slot.existing;
@@ -196,11 +159,7 @@ function ProductForm({ product }: { product?: Product | null }) {
                   {index === 0 && " (main image)"}
                 </label>
                 {slot.existing && (
-                  <input
-                    type="hidden"
-                    name={`keepImage_${index}`}
-                    value={slot.existing}
-                  />
+                  <input type="hidden" name={`keepImage_${index}`} value={slot.existing} />
                 )}
                 <input
                   id={`image-${slot.key}`}
@@ -242,126 +201,81 @@ function ProductForm({ product }: { product?: Product | null }) {
           })}
 
           {imageSlots.length < MAX_PRODUCT_IMAGES && (
-            <button
-              type="button"
-              onClick={addImageField}
-              className={styles.button}
-            >
+            <button type="button" onClick={addImageField} className={styles.button}>
               + Add More Images
             </button>
           )}
 
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.image
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.image?.[0]}
-            </span>
+          <Activity mode={fieldErrors.image ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.image?.[0]}</span>
           </Activity>
         </div>
 
-        <div className={styles.formContainer}>
-          <label>Colors</label>
+        <fieldset className={`${styles.formContainer} ${styles.fieldset}`}>
+          <legend className={styles.legend}>Colors</legend>
           {colors.map((_, index) => (
             <input
               key={index}
               type="text"
               name={`color_${index}`}
+              aria-label={`Color ${index + 1}`}
               className={styles.input}
               placeholder={`Color #${index + 1}`}
               required
               defaultValue={product?.color[index]}
             />
           ))}
-          <button
-            type="button"
-            onClick={addColorField}
-            className={styles.button}
-          >
+          <button type="button" onClick={addColorField} className={styles.button}>
             + Add More Colors
           </button>
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.color
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.color}
-            </span>
+          <Activity mode={fieldErrors.color ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.color}</span>
           </Activity>
-        </div>
+        </fieldset>
 
-        <div className={styles.formContainer}>
-          <label>Sizes</label>
+        <fieldset className={`${styles.formContainer} ${styles.fieldset}`}>
+          <legend className={styles.legend}>Sizes</legend>
           {sizes.map((_, index) => (
             <input
               key={index}
               type="text"
               name={`size_${index}`}
+              aria-label={`Size ${index + 1}`}
               className={styles.input}
               placeholder={`Size #${index + 1}`}
               required
               defaultValue={product?.size[index]}
             />
           ))}
-          <button
-            type="button"
-            onClick={addSizeField}
-            className={styles.button}
-          >
+          <button type="button" onClick={addSizeField} className={styles.button}>
             + Add More Sizes
           </button>
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.size
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.size}
-            </span>
+          <Activity mode={fieldErrors.size ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.size}</span>
           </Activity>
-        </div>
+        </fieldset>
 
-        <div className={styles.formContainer}>
-          <label>Keywords</label>
+        <fieldset className={`${styles.formContainer} ${styles.fieldset}`}>
+          <legend className={styles.legend}>Keywords</legend>
           {keywords.map((_, index) => (
             <input
               key={index}
               type="text"
               name={`keyword_${index}`}
+              aria-label={`Keyword ${index + 1}`}
               className={styles.input}
               placeholder={`Keyword #${index + 1} for better searches`}
               required
               defaultValue={product?.keywords[index]}
             />
           ))}
-          <button
-            type="button"
-            onClick={addKeywordField}
-            className={styles.button}
-          >
+          <button type="button" onClick={addKeywordField} className={styles.button}>
             + Add More Keywords
           </button>
-          <Activity
-            mode={
-              error && "fieldErrors" in error && error.fieldErrors.keywords
-                ? "visible"
-                : "hidden"
-            }
-          >
-            <span className={styles.errorMessage}>
-              {error && "fieldErrors" in error && error.fieldErrors.keywords}
-            </span>
+          <Activity mode={fieldErrors.keywords ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{fieldErrors.keywords}</span>
           </Activity>
-        </div>
+        </fieldset>
         <SubmitButton />
       </Form>
     </>

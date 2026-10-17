@@ -13,17 +13,11 @@ function parseDescription(description: string) {
     .filter(Boolean)
     .map((paragraph) => {
       const match = paragraph.match(/^([^:.]{1,40}):\s*([\s\S]+)$/);
-      return match
-        ? { label: match[1], text: match[2] }
-        : { label: null, text: paragraph };
+      return match ? { label: match[1], text: match[2] } : { label: null, text: paragraph };
     });
 }
 
-export default function ProductDescription({
-  description,
-}: {
-  description: string;
-}) {
+export default function ProductDescription({ description }: { description: string }) {
   // Open by default: the description is the main thing customers read.
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -42,14 +36,10 @@ export default function ProductDescription({
         type="button"
       >
         <span>Description</span>
-        <ChevronDown
-          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
-        />
+        <ChevronDown className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`} />
       </button>
 
-      <div
-        className={`${styles.panelWrapper} ${isOpen ? styles.panelWrapperOpen : ""}`}
-      >
+      <div className={`${styles.panelWrapper} ${isOpen ? styles.panelWrapperOpen : ""}`}>
         <div className={styles.panelInner}>
           <div className={styles.content}>
             {paragraphs.length === 0 ? (
@@ -58,9 +48,7 @@ export default function ProductDescription({
               paragraphs.map((paragraph, index) =>
                 paragraph.label ? (
                   <p key={index} className={styles.descriptionItem}>
-                    <strong className={styles.descriptionLabel}>
-                      {paragraph.label}
-                    </strong>
+                    <strong className={styles.descriptionLabel}>{paragraph.label}</strong>
                     {paragraph.text}
                   </p>
                 ) : (

@@ -6,18 +6,23 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint",
-    "test": "vitest run"
+    "lint": "vp lint",
+    "test": "vp test run",
+    "prepare": "vp config",
+    "mcp:dev": "tsx --env-file=.env mcp/server.ts",
+    "mcp:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector npm run mcp:dev"
   },
   "dependencies": {
     "@better-auth/stripe": "^1.7.1",
+    "@google/genai": "^2.30.0",
     "@icons-pack/react-simple-icons": "^13.13.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@radix-ui/themes": "^3.3.0",
     "@stripe/react-stripe-js": "^5.6.1",
     "@stripe/stripe-js": "^8.11.0",
-    "@vercel/blob": "^2.0.0",
+    "@vercel/blob": "^2.8.1",
     "better-auth": "^1.6.23",
     "dayjs": "^1.11.21",
     "lucide-react": "^1.24.0",
@@ -31,6 +36,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@modelcontextprotocol/inspector": "^2.11.0",
     "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/pg": "^8.20.0",
@@ -38,11 +44,12 @@
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
     "dotenv": "^17.4.2",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.9",
     "prisma": "^7.8.0",
     "tsx": "^4.20.0",
     "typescript": "^5",
-    "vitest": "^3.2.4"
+    "vite-plus": "1.2.0"
+  },
+  "overrides": {
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.2.0"
   }
 }

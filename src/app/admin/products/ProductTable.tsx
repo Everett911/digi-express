@@ -3,18 +3,9 @@ import Image from "next/image";
 import { Table } from "@radix-ui/themes";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
-import {
-  deleteProduct,
-  toggleProductAvailability,
-} from "../_actions/products";
+import { deleteProduct, toggleProductAvailability } from "../_actions/products";
 import RowActions from "../_components/RowActions";
-import {
-  EmptyState,
-  Pagination,
-  SrOnly,
-  StatusBadge,
-  TableSkeleton,
-} from "../_components/ui";
+import { EmptyState, Pagination, SrOnly, StatusBadge, TableSkeleton } from "../_components/ui";
 import { PAGE_SIZE, pageCount } from "../_lib/pagination";
 import table from "../_components/table.module.css";
 
@@ -86,9 +77,7 @@ export async function ProductTable({ page }: { page: number }) {
                       )}
                     </div>
                     <div className={table.stack}>
-                      <span className={`${table.strong} ${table.truncate}`}>
-                        {product.name}
-                      </span>
+                      <span className={`${table.strong} ${table.truncate}`}>{product.name}</span>
                       <span className={table.muted}>{product.brand}</span>
                     </div>
                   </div>
@@ -108,17 +97,13 @@ export async function ProductTable({ page }: { page: number }) {
                     {product.size.join(", ") || "—"}
                   </span>
                 </Table.Cell>
-                <Table.Cell className={table.number}>
-                  {formatNumber(orderCount)}
-                </Table.Cell>
+                <Table.Cell className={table.number}>{formatNumber(orderCount)}</Table.Cell>
                 <Table.Cell className={table.actions}>
                   <RowActions
                     label={`Actions for ${product.name}`}
                     editHref={`/admin/products/${product.id}/edit` as Route}
                     toggle={{
-                      label: product.isAvailableForPurchase
-                        ? "Deactivate"
-                        : "Activate",
+                      label: product.isAvailableForPurchase ? "Deactivate" : "Activate",
                       action: toggleProductAvailability.bind(
                         null,
                         product.id,
@@ -139,11 +124,7 @@ export async function ProductTable({ page }: { page: number }) {
           })}
         </Table.Body>
       </Table.Root>
-      <Pagination
-        basePath="/admin/products"
-        page={page}
-        totalPages={pageCount(total)}
-      />
+      <Pagination basePath="/admin/products" page={page} totalPages={pageCount(total)} />
     </>
   );
 }

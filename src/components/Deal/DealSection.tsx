@@ -12,19 +12,11 @@ function DealSection() {
       <SectionTitle>Featured Deals</SectionTitle>
       <div className={styles.container}>
         <div className={styles.leftWrapper}>
-          <Image
-            src={Deal}
-            alt="Exclusive Deals Image"
-            className={styles.leftImg}
-          />
+          <Image src={Deal} alt="Exclusive Deals Image" className={styles.leftImg} />
           <button className={styles.leftButton}>Shop Now</button>
         </div>
         <div className={styles.rightWrapper}>
-          <Image
-            src={Gift}
-            alt="Welcome Gift Image"
-            className={styles.rightImg}
-          />
+          <Image src={Gift} alt="Welcome Gift Image" className={styles.rightImg} />
           <button className={styles.rightButton}>Shop Now</button>
         </div>
       </div>

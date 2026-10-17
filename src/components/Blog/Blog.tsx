@@ -17,9 +17,7 @@ function Blog() {
       <div className={styles.container}>
         <div className={styles.wrapperBox}>
           <button className={styles.button}>Fitness</button>
-          <span className={styles.title}>
-            Affordable Gym Wear That Looks and Feels Premium
-          </span>
+          <span className={styles.title}>Affordable Gym Wear That Looks and Feels Premium</span>
           <Image src={first} alt="first blog" className={styles.imgBlog} />
           <div className={styles.filter}></div>
         </div>
@@ -41,9 +39,7 @@ function Blog() {
         </div>
         <div className={styles.wrapperBox}>
           <button className={styles.button}>The Fashion Blotter</button>
-          <span className={styles.title}>
-            Absorbing the latest runaway and streetwear trends.
-          </span>
+          <span className={styles.title}>Absorbing the latest runaway and streetwear trends.</span>
           <Image src={forth} alt="forth blog" className={styles.imgBlog} />
           <div className={styles.filter}></div>
         </div>

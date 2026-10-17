@@ -46,12 +46,7 @@ export default function RowActions({
   return (
     <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger>
-        <IconButton
-          variant="ghost"
-          color="gray"
-          aria-label={label}
-          disabled={isPending}
-        >
+        <IconButton variant="ghost" color="gray" aria-label={label} disabled={isPending}>
           <MoreHorizontal size={18} />
         </IconButton>
       </DropdownMenu.Trigger>
@@ -63,10 +58,7 @@ export default function RowActions({
           </DropdownMenu.Item>
         )}
         {toggle && (
-          <DropdownMenu.Item
-            disabled={isPending}
-            onSelect={() => run(toggle.action)}
-          >
+          <DropdownMenu.Item disabled={isPending} onSelect={() => run(toggle.action)}>
             {toggle.label}
           </DropdownMenu.Item>
         )}
@@ -82,9 +74,7 @@ export default function RowActions({
             >
               Delete
             </DropdownMenu.Item>
-            {deleteBlockedReason && (
-              <p className={styles.reason}>{deleteBlockedReason}</p>
-            )}
+            {deleteBlockedReason && <p className={styles.reason}>{deleteBlockedReason}</p>}
           </>
         )}
       </DropdownMenu.Content>

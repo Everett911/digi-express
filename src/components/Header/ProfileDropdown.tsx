@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, KeyboardEvent, Activity } from "react";
+import { useState, useRef, useEffect, Activity } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -23,22 +23,20 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "Escape") {
-      setIsOpen(false);
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsOpen(false);
     }
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);
 
@@ -55,11 +53,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
   };
 
   return (
-    <div
-      className={styles.container}
-      ref={containerRef}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={styles.container} ref={containerRef}>
       <button
         className={styles.trigger}
         onClick={toggleMenu}
@@ -69,17 +63,9 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
         type="button"
       >
         {!session ? (
-          <User
-            size={23}
-            style={{ color: "var(--brand)" }}
-            className={styles.icon}
-          />
+          <User size={23} style={{ color: "var(--brand)" }} className={styles.icon} />
         ) : (
-          <CircleUser
-            size={25}
-            style={{ color: "var(--brand)" }}
-            className={styles.icon}
-          />
+          <CircleUser size={25} style={{ color: "var(--brand)" }} className={styles.icon} />
         )}
       </button>
 
@@ -101,9 +87,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
             </Link>
           ) : (
             <>
-              <span className={styles.user}>
-                {truncateString(`${session?.user.name}`, 10)}
-              </span>
+              <span className={styles.user}>{truncateString(`${session?.user.name}`, 10)}</span>
               <Link
                 className={styles.item}
                 href="/order"
@@ -121,23 +105,14 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
                 Account
               </Link>
               <Activity
-                mode={
-                  (session?.user?.role ?? "customer") === "admin"
-                    ? "visible"
-                    : "hidden"
-                }
+                mode={(session?.user?.role ?? "customer") === "admin" ? "visible" : "hidden"}
               >
                 <Link className={styles.item} role="menuitem" href={"/admin"}>
                   Admin
                 </Link>
               </Activity>
-              <div className={styles.divider} role="separator" />
-              <button
-                className={styles.item}
-                onClick={handleSignOut}
-                role="menuitem"
-                type="button"
-              >
+              <hr className={styles.divider} />
+              <button className={styles.item} onClick={handleSignOut} role="menuitem" type="button">
                 Sign Out
               </button>
             </>

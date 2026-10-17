@@ -208,6 +208,7 @@ a.pageButton:hover {
 }
 
 .skeletonRow {
+  display: block;
   height: 40px;
   border-radius: 8px;
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);

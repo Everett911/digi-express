@@ -15,9 +15,7 @@ const nextConfig: NextConfig = {
   typedRoutes: true,
   images: {
     // Product photos uploaded from the admin dashboard (Vercel Blob).
-    remotePatterns: [
-      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
-    ],
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
   },
   turbopack: {
     root: path.resolve(__dirname),
@@ -30,11 +28,7 @@ const nextConfig: NextConfig = {
   },
   webpack(config) {
     const fileLoaderRule = config.module.rules.find((rule: RuleWithTest) =>
-      Boolean(
-        (rule.test as RegExp | { test?: (v: string) => boolean })?.test?.(
-          ".svg",
-        ),
-      ),
+      Boolean((rule.test as RegExp | { test?: (v: string) => boolean })?.test?.(".svg")),
     );
 
     if (fileLoaderRule) {

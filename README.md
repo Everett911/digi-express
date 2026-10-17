@@ -46,20 +46,20 @@ the database. The role can't be set through the app.
 
 ### Environment variables
 
-| Variable | Purpose |
-| --- | --- |
-| `DATABASE_URL` | PostgreSQL connection string |
-| `BETTER_AUTH_SECRET` | Secret used to sign sessions |
-| `BETTER_AUTH_URL` | Site URL, for example `http://localhost:3000` |
-| `NEXT_PUBLIC_SERVER_URL` | Site URL Stripe returns to after payment |
-| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google sign-in |
-| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | GitHub sign-in |
-| `STRIPE_SECRET_KEY` | Stripe API key (use a test key) |
-| `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` | Stripe publishable key |
-| `STRIPE_WEBHOOK_SECRET_KEY` | Signing secret for `/api/webhooks/stripe` |
-| `RESEND_API_KEY` | Sends verification and order emails (optional locally: emails are skipped) |
-| `EMAIL_FROM` | Sender address, for example `Digi Express <orders@example.com>` |
-| `BLOB_READ_WRITE_TOKEN` | Vercel Blob store for product photos uploaded in the admin |
+| Variable                                   | Purpose                                                                    |
+| ------------------------------------------ | -------------------------------------------------------------------------- |
+| `DATABASE_URL`                             | PostgreSQL connection string                                               |
+| `BETTER_AUTH_SECRET`                       | Secret used to sign sessions                                               |
+| `BETTER_AUTH_URL`                          | Site URL, for example `http://localhost:3000`                              |
+| `NEXT_PUBLIC_SERVER_URL`                   | Site URL Stripe returns to after payment                                   |
+| `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Google sign-in                                                             |
+| `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` | GitHub sign-in                                                             |
+| `STRIPE_SECRET_KEY`                        | Stripe API key (use a test key)                                            |
+| `NEXT_PUBLIC_STRIPE_PUBLIC_KEY`            | Stripe publishable key                                                     |
+| `STRIPE_WEBHOOK_SECRET_KEY`                | Signing secret for `/api/webhooks/stripe`                                  |
+| `RESEND_API_KEY`                           | Sends verification and order emails (optional locally: emails are skipped) |
+| `EMAIL_FROM`                               | Sender address, for example `Digi Express <orders@example.com>`            |
+| `BLOB_READ_WRITE_TOKEN`                    | Vercel Blob store for product photos uploaded in the admin                 |
 
 To receive Stripe webhooks locally:
 
@@ -71,12 +71,12 @@ Pay with the test card `4242 4242 4242 4242` and any future expiry date and CVC.
 
 ## Scripts
 
-| Command | What it does |
-| --- | --- |
-| `npm run dev` | Start the development server |
+| Command         | What it does                                        |
+| --------------- | --------------------------------------------------- |
+| `npm run dev`   | Start the development server                        |
 | `npm run build` | Generate the Prisma client and build for production |
-| `npm run lint` | Run ESLint |
-| `npm test` | Run the unit tests (Vitest) |
+| `npm run lint`  | Run ESLint                                          |
+| `npm test`      | Run the unit tests (Vitest)                         |
 
 ## Project structure
 

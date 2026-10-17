@@ -65,13 +65,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
               </Table.Header>
               <Table.Body>
                 {orders.map((order) => {
-                  const quantity = order.items.reduce(
-                    (sum, item) => sum + item.quantity,
-                    0,
-                  );
+                  const quantity = order.items.reduce((sum, item) => sum + item.quantity, 0);
                   const products =
-                    order.items.map((item) => item.name).join(", ") ||
-                    "Unknown product";
+                    order.items.map((item) => item.name).join(", ") || "Unknown product";
 
                   return (
                     <Table.Row key={order.id} align="center">
@@ -81,9 +77,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                             {order.user.name || order.user.email}
                           </span>
                           {order.user.name && (
-                            <span className={table.muted}>
-                              {order.user.email}
-                            </span>
+                            <span className={table.muted}>{order.user.email}</span>
                           )}
                         </div>
                       </Table.RowHeaderCell>
@@ -95,9 +89,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                       <Table.Cell className={table.number}>
                         {formatShortDate(order.createdAt)}
                       </Table.Cell>
-                      <Table.Cell className={table.number}>
-                        {formatNumber(quantity)}
-                      </Table.Cell>
+                      <Table.Cell className={table.number}>{formatNumber(quantity)}</Table.Cell>
                       <Table.Cell className={`${table.number} ${table.strong}`}>
                         {formatCurrency(order.totalCostCents / 100)}
                       </Table.Cell>
@@ -120,11 +112,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                 })}
               </Table.Body>
             </Table.Root>
-            <Pagination
-              basePath="/admin/orders"
-              page={page}
-              totalPages={pageCount(total)}
-            />
+            <Pagination basePath="/admin/orders" page={page} totalPages={pageCount(total)} />
           </>
         )}
       </Panel>

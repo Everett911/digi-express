@@ -3,14 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 import { deleteUser } from "../_actions/users";
 import RowActions from "../_components/RowActions";
-import {
-  EmptyState,
-  PageHeader,
-  Pagination,
-  Panel,
-  SrOnly,
-  StatusBadge,
-} from "../_components/ui";
+import { EmptyState, PageHeader, Pagination, Panel, SrOnly, StatusBadge } from "../_components/ui";
 import table from "../_components/table.module.css";
 import { requireAdminPage } from "../_lib/auth";
 import { formatShortDate } from "../_lib/format";
@@ -47,9 +40,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
     where: { userId: { in: users.map((user) => user.id) } },
     _sum: { totalCostCents: true },
   });
-  const spentByUser = new Map(
-    spending.map((row) => [row.userId, row._sum.totalCostCents ?? 0]),
-  );
+  const spentByUser = new Map(spending.map((row) => [row.userId, row._sum.totalCostCents ?? 0]));
 
   return (
     <>
@@ -87,27 +78,19 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                     <Table.Row key={user.id} align="center">
                       <Table.RowHeaderCell>
                         <div className={table.stack}>
-                          <span className={table.strong}>
-                            {user.name || user.email}
-                          </span>
-                          {user.name && (
-                            <span className={table.muted}>{user.email}</span>
-                          )}
+                          <span className={table.strong}>{user.name || user.email}</span>
+                          {user.name && <span className={table.muted}>{user.email}</span>}
                         </div>
                       </Table.RowHeaderCell>
                       <Table.Cell>
-                        <StatusBadge
-                          tone={user.role === "admin" ? "accent" : "neutral"}
-                        >
+                        <StatusBadge tone={user.role === "admin" ? "accent" : "neutral"}>
                           {user.role === "admin" ? "Admin" : "Customer"}
                         </StatusBadge>
                       </Table.Cell>
                       <Table.Cell className={table.number}>
                         {formatShortDate(user.createdAt)}
                       </Table.Cell>
-                      <Table.Cell className={table.number}>
-                        {formatNumber(orderCount)}
-                      </Table.Cell>
+                      <Table.Cell className={table.number}>{formatNumber(orderCount)}</Table.Cell>
                       <Table.Cell className={`${table.number} ${table.strong}`}>
                         {formatCurrency((spentByUser.get(user.id) ?? 0) / 100)}
                       </Table.Cell>
@@ -130,11 +113,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                 })}
               </Table.Body>
             </Table.Root>
-            <Pagination
-              basePath="/admin/users"
-              page={page}
-              totalPages={pageCount(total)}
-            />
+            <Pagination basePath="/admin/users" page={page} totalPages={pageCount(total)} />
           </>
         )}
       </Panel>

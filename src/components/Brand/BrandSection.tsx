@@ -55,9 +55,7 @@ export default function BrandSection() {
     },
     {
       id: "4",
-      icon: (
-        <SiUnderarmour size={iconSize} color={iconColor} style={iconStyle} />
-      ),
+      icon: <SiUnderarmour size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=underarmor",
       name: "Under Armour",
     },
@@ -69,9 +67,7 @@ export default function BrandSection() {
     },
     {
       id: "6",
-      icon: (
-        <SiNewbalance size={iconSize} color={iconColor} style={iconStyle} />
-      ),
+      icon: <SiNewbalance size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?brand=newbalance",
       name: "New Balance",
     },
@@ -103,10 +99,7 @@ export default function BrandSection() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     };
@@ -127,19 +120,11 @@ export default function BrandSection() {
         </div>
 
         <div className={styles.dropdown} ref={dropdownRef}>
-          <button
-            type="button"
-            className={styles.dropdownButton}
-            onClick={toggleDropdown}
-          >
+          <button type="button" className={styles.dropdownButton} onClick={toggleDropdown}>
             <span>{dropdownOpen ? "Hide Brands" : "Select a Brand"}</span>
             {dropdownOpen ? <X size={20} /> : <ChevronDown size={20} />}
           </button>
-          <div
-            className={`${styles.dropdownMenu} ${
-              dropdownOpen ? styles.dropdownOpen : ""
-            }`}
-          >
+          <div className={`${styles.dropdownMenu} ${dropdownOpen ? styles.dropdownOpen : ""}`}>
             {categories.map((category) => (
               <Link
                 key={category.id}
@@ -156,11 +141,7 @@ export default function BrandSection() {
 
         <div className={styles.grid}>
           {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={category.href as Route}
-              className={styles.card}
-            >
+            <Link key={category.id} href={category.href as Route} className={styles.card}>
               <div className={styles.iconWrapper}>{category.icon}</div>
             </Link>
           ))}

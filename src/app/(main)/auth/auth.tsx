@@ -28,8 +28,8 @@ export default function AuthClientPage() {
 
   const urlError = searchParams.get("error");
   const urlErrorMessage = urlError
-    ? AUTH_ERROR_MESSAGES[urlError] ??
-      "Something went wrong during authentication. Please try again."
+    ? (AUTH_ERROR_MESSAGES[urlError] ??
+      "Something went wrong during authentication. Please try again.")
     : "";
   const displayedError = error || urlErrorMessage;
 
@@ -113,11 +113,7 @@ export default function AuthClientPage() {
         }
       }
     } catch (err) {
-      setError(
-        `Authentication error: ${
-          err instanceof Error ? err.message : "Unknown error"
-        }`,
-      );
+      setError(`Authentication error: ${err instanceof Error ? err.message : "Unknown error"}`);
     } finally {
       setIsLoading(false);
     }
@@ -128,9 +124,7 @@ export default function AuthClientPage() {
       <div className={styles.flexWrapper}>
         <div className={styles.contentBox}>
           <div className={styles.textCenter}>
-            <h1 className={styles.title}>
-              {isSignIn ? "Welcome Back" : "Create Account"}
-            </h1>
+            <h1 className={styles.title}>{isSignIn ? "Welcome Back" : "Create Account"}</h1>
             <p className={styles.subtitle}>
               {isSignIn
                 ? "Sign in to your account to continue"
@@ -154,13 +148,10 @@ export default function AuthClientPage() {
           {needsVerification && !error && (
             <div className={styles.noticeContainer}>
               <p className={styles.noticeText}>
-                We&apos;ve sent a verification link to{" "}
-                <strong>{email}</strong>. Please check your inbox (and spam
-                folder) to activate your account.
+                We&apos;ve sent a verification link to <strong>{email}</strong>. Please check your
+                inbox (and spam folder) to activate your account.
               </p>
-              {resendStatus && (
-                <p className={styles.noticeText}>{resendStatus}</p>
-              )}
+              {resendStatus && <p className={styles.noticeText}>{resendStatus}</p>}
               <button
                 type="button"
                 onClick={handleResendVerification}
@@ -252,11 +243,7 @@ export default function AuthClientPage() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={styles.submitButton}
-            >
+            <button type="submit" disabled={isLoading} className={styles.submitButton}>
               {isLoading ? (
                 <div className={styles.loadingFlex}>
                   <LoaderCircleIcon className={styles.spinnerIcon} />
@@ -280,9 +267,7 @@ export default function AuthClientPage() {
               }}
               className={styles.toggleButton}
             >
-              {isSignIn
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Sign in"}
+              {isSignIn ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
             </button>
           </div>
         </div>

@@ -1,12 +1,7 @@
 "use client";
 import type { Route } from "next";
 import Link from "next/link";
-import {
-  SiFacebook,
-  SiInstagram,
-  SiX,
-  SiYoutube,
-} from "@icons-pack/react-simple-icons";
+import { SiFacebook, SiInstagram, SiX, SiYoutube } from "@icons-pack/react-simple-icons";
 import { Plus, Minus } from "lucide-react";
 import styles from "./Footer.module.css";
 import Logo from "@/src/assets/images/logo.png";
@@ -22,6 +17,14 @@ interface footerTabs {
   title: string;
   links: footerlinks[];
 }
+
+// TODO: swap in the store's own profile pages.
+const SOCIAL_LINKS = [
+  { label: "Facebook", href: "https://www.facebook.com/", Icon: SiFacebook },
+  { label: "X (Twitter)", href: "https://x.com/", Icon: SiX },
+  { label: "YouTube", href: "https://www.youtube.com/", Icon: SiYoutube },
+  { label: "Instagram", href: "https://www.instagram.com/", Icon: SiInstagram },
+];
 
 export default function Footer() {
   const [activeTabIndex, setActiveTabIndex] = useState<number | null>(null);
@@ -39,9 +42,7 @@ export default function Footer() {
     <div className={styles.footerContainer}>
       {/* 1. Header Banner */}
       <div className={styles.banner}>
-        <h2 className={styles.bannerText}>
-          Swift transit. Zero delay. Done right.
-        </h2>
+        <h2 className={styles.bannerText}>Swift transit. Zero delay. Done right.</h2>
       </div>
 
       <footer className={styles.mainFooter}>
@@ -52,18 +53,18 @@ export default function Footer() {
             </div>
 
             <div className={styles.socials}>
-              <a href="#" className={styles.socialIcon} aria-label="Facebook">
-                <SiFacebook />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Twitter">
-                <SiX />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="YouTube">
-                <SiYoutube />
-              </a>
-              <a href="#" className={styles.socialIcon} aria-label="Instagram">
-                <SiInstagram />
-              </a>
+              {SOCIAL_LINKS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={styles.socialIcon}
+                  aria-label={label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon />
+                </a>
+              ))}
             </div>
           </div>
 
@@ -77,10 +78,7 @@ export default function Footer() {
                     {tab.links.map((link: footerlinks) => {
                       return (
                         <li key={link.label}>
-                          <Link
-                            href={link.href as Route}
-                            className={styles.link}
-                          >
+                          <Link href={link.href as Route} className={styles.link}>
                             {link.label}
                           </Link>
                         </li>
@@ -96,17 +94,9 @@ export default function Footer() {
                   <button onClick={() => handleTabClick(index)}>
                     <span className={styles.icon}>
                       {isOpen ? (
-                        <Minus
-                          color={iconColor}
-                          style={iconStyle}
-                          size={iconSize}
-                        />
+                        <Minus color={iconColor} style={iconStyle} size={iconSize} />
                       ) : (
-                        <Plus
-                          color={iconColor}
-                          style={iconStyle}
-                          size={iconSize}
-                        />
+                        <Plus color={iconColor} style={iconStyle} size={iconSize} />
                       )}
                     </span>
                   </button>
@@ -115,10 +105,7 @@ export default function Footer() {
                     <ul className={styles.linkList}>
                       {tab.links.map((link: footerlinks) => (
                         <li key={link.label}>
-                          <Link
-                            href={link.href as Route}
-                            className={styles.link}
-                          >
+                          <Link href={link.href as Route} className={styles.link}>
                             {link.label}
                           </Link>
                         </li>
@@ -132,8 +119,7 @@ export default function Footer() {
         </div>
 
         <div className={styles.copyright}>
-          © 2026 Digi-Express. All Rights Reserved. | Privacy Policy | Terms of
-          Service
+          © 2026 Digi-Express. All Rights Reserved. | Privacy Policy | Terms of Service
         </div>
       </footer>
     </div>

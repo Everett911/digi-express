@@ -19,8 +19,7 @@ export default function AdminNav() {
     <nav className={styles.nav} aria-label="Admin">
       {LINKS.map(({ href, label, icon: Icon }) => {
         // Dashboard only matches exactly; sections also match their sub-pages.
-        const isActive =
-          href === "/admin" ? pathname === href : pathname.startsWith(href);
+        const isActive = href === "/admin" ? pathname === href : pathname.startsWith(href);
 
         return (
           <Link

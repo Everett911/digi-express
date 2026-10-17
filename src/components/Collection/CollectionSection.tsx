@@ -13,11 +13,7 @@ export default function CollectionSection() {
       <div className={styles.collectionContainer}>
         <div className={styles.columnLeft}>
           <div className={styles.topWrapper}>
-            <Image
-              src={Appliances}
-              alt="Appliances Card"
-              className={styles.appImage}
-            />
+            <Image src={Appliances} alt="Appliances Card" className={styles.appImage} />
             <Link href={"/products?type=appliances"}>
               <button className={styles.appButton}>Shop Now</button>
             </Link>
@@ -31,11 +27,7 @@ export default function CollectionSection() {
         </div>
         <div className={styles.columnRight}>
           <div className={styles.rightWrapper}>
-            <Image
-              src={Delivery}
-              alt="Delivery Card"
-              className={styles.deliverImage}
-            />
+            <Image src={Delivery} alt="Delivery Card" className={styles.deliverImage} />
           </div>
         </div>
       </div>

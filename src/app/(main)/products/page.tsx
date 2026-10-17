@@ -4,10 +4,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import { ArrowRight, Sparkles, X } from "lucide-react";
 import styles from "./products.module.css";
-import {
-  ProductCard,
-  ProductSkeleton,
-} from "@/src/components/ProductCard/ProductCard";
+import { ProductCard, ProductSkeleton } from "@/src/components/ProductCard/ProductCard";
 import { Suspense } from "react";
 import FilterPanel from "@/src/components/ProductFilter/FilterPanel";
 import Footer from "@/src/components/Footer/Footer";
@@ -38,10 +35,7 @@ async function ProductList({
   searchQuery: string;
   searchParams: PageProps["searchParams"];
 }) {
-  const { products, correctedQuery } = await getProducts(
-    searchQuery,
-    searchParams,
-  );
+  const { products, correctedQuery } = await getProducts(searchQuery, searchParams);
 
   // Same URL without the search term, so filters and sort stay applied.
   const resolvedParams = await searchParams;
@@ -71,8 +65,8 @@ async function ProductList({
     <>
       {correctedQuery ? (
         <p className={styles.searchStatus}>
-          No results for &ldquo;{searchQuery}&rdquo;. Showing results for
-          &ldquo;<strong>{correctedQuery}</strong>&rdquo; instead.
+          No results for &ldquo;{searchQuery}&rdquo;. Showing results for &ldquo;
+          <strong>{correctedQuery}</strong>&rdquo; instead.
           {clearSearch}
         </p>
       ) : (
@@ -92,10 +86,7 @@ async function ProductList({
         {products.length === 0 ? (
           <div className={styles.searchNoFound}>
             <h3>No items found</h3>
-            <p>
-              We couldn&apos;t find any products matching your search term or
-              active filters.
-            </p>
+            <p>We couldn&apos;t find any products matching your search term or active filters.</p>
           </div>
         ) : (
           <ProductCard products={products} layout="grid" />
@@ -125,8 +116,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
             <div className={styles.signInText}>
               <p className={styles.signInTitle}>Unlock member-only deals</p>
               <p className={styles.signInSubtitle}>
-                Sign in for personalized offers, a saved cart and order
-                tracking.
+                Sign in for personalized offers, a saved cart and order tracking.
               </p>
             </div>
             <Link href="/auth" className={styles.signInButton}>

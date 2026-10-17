@@ -88,9 +88,7 @@ export default function HeaderTabs() {
       e.preventDefault();
       setActiveTab(TABS[index]);
       // Wait for the panel to mount, then move focus to its first link.
-      requestAnimationFrame(() =>
-        document.getElementById(panelId)?.querySelector("a")?.focus()
-      );
+      requestAnimationFrame(() => document.getElementById(panelId)?.querySelector("a")?.focus());
       return;
     }
     if (next === null) return;
@@ -103,11 +101,6 @@ export default function HeaderTabs() {
   // Close when focus leaves the whole menu (e.g. Tab past the last link).
   const handleBlur = (e: React.FocusEvent) => {
     if (!containerRef.current?.contains(e.relatedTarget as Node | null)) close();
-  };
-
-  // Close after following a link inside the panel.
-  const handlePanelClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).closest("a")) close();
   };
 
   return (
@@ -143,12 +136,8 @@ export default function HeaderTabs() {
 
       {activeTab && (
         <div className={styles.tabPanel}>
-          <div
-            id={panelId}
-            className={styles.visiblePanel}
-            onClick={handlePanelClick}
-          >
-            <SubHeaderTabs titleTab={activeTab} />
+          <div id={panelId} className={styles.visiblePanel}>
+            <SubHeaderTabs titleTab={activeTab} onNavigate={close} />
           </div>
         </div>
       )}

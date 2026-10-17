@@ -9,9 +9,7 @@ const MIN_COMPACT_LENGTH = 5;
 // Filler words that carry no product meaning; requiring them to match
 // would turn "the best shoes for men" into zero results.
 const STOPWORDS = new Set(
-  "a an and any at best by for good i in me my nice of on or some the to with".split(
-    " ",
-  ),
+  "a an and any at best by for good i in me my nice of on or some the to with".split(" "),
 );
 
 // Escape LIKE wildcards so user input like "50%" is matched literally.
@@ -61,18 +59,12 @@ export function tokenizeSearchQuery(searchQuery: string): string[] {
 // Optimal string alignment distance: edits, plus swapped neighbours.
 function editDistance(a: string, b: string) {
   const d = Array.from({ length: a.length + 1 }, (_, i) =>
-    Array.from({ length: b.length + 1 }, (_, j) =>
-      i === 0 ? j : j === 0 ? i : 0,
-    ),
+    Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0)),
   );
   for (let i = 1; i <= a.length; i++) {
     for (let j = 1; j <= b.length; j++) {
       const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      d[i][j] = Math.min(
-        d[i - 1][j] + 1,
-        d[i][j - 1] + 1,
-        d[i - 1][j - 1] + cost,
-      );
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
       if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
         d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
       }
@@ -107,9 +99,7 @@ type Correction = { normalized: string; display: string };
 
 // Find the closest catalogue word for each misspelled token ("snekers",
 // "parfume"). Returns only the tokens that were corrected.
-async function correctTokens(
-  tokens: string[],
-): Promise<Map<string, Correction>> {
+async function correctTokens(tokens: string[]): Promise<Map<string, Correction>> {
   const vocabulary = await getVocabulary();
   const words = [...vocabulary.keys()];
   const corrections = new Map<string, Correction>();
@@ -139,10 +129,7 @@ async function correctTokens(
   return corrections;
 }
 
-async function queryProductIds(
-  tokens: string[],
-  phrase: string,
-): Promise<string[]> {
+async function queryProductIds(tokens: string[], phrase: string): Promise<string[]> {
   const keywordsText = Prisma.sql`array_to_string(p."keywords", ' ')`;
   const colorText = Prisma.sql`array_to_string(p."color", ' ')`;
   const descriptionText = Prisma.sql`coalesce(p."description", '')`;
@@ -211,9 +198,7 @@ export type ProductSearchResult = {
  * keywords or color, or a whole word in the description, case-insensitively.
  * If nothing matches, misspelled words are corrected once and retried.
  */
-export async function searchProducts(
-  searchQuery: string,
-): Promise<ProductSearchResult> {
+export async function searchProducts(searchQuery: string): Promise<ProductSearchResult> {
   const phrase = searchQuery.trim();
   const tokens = tokenizeSearchQuery(phrase);
   if (tokens.length === 0) return { ids: [], correctedQuery: null };
@@ -232,9 +217,7 @@ export async function searchProducts(
       return correction ? correction.display : word;
     })
     .join(" ");
-  const correctedTokens = tokens.map(
-    (token) => corrections.get(token)?.normalized ?? token,
-  );
+  const correctedTokens = tokens.map((token) => corrections.get(token)?.normalized ?? token);
   const correctedIds = await queryProductIds(correctedTokens, correctedQuery);
   return {
     ids: correctedIds,

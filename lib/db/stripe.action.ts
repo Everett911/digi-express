@@ -86,8 +86,7 @@ export async function createPaymentIntentAction() {
       paymentIntentOptions.customer = session.user.stripeCustomerId as string;
     }
 
-    const paymentIntent =
-      await stripe.paymentIntents.create(paymentIntentOptions);
+    const paymentIntent = await stripe.paymentIntents.create(paymentIntentOptions);
 
     if (!paymentIntent.client_secret) {
       throw new Error("Stripe failed to return a client secret");

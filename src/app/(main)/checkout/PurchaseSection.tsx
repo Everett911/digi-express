@@ -10,21 +10,14 @@ interface PurchaseSectionProps {
   totalCostCents: number;
 }
 
-function PurchaseSection({
-  clientSecret,
-  totalCostCents,
-}: PurchaseSectionProps) {
+function PurchaseSection({ clientSecret, totalCostCents }: PurchaseSectionProps) {
   const options = {
     clientSecret,
     appearance: { theme: "flat" as const },
   };
 
   return (
-    <Elements
-      stripe={stripePromise}
-      options={options}
-      key={options.clientSecret}
-    >
+    <Elements stripe={stripePromise} options={options} key={options.clientSecret}>
       <PurchaseForm totalCostCents={totalCostCents} />
     </Elements>
   );

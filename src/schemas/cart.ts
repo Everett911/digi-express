@@ -4,11 +4,7 @@ import { DeliveryOptionSchema } from "./deliveryOptions";
 
 export const MAX_CART_QUANTITY = 10;
 
-export const cartQuantitySchema = z
-  .number()
-  .int()
-  .min(1)
-  .max(MAX_CART_QUANTITY);
+export const cartQuantitySchema = z.number().int().min(1).max(MAX_CART_QUANTITY);
 
 // Size and colour are "" when the product doesn't have that option.
 const optionSchema = z
@@ -43,9 +39,7 @@ const baseCartItemSchema = z.object({
   deliveryOptionId: z.string(),
 });
 
-export const cartSchema = z
-  .array(nestedCartItemSchema.extend(baseCartItemSchema.shape))
-  .optional();
+export const cartSchema = z.array(nestedCartItemSchema.extend(baseCartItemSchema.shape)).optional();
 
 export type Cart = z.infer<typeof cartSchema>;
 export type CartItem = z.infer<typeof baseCartItemSchema>;

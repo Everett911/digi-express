@@ -2,13 +2,7 @@ import Image from "next/image";
 import { DollarSign, Package, ShoppingBag, Users } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
-import {
-  EmptyState,
-  PageHeader,
-  Panel,
-  StatCard,
-  TextLink,
-} from "./_components/ui";
+import { EmptyState, PageHeader, Panel, StatCard, TextLink } from "./_components/ui";
 import { requireAdminPage } from "./_lib/auth";
 import { formatShortDate } from "./_lib/format";
 import styles from "./page.module.css";
@@ -74,10 +68,8 @@ async function getDashboardData() {
     customerCount,
     activeProducts,
     inactiveProducts,
-    averageOrderCents:
-      allSales._count === 0 ? 0 : revenueCents / allSales._count,
-    averageCustomerCents:
-      customerCount === 0 ? 0 : revenueCents / customerCount,
+    averageOrderCents: allSales._count === 0 ? 0 : revenueCents / allSales._count,
+    averageCustomerCents: customerCount === 0 ? 0 : revenueCents / customerCount,
     recentOrders,
     bestSellers: bestSellers.flatMap((item) => {
       const product = productsById.get(item.productId);
@@ -125,26 +117,17 @@ export default async function AdminDashboard() {
       </div>
 
       <div className={styles.columns}>
-        <Panel
-          title="Recent orders"
-          action={<TextLink href="/admin/orders">View all</TextLink>}
-        >
+        <Panel title="Recent orders" action={<TextLink href="/admin/orders">View all</TextLink>}>
           {data.recentOrders.length === 0 ? (
-            <EmptyState
-              title="No orders yet"
-              description="New orders will show up here."
-            />
+            <EmptyState title="No orders yet" description="New orders will show up here." />
           ) : (
             <ul className={styles.list}>
               {data.recentOrders.map((order) => (
                 <li key={order.id} className={styles.listRow}>
                   <div className={styles.listMain}>
-                    <span className={styles.listTitle}>
-                      {order.user.name || order.user.email}
-                    </span>
+                    <span className={styles.listTitle}>{order.user.name || order.user.email}</span>
                     <span className={styles.listMeta}>
-                      {formatShortDate(order.createdAt)} ·{" "}
-                      {formatNumber(order._count.items)}{" "}
+                      {formatShortDate(order.createdAt)} · {formatNumber(order._count.items)}{" "}
                       {order._count.items === 1 ? "item" : "items"}
                     </span>
                   </div>
@@ -157,15 +140,9 @@ export default async function AdminDashboard() {
           )}
         </Panel>
 
-        <Panel
-          title="Best sellers"
-          action={<TextLink href="/admin/products">View all</TextLink>}
-        >
+        <Panel title="Best sellers" action={<TextLink href="/admin/products">View all</TextLink>}>
           {data.bestSellers.length === 0 ? (
-            <EmptyState
-              title="No sales yet"
-              description="Your top products will show up here."
-            />
+            <EmptyState title="No sales yet" description="Your top products will show up here." />
           ) : (
             <ul className={styles.list}>
               {data.bestSellers.map((product) => (
@@ -187,9 +164,7 @@ export default async function AdminDashboard() {
                       {formatCurrency(product.priceCents / 100)}
                     </span>
                   </div>
-                  <span className={styles.listValue}>
-                    {formatNumber(product.unitsSold)} sold
-                  </span>
+                  <span className={styles.listValue}>{formatNumber(product.unitsSold)} sold</span>
                 </li>
               ))}
             </ul>

@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import ProductDetailContent, {
-  type DeliveryEstimate,
-} from "./ProductDetailContent";
+import ProductDetailContent, { type DeliveryEstimate } from "./ProductDetailContent";
 import styles from "./detail.module.css";
 import ProductSwiper from "@/src/components/Carousel/ProductSwiper";
 import ProductDescription from "@/src/components/Accordion/ProductDescription";
@@ -26,20 +24,14 @@ function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-export default async function ProductDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params; // Next.js 15 requires awaiting params
 
   const product = await prisma.product.findUnique({ where: { id } });
   if (!product) notFound();
 
   const keywords = product.keywords.map((keyword) => keyword.toLowerCase());
-  const isAppliance = ["appliances", "appliance"].some((item) =>
-    keywords.includes(item),
-  );
+  const isAppliance = ["appliances", "appliance"].some((item) => keywords.includes(item));
   const sizes = product.size.filter((size) => size && size !== "none");
   const colors = product.color.filter((color) => color && color !== "none");
 
@@ -56,6 +48,8 @@ export default async function ProductDetailPage({
   ]);
 
   // Cheapest first, with the date each option would arrive if ordered today.
+  // A server component renders once per request, so reading the clock is fine.
+  // oxlint-disable-next-line react/purity
   const today = new Date();
   const deliveryEstimates: DeliveryEstimate[] = [...deliveryOptions]
     .sort((a, b) => a.priceCents - b.priceCents)
@@ -75,10 +69,8 @@ export default async function ProductDetailPage({
         candidate.keywords
           .map((k) => k.toLowerCase())
           .filter((k) => keywords.includes(k))
-          .reduce(
-            (sum, k) => sum + (AUDIENCE_KEYWORDS.includes(k) ? 1 : 3),
-            0,
-          ) + (candidate.brand === product.brand ? 0.5 : 0),
+          .reduce((sum, k) => sum + (AUDIENCE_KEYWORDS.includes(k) ? 1 : 3), 0) +
+        (candidate.brand === product.brand ? 0.5 : 0),
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, RELATED_LIMIT)
@@ -127,9 +119,7 @@ export default async function ProductDetailPage({
                 <dd>
                   <Link
                     className={styles.specLink}
-                    href={
-                      `/products?brand=${encodeURIComponent(product.brand)}` as Route
-                    }
+                    href={`/products?brand=${encodeURIComponent(product.brand)}` as Route}
                   >
                     {capitalize(product.brand)}
                   </Link>
@@ -149,9 +139,7 @@ export default async function ProductDetailPage({
                       <Link
                         key={category}
                         className={styles.tag}
-                        href={
-                          `/products?type=${encodeURIComponent(category)}` as Route
-                        }
+                        href={`/products?type=${encodeURIComponent(category)}` as Route}
                       >
                         {capitalize(category)}
                       </Link>

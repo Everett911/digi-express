@@ -333,7 +333,12 @@
 }
 
 .colorSwatchUnknown {
-  background: conic-gradient(var(--border-default) 0 25%, var(--surface) 0 50%, var(--border-default) 0 75%, var(--surface) 0);
+  background: conic-gradient(
+    var(--border-default) 0 25%,
+    var(--surface) 0 50%,
+    var(--border-default) 0 75%,
+    var(--surface) 0
+  );
 }
 
 .colorSwatchActive {

@@ -6,9 +6,5 @@ export function cache<Args extends unknown[], Return>(
   keyParts: string[],
   options: { revalidate?: number | false; tags?: string[] } = {},
 ) {
-  return nextCache(
-    reactCache(cb) as (...args: Args) => Promise<Return>,
-    keyParts,
-    options,
-  );
+  return nextCache(reactCache(cb) as (...args: Args) => Promise<Return>, keyParts, options);
 }

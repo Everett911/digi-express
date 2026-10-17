@@ -1,11 +1,7 @@
 import { prisma } from "../prisma";
 import { cache } from "@/lib/cache";
 import type { Prisma, Product } from "@prisma/client";
-import {
-  mapPriceGroupsToPrisma,
-  PRICE_GROUPS,
-  priceGroupToRange,
-} from "@/lib/utils/priceMapper";
+import { mapPriceGroupsToPrisma, PRICE_GROUPS, priceGroupToRange } from "@/lib/utils/priceMapper";
 import { searchProducts } from "../utils/productSearch";
 
 export const getNewestProducts = cache(
@@ -50,9 +46,7 @@ const ORDER_BY: Record<SortOption, Prisma.ProductOrderByWithRelationInput> = {
 };
 
 function parseSort(value: string | undefined): SortOption | null {
-  return SORT_OPTIONS.some((option) => option.value === value)
-    ? (value as SortOption)
-    : null;
+  return SORT_OPTIONS.some((option) => option.value === value) ? (value as SortOption) : null;
 }
 
 export type ProductListResult = {
@@ -82,21 +76,15 @@ async function fetchProductsFromDb(
   searchParams: AllowedSearchParams,
 ): Promise<ProductListResult> {
   const sizes = (
-    typeof searchParams.size === "string"
-      ? [searchParams.size]
-      : searchParams.size || []
+    typeof searchParams.size === "string" ? [searchParams.size] : searchParams.size || []
   ).map((val) => val.toLowerCase());
 
   const colors = (
-    typeof searchParams.color === "string"
-      ? [searchParams.color]
-      : searchParams.color || []
+    typeof searchParams.color === "string" ? [searchParams.color] : searchParams.color || []
   ).map((val) => val.toLowerCase());
 
   const brands = (
-    typeof searchParams.brand === "string"
-      ? [searchParams.brand]
-      : searchParams.brand || []
+    typeof searchParams.brand === "string" ? [searchParams.brand] : searchParams.brand || []
   ).map((val) => val.toLowerCase());
 
   const priceGroups =
@@ -106,9 +94,7 @@ async function fetchProductsFromDb(
   const priceFilters = mapPriceGroupsToPrisma(priceGroups);
 
   const rawTypes = (
-    typeof searchParams.type === "string"
-      ? searchParams.type.split(",")
-      : searchParams.type || []
+    typeof searchParams.type === "string" ? searchParams.type.split(",") : searchParams.type || []
   )
     .flatMap((val) => val.split(","))
     .map((val) => val.trim().toLowerCase())
@@ -123,9 +109,7 @@ async function fetchProductsFromDb(
   const allAliases = DEPARTMENTS.flatMap((department) => department.aliases);
   const structuralKeywords = rawTypes.filter((t) => !allAliases.includes(t));
 
-  const conditions: Prisma.ProductWhereInput[] = [
-    { isAvailableForPurchase: true },
-  ];
+  const conditions: Prisma.ProductWhereInput[] = [{ isAvailableForPurchase: true }];
 
   // Ranked IDs from the text search; null means "no search, don't rank".
   const search = searchQuery ? await searchProducts(searchQuery) : null;
@@ -137,29 +121,23 @@ async function fetchProductsFromDb(
   if (sizes.length > 0) conditions.push({ size: { hasSome: sizes } });
   if (colors.length > 0) conditions.push({ color: { hasSome: colors } });
   // Brands are stored with inconsistent casing ("zara", "Daniel Wellington").
-  if (brands.length > 0)
-    conditions.push({ brand: { in: brands, mode: "insensitive" } });
+  if (brands.length > 0) conditions.push({ brand: { in: brands, mode: "insensitive" } });
   if (priceFilters.length > 0) conditions.push({ OR: priceFilters });
 
   if (selectedDepartments.length > 0) {
     conditions.push({
       keywords: {
-        hasSome: selectedDepartments.flatMap((department) =>
-          keywordVariants(department.aliases),
-        ),
+        hasSome: selectedDepartments.flatMap((department) => keywordVariants(department.aliases)),
       },
     });
     const excluded = DEPARTMENTS.filter(
-      (department) =>
-        department.exclusive && !selectedDepartments.includes(department),
+      (department) => department.exclusive && !selectedDepartments.includes(department),
     );
     if (excluded.length > 0) {
       conditions.push({
         NOT: {
           keywords: {
-            hasSome: excluded.flatMap((department) =>
-              keywordVariants(department.aliases),
-            ),
+            hasSome: excluded.flatMap((department) => keywordVariants(department.aliases)),
           },
         },
       });
@@ -194,10 +172,7 @@ export async function getProducts(
   // "Shoes" and " shoes " give the same results, so share one cache entry.
   const normalizedQuery = searchQuery.trim().replace(/\s+/g, " ").toLowerCase();
 
-  const serializedKey = JSON.stringify(
-    resolvedParams,
-    Object.keys(resolvedParams).sort(),
-  );
+  const serializedKey = JSON.stringify(resolvedParams, Object.keys(resolvedParams).sort());
 
   return cache(
     async (): Promise<ProductListResult> => {
@@ -276,22 +251,16 @@ export const getFilterOptions = cache(
       const range = priceGroupToRange(group);
       const min = typeof range?.gte === "number" ? range.gte : -Infinity;
       const max = typeof range?.lt === "number" ? range.lt : Infinity;
-      const count = prices.filter(
-        ({ priceCents }) => priceCents >= min && priceCents < max,
-      ).length;
+      const count = prices.filter(({ priceCents }) => priceCents >= min && priceCents < max).length;
       return { value: group, count };
     });
 
     return {
-      sizes: toOptions(sizes).sort(
-        (a, b) => sizeRank(a.value) - sizeRank(b.value),
-      ),
+      sizes: toOptions(sizes).sort((a, b) => sizeRank(a.value) - sizeRank(b.value)),
       colors: toOptions(colors),
       brands: toOptions(brands),
       // Departments have their own header tabs, so leave them out here.
-      keywords: toOptions(keywords).filter(
-        (k) => !DEPARTMENT_ALIASES.includes(k.value),
-      ),
+      keywords: toOptions(keywords).filter((k) => !DEPARTMENT_ALIASES.includes(k.value)),
       priceGroups,
     };
   },

@@ -1,0 +1,258 @@
+/* Closed: a round pill button in the bottom-right corner. */
+.launcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 999px;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.35);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+
+.launcher:hover {
+  background: var(--button-primary-hover);
+  transform: translateY(-2px);
+}
+
+/* Open: a card with header, scrolling messages and an input row. */
+.panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 50;
+  width: 370px;
+  height: 540px;
+  max-height: calc(100dvh - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 20px 50px -12px rgba(15, 23, 42, 0.3);
+  animation: open 0.2s ease-out;
+}
+
+@keyframes open {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--button-primary);
+  color: var(--text-on-dark);
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
+  background: var(--background);
+}
+
+.bubble {
+  max-width: 80%;
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap; /* keep the AI's line breaks */
+  overflow-wrap: anywhere;
+}
+
+.user {
+  align-self: flex-end;
+  border-radius: 16px 16px 4px 16px;
+  background: var(--brand);
+  color: var(--text-on-dark);
+}
+
+.bot {
+  align-self: flex-start;
+  border: 1px solid var(--border-default);
+  border-radius: 16px 16px 16px 4px;
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+/* Three bouncing dots while waiting for the answer. */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: 14px;
+}
+
+.typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-subtle);
+  animation: bounce 1.2s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.empty {
+  margin: auto 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.suggestion {
+  padding: 6px 12px;
+  border: 1px solid var(--brand-soft-border);
+  border-radius: 999px;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  border-color: var(--brand);
+}
+
+.form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--border-default);
+  background: var(--surface);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--focus-ring);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+
+.sendButton {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: var(--button-primary);
+  color: var(--button-primary-text);
+  cursor: pointer;
+}
+
+.sendButton:hover:not(:disabled) {
+  background: var(--button-primary-hover);
+}
+
+.sendButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Phones: the panel fills the screen. */
+@media (max-width: 480px) {
+  .panel {
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .launcher span {
+    display: none;
+  }
+
+  .launcher {
+    padding: 14px;
+  }
+}

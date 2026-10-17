@@ -10,9 +10,7 @@ import PurchaseSection from "./PurchaseSection";
 import { createPaymentIntentAction } from "@/lib/db/stripe.action";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import StatusPage, {
-  statusActionClass,
-} from "@/src/components/StatusPage/StatusPage";
+import StatusPage, { statusActionClass } from "@/src/components/StatusPage/StatusPage";
 
 export default async function CheckoutPage() {
   const deliveryOptions = await getDeliveryOptions();
@@ -54,10 +52,7 @@ export default async function CheckoutPage() {
 
         <div className={styles.checkoutGrid}>
           <section className={styles.orderSection}>
-            <OrderSummary
-              carts={cart ?? []}
-              deliveryOptions={deliveryOptions}
-            />
+            <OrderSummary carts={cart ?? []} deliveryOptions={deliveryOptions} />
           </section>
 
           <aside className={styles.summarySection}>

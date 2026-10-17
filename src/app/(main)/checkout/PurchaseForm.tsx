@@ -1,11 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import {
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
+import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { formatCurrency } from "@/src/utils/formatters";
 import styles from "./PurchaseForm.module.css";
 
@@ -28,8 +24,7 @@ function PurchaseForm({ totalCostCents }: { totalCostCents: number }) {
         return;
       }
 
-      const baseUrl =
-        process.env.NEXT_PUBLIC_SERVER_URL || window.location.origin;
+      const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || window.location.origin;
 
       const { error } = await stripe.confirmPayment({
         elements,

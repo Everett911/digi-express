@@ -37,24 +37,15 @@ export function OrderItemDetails({ order }: Props) {
         return (
           <Fragment key={item.id}>
             <div className={styles.productImageContainer}>
-              <Image
-                src={item.image}
-                width={150}
-                height={150}
-                alt="product image"
-              />
+              <Image src={item.image} width={150} height={150} alt="product image" />
             </div>
 
             <div className={styles.productDetails}>
               <div className={styles.productName}>{item.name}</div>
 
-              <DeliveryDate
-                estimatedDeliveryTimeMs={formatDate(deliveryDate)}
-              />
+              <DeliveryDate estimatedDeliveryTimeMs={formatDate(deliveryDate)} />
 
-              <div className={styles.productQuantity}>
-                Quantity: {item.quantity}
-              </div>
+              <div className={styles.productQuantity}>Quantity: {item.quantity}</div>
               <button
                 type="button"
                 className={styles.buyAgainButton}
@@ -62,9 +53,7 @@ export function OrderItemDetails({ order }: Props) {
                 disabled={isPending}
               >
                 <RotateCcwSquareIcon color="white" size={20} />
-                <span className="buy-again-message">
-                  {isPending ? "Adding..." : "Add to Cart"}
-                </span>
+                <span className="buy-again-message">{isPending ? "Adding..." : "Add to Cart"}</span>
               </button>
             </div>
           </Fragment>
