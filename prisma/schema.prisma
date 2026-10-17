@@ -78,6 +78,13 @@ model DeliveryOption {
   cartItems CartItem[]
 }
 
+// Fixed-window request counters, e.g. for the public shopping chat.
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime @db.Timestamptz(3)
+}
+
 model CartItem {
   id               String   @id @default(uuid()) @db.Uuid
   userId           String

@@ -31,10 +31,14 @@ export function registerStorefrontTools(server: McpServer) {
     },
     async ({ query, maxPriceCents }) => {
       const { ids } = await searchProducts(query);
+
       const products = await prisma.product.findMany({
-        where: { id: { in: ids.slice(0, 20) }, priceCents: { lte: maxPriceCents } },
+        where: { id: { in: ids }, priceCents: { lte: maxPriceCents } },
         select: publicProductSelect,
       });
+
+      const rank = new Map(ids.map((id, index) => [id, index]));
+      products.sort((a, b) => rank.get(a.id)! - rank.get(b.id)!);
       return ok(products.slice(0, 8));
     },
   );
