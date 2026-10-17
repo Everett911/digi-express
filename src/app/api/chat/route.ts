@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { runChat } from "@/lib/ai/chat";
+import { auth } from "@/lib/auth";
 import { getClientIp, rateLimit } from "@/lib/rateLimit";
 
 const CHAT_LIMITS = [
@@ -24,7 +25,6 @@ export async function POST(request: Request) {
     return Response.json({ error: "The assistant isn't configured." }, { status: 503 });
   }
 
-  // Every message costs Gemini calls, so cap how often one visitor can ask.
   const ip = getClientIp(request);
   for (const { name, limit, windowSeconds } of CHAT_LIMITS) {
     const { allowed, retryAfterSeconds } = await rateLimit(
@@ -46,7 +46,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    return Response.json(await runChat(parsed.data.messages));
+    const session = await auth.api.getSession({ headers: request.headers });
+    return Response.json(await runChat(parsed.data.messages, { userId: session?.user.id }));
   } catch (error) {
     console.error("chat error:", error);
     return Response.json(

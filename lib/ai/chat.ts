@@ -9,16 +9,20 @@ const MODEL = process.env.GEMINI_MODEL ?? "gemini-3.5-flash";
 const MAX_TOOL_ROUNDS = 5;
 
 const SYSTEM_PROMPT = `You are the shopping assistant for Digi-Express, an online store.
-- Only help with the store's products and shipping. Politely decline anything else.
+- Only help with the store's products, shipping and the customer's orders. Politely decline anything else.
 - Always use the tools to find products. Never invent products, prices or stock.
 - Prices from tools are in cents: 2500 means $25.00.
 - Keep answers short and friendly.
 - Reply in plain text, no markdown: no ** or *, use "- " for lists.`;
 
+const SIGNED_IN = "- The customer is signed in. Use my-orders for questions about their orders.";
+const SIGNED_OUT =
+  "- The customer is not signed in. For questions about their orders, ask them to sign in first.";
+
 export type ChatMessage = { role: "user" | "model"; text: string };
 
-async function connectMcp() {
-  const server = createStorefrontServer();
+async function connectMcp(userId?: string) {
+  const server = createStorefrontServer({ userId });
   const client = new Client({ name: "digi-express-chat", version: "1.0.0" });
 
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
@@ -36,8 +40,10 @@ function toGeminiTools(
   });
 }
 
-export async function runChat(messages: ChatMessage[]) {
-  const client = await connectMcp();
+// userId comes from the session, so the order tools only ever see that
+// customer's orders.
+export async function runChat(messages: ChatMessage[], { userId }: { userId?: string } = {}) {
+  const client = await connectMcp(userId);
   try {
     const { tools } = await client.listTools();
     const functionDeclarations = toGeminiTools(tools);
@@ -52,7 +58,7 @@ export async function runChat(messages: ChatMessage[]) {
         model: MODEL,
         contents,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
+          systemInstruction: `${SYSTEM_PROMPT}\n${userId ? SIGNED_IN : SIGNED_OUT}`,
           tools: [{ functionDeclarations }],
         },
       });

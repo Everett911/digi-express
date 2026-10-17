@@ -1,4 +1,5 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import dayjs from "dayjs";
 import { z } from "zod";
 import { prisma } from "../../lib/prisma";
 import { searchProducts } from "../../lib/utils/productSearch";
@@ -13,7 +14,8 @@ const publicProductSelect = {
   image: true,
 } as const;
 
-export function registerStorefrontTools(server: McpServer) {
+//
+export function registerStorefrontTools(server: McpServer, { userId }: { userId?: string } = {}) {
   server.registerTool(
     "search-products",
     {
@@ -73,5 +75,53 @@ export function registerStorefrontTools(server: McpServer) {
       annotations: { readOnlyHint: true },
     },
     async () => ok(await listDeliveryOptions()),
+  );
+
+  if (!userId) return;
+
+  server.registerTool(
+    "my-orders",
+    {
+      description:
+        "The signed-in customer's 10 most recent orders, newest first, with status, items and each item's estimated arrival date. Prices are in cents.",
+      inputSchema: {
+        orderId: z.uuid().optional().describe("Only this order, if the customer names one"),
+      },
+      annotations: { readOnlyHint: true },
+    },
+    async ({ orderId }) => {
+      const orders = await prisma.order.findMany({
+        where: { userId, id: orderId },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+        select: {
+          id: true,
+          status: true,
+          totalCostCents: true,
+          createdAt: true,
+          items: {
+            select: {
+              name: true,
+              quantity: true,
+              priceCents: true,
+              color: true,
+              size: true,
+              deliveryDays: true,
+            },
+          },
+        },
+      });
+      if (orderId && orders.length === 0) return fail("Order not found");
+
+      return ok(
+        orders.map(({ items, ...order }) => ({
+          ...order,
+          items: items.map(({ deliveryDays, ...item }) => ({
+            ...item,
+            estimatedArrival: dayjs(order.createdAt).add(deliveryDays, "day").format("YYYY-MM-DD"),
+          })),
+        })),
+      );
+    },
   );
 }
