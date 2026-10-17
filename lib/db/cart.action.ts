@@ -88,9 +88,7 @@ export async function updateDeliveryOption(
   return { success: true };
 }
 
-export async function deleteCartItem(
-  cartItemId: string,
-): Promise<CartActionResult> {
+export async function deleteCartItem(cartItemId: string): Promise<CartActionResult> {
   const userId = await getUserId();
   if (!userId) return SIGNED_OUT;
 
@@ -103,9 +101,7 @@ export async function deleteCartItem(
   return { success: true };
 }
 
-export async function addItemToCart(
-  input: AddToCartInput,
-): Promise<CartActionResult> {
+export async function addItemToCart(input: AddToCartInput): Promise<CartActionResult> {
   const userId = await getUserId();
   if (!userId) return SIGNED_OUT;
 

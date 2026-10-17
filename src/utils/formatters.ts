@@ -21,10 +21,7 @@ const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", {
 });
 
 export function formatDate(date: Date | number | string): string {
-  const dateObj =
-    typeof date === "string" || typeof date === "number"
-      ? new Date(date)
-      : date;
+  const dateObj = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
 
   return DATE_FORMATTER.format(dateObj);
 }

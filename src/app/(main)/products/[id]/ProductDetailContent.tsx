@@ -71,9 +71,7 @@ export default function ProductDetailContent({
         });
         if (!result.success) {
           setStatus(
-            result.signedOut
-              ? { kind: "signedOut" }
-              : { kind: "error", message: result.error },
+            result.signedOut ? { kind: "signedOut" } : { kind: "error", message: result.error },
           );
           return;
         }
@@ -98,9 +96,7 @@ export default function ProductDetailContent({
         {product.brand}
       </Link>
       <h1 className={styles.title}>{product.name}</h1>
-      <span className={styles.price}>
-        {formatCurrency(product.priceCents / 100)}
-      </span>
+      <span className={styles.price}>{formatCurrency(product.priceCents / 100)}</span>
 
       {isAvailable ? (
         <p className={styles.inStock}>
@@ -117,9 +113,7 @@ export default function ProductDetailContent({
           <span className={styles.sizeTitle}>
             Size
             {selectedSize && (
-              <strong className={styles.selectedValue}>
-                : {selectedSize.toUpperCase()}
-              </strong>
+              <strong className={styles.selectedValue}>: {selectedSize.toUpperCase()}</strong>
             )}
           </span>
           <div className={styles.sizeContainer}>
@@ -200,9 +194,7 @@ export default function ProductDetailContent({
             to add items to your cart.
           </p>
         )}
-        {status.kind === "error" && (
-          <p className={styles.errorText}>{status.message}</p>
-        )}
+        {status.kind === "error" && <p className={styles.errorText}>{status.message}</p>}
       </div>
 
       {deliveryEstimates.length > 0 && (
@@ -214,12 +206,8 @@ export default function ProductDetailContent({
             {deliveryEstimates.map((estimate) => (
               <li key={estimate.id} className={styles.deliveryOption}>
                 <span className={styles.deliveryWhen}>
-                  <span className={styles.deliveryDate}>
-                    Arrives {estimate.arrival}
-                  </span>
-                  <span className={styles.deliveryName}>
-                    {deliveryName(estimate.deliveryDays)}
-                  </span>
+                  <span className={styles.deliveryDate}>Arrives {estimate.arrival}</span>
+                  <span className={styles.deliveryName}>{deliveryName(estimate.deliveryDays)}</span>
                 </span>
                 <span
                   className={
@@ -228,16 +216,12 @@ export default function ProductDetailContent({
                       : styles.deliveryPrice
                   }
                 >
-                  {estimate.priceCents === 0
-                    ? "Free"
-                    : formatCurrency(estimate.priceCents / 100)}
+                  {estimate.priceCents === 0 ? "Free" : formatCurrency(estimate.priceCents / 100)}
                 </span>
               </li>
             ))}
           </ul>
-          <p className={styles.deliveryNote}>
-            You can choose your delivery option at checkout.
-          </p>
+          <p className={styles.deliveryNote}>You can choose your delivery option at checkout.</p>
         </div>
       )}
     </div>

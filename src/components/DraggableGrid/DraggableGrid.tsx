@@ -12,10 +12,7 @@ function DraggableGrid({ children, className }: DraggableGridProps) {
   const gridRef = useDragScroll<HTMLDivElement>();
 
   return (
-    <div
-      className={className ? `${styles.grid} ${className}` : styles.grid}
-      ref={gridRef}
-    >
+    <div className={className ? `${styles.grid} ${className}` : styles.grid} ref={gridRef}>
       {children}
     </div>
   );

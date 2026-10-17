@@ -19,9 +19,7 @@ export function PageHeader({
     <header className={styles.pageHeader}>
       <div>
         <h1 className={styles.pageTitle}>{title}</h1>
-        {description && (
-          <p className={styles.pageDescription}>{description}</p>
-        )}
+        {description && <p className={styles.pageDescription}>{description}</p>}
       </div>
       {action}
     </header>
@@ -102,23 +100,11 @@ export function TextLink({ href, children }: { href: Route; children: ReactNode 
 
 type BadgeTone = "success" | "neutral" | "accent";
 
-export function StatusBadge({
-  tone,
-  children,
-}: {
-  tone: BadgeTone;
-  children: ReactNode;
-}) {
+export function StatusBadge({ tone, children }: { tone: BadgeTone; children: ReactNode }) {
   return <span className={`${styles.badge} ${styles[tone]}`}>{children}</span>;
 }
 
-export function EmptyState({
-  title,
-  description,
-}: {
-  title: string;
-  description?: string;
-}) {
+export function EmptyState({ title, description }: { title: string; description?: string }) {
   return (
     <div className={styles.empty}>
       <p className={styles.emptyTitle}>{title}</p>
@@ -167,19 +153,13 @@ export function Pagination({
   );
 }
 
-export function TableSkeleton({
-  label = "Loading",
-  rows = 6,
-}: {
-  label?: string;
-  rows?: number;
-}) {
+export function TableSkeleton({ label = "Loading", rows = 6 }: { label?: string; rows?: number }) {
   return (
-    <div className={styles.skeleton} role="status" aria-label={label}>
+    <output className={styles.skeleton} aria-label={label}>
       {Array.from({ length: rows }).map((_, index) => (
-        <div key={index} className={styles.skeletonRow} />
+        <span key={index} className={styles.skeletonRow} />
       ))}
-    </div>
+    </output>
   );
 }
 

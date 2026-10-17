@@ -8,10 +8,7 @@ import BrandSection from "@/src/components/Brand/BrandSection";
 import Blog from "@/src/components/Blog/Blog";
 import DraggableGrid from "@/src/components/DraggableGrid/DraggableGrid";
 import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
-import {
-  ProductCard,
-  ProductSkeleton,
-} from "@/src/components/ProductCard/ProductCard";
+import { ProductCard, ProductSkeleton } from "@/src/components/ProductCard/ProductCard";
 import { Suspense } from "react";
 import { getNewestProducts } from "@/lib/db/products";
 

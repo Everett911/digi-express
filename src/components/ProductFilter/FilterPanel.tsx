@@ -66,14 +66,10 @@ export default function FilterPanel({ options, sortOptions }: Props) {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
-  const [expanded, setExpanded] = useState<Partial<Record<FilterKey, boolean>>>(
-    {}
-  );
+  const [expanded, setExpanded] = useState<Partial<Record<FilterKey, boolean>>>({});
 
   // Selections update instantly while the new product list loads.
-  const [optimisticQuery, setOptimisticQuery] = useOptimistic(
-    searchParams.toString()
-  );
+  const [optimisticQuery, setOptimisticQuery] = useOptimistic(searchParams.toString());
   const params = new URLSearchParams(optimisticQuery);
 
   const selected = (key: FilterKey) => params.getAll(key);
@@ -119,16 +115,15 @@ export default function FilterPanel({ options, sortOptions }: Props) {
     navigate(next);
   };
 
-  const activeFilters = (Object.keys(FILTER_LABELS) as FilterKey[]).flatMap(
-    (key) =>
-      selected(key).map((value) => ({
-        key,
-        value,
-        label:
-          key === "type" && DEPARTMENTS.includes(value.toLowerCase())
-            ? `Department: ${titleCase(value)}`
-            : `${FILTER_LABELS[key]}: ${key === "size" ? value.toUpperCase() : titleCase(value)}`,
-      }))
+  const activeFilters = (Object.keys(FILTER_LABELS) as FilterKey[]).flatMap((key) =>
+    selected(key).map((value) => ({
+      key,
+      value,
+      label:
+        key === "type" && DEPARTMENTS.includes(value.toLowerCase())
+          ? `Department: ${titleCase(value)}`
+          : `${FILTER_LABELS[key]}: ${key === "size" ? value.toUpperCase() : titleCase(value)}`,
+    })),
   );
 
   const renderShowMore = (key: FilterKey, list: FilterOption[]) =>
@@ -193,9 +188,7 @@ export default function FilterPanel({ options, sortOptions }: Props) {
         >
           <SlidersHorizontalIcon size={18} />
           Filters
-          {activeFilters.length > 0 && (
-            <span className={styles.badge}>{activeFilters.length}</span>
-          )}
+          {activeFilters.length > 0 && <span className={styles.badge}>{activeFilters.length}</span>}
           <ChevronDown
             size={16}
             className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
@@ -286,9 +279,7 @@ export default function FilterPanel({ options, sortOptions }: Props) {
                           style={hex ? { backgroundColor: hex } : undefined}
                           className={`${styles.colorSwatch} ${!hex ? styles.colorSwatchUnknown : ""} ${!hex || LIGHT_COLORS.has(option.value) ? styles.colorSwatchBorder : ""} ${active ? styles.colorSwatchActive : ""}`}
                         />
-                        <span
-                          className={active ? styles.labelActive : styles.labelNormal}
-                        >
+                        <span className={active ? styles.labelActive : styles.labelNormal}>
                           {titleCase(option.value)}
                         </span>
                       </button>

@@ -73,20 +73,14 @@ export default function ProductSwiper({ images }: props) {
 
           return (
             <SwiperSlide key={index}>
-              <div
+              <button
+                type="button"
                 className={containerClassName}
-                role="button"
-                tabIndex={0}
                 aria-label={`Switch to product view ${index + 1}`}
+                aria-current={isActive}
                 onClick={() => {
                   mainSwiper?.slideTo(index);
                   setActiveIndex(index);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    mainSwiper?.slideTo(index);
-                    setActiveIndex(index);
-                  }
                 }}
               >
                 <Image
@@ -97,7 +91,7 @@ export default function ProductSwiper({ images }: props) {
                   className={styles.productImage}
                   loading="eager"
                 />
-              </div>
+              </button>
             </SwiperSlide>
           );
         })}

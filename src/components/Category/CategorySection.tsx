@@ -60,9 +60,7 @@ export default function CategorySection() {
     {
       id: "5",
       name: "Outdoors",
-      icon: (
-        <FlameKindling size={iconSize} color={iconColor} style={iconStyle} />
-      ),
+      icon: <FlameKindling size={iconSize} color={iconColor} style={iconStyle} />,
       href: "/products?type=outdoors",
     },
     {
@@ -87,10 +85,7 @@ export default function CategorySection() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     };
@@ -111,21 +106,11 @@ export default function CategorySection() {
         </div>
 
         <div className={styles.dropdown} ref={dropdownRef}>
-          <button
-            type="button"
-            className={styles.dropdownButton}
-            onClick={toggleDropdown}
-          >
-            <span>
-              {dropdownOpen ? "Hide Categories" : "Select a Category"}
-            </span>
+          <button type="button" className={styles.dropdownButton} onClick={toggleDropdown}>
+            <span>{dropdownOpen ? "Hide Categories" : "Select a Category"}</span>
             {dropdownOpen ? <X size={20} /> : <ChevronDown size={20} />}
           </button>
-          <div
-            className={`${styles.dropdownMenu} ${
-              dropdownOpen ? styles.dropdownOpen : ""
-            }`}
-          >
+          <div className={`${styles.dropdownMenu} ${dropdownOpen ? styles.dropdownOpen : ""}`}>
             {categories.map((category) => (
               <Link
                 key={category.id}
@@ -142,11 +127,7 @@ export default function CategorySection() {
 
         <div className={styles.grid}>
           {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={category.href as Route}
-              className={styles.card}
-            >
+            <Link key={category.id} href={category.href as Route} className={styles.card}>
               <div className={styles.iconWrapper}>{category.icon}</div>
               <span className={styles.label}>{category.name}</span>
             </Link>

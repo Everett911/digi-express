@@ -15,10 +15,7 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get("stripe-signature");
 
   if (!signature) {
-    return NextResponse.json(
-      { error: "Missing stripe-signature header" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
   }
 
   let event: Stripe.Event;
@@ -32,10 +29,7 @@ export async function POST(req: NextRequest) {
   } catch (err: unknown) {
     const errorMessage = err instanceof Error ? err.message : "Unknown error";
     console.error(` Webhook Signature Verification Failed: ${errorMessage}`);
-    return NextResponse.json(
-      { error: `Webhook Error: ${errorMessage}` },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: `Webhook Error: ${errorMessage}` }, { status: 400 });
   }
 
   if (event.type === "payment_intent.succeeded") {
@@ -46,9 +40,7 @@ export async function POST(req: NextRequest) {
     const customerEmail = metadata.userEmail || paymentIntent.receipt_email;
 
     if (!userId) {
-      console.error(
-        `❌ No userId found in payment intent metadata for: ${paymentIntent.id}`,
-      );
+      console.error(`❌ No userId found in payment intent metadata for: ${paymentIntent.id}`);
       return NextResponse.json(
         { error: "No userId found in payment intent metadata" },
         { status: 400 },
@@ -121,9 +113,7 @@ export async function POST(req: NextRequest) {
           console.log(` Confirmation email sent to ${customerEmail}`);
         } catch (emailError: unknown) {
           const emailMessage =
-            emailError instanceof Error
-              ? emailError.message
-              : "Unknown email error";
+            emailError instanceof Error ? emailError.message : "Unknown email error";
           console.error(` Resend Email Delivery Failure: ${emailMessage}`);
         }
       }
@@ -132,18 +122,11 @@ export async function POST(req: NextRequest) {
       revalidatePath("/checkout");
       revalidatePath("/order");
 
-      return NextResponse.json(
-        { success: true, ordered: true },
-        { status: 200 },
-      );
+      return NextResponse.json({ success: true, ordered: true }, { status: 200 });
     } catch (error: unknown) {
-      const dbErrorMessage =
-        error instanceof Error ? error.message : "Unknown DB error";
+      const dbErrorMessage = error instanceof Error ? error.message : "Unknown DB error";
       console.error(` Webhook Order Creation Failure: ${dbErrorMessage}`);
-      return NextResponse.json(
-        { error: "Failed to create database order" },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: "Failed to create database order" }, { status: 500 });
     }
   }
 

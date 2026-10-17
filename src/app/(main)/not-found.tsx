@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Footer from "@/src/components/Footer/Footer";
-import StatusPage, {
-  statusActionClass,
-} from "@/src/components/StatusPage/StatusPage";
+import StatusPage, { statusActionClass } from "@/src/components/StatusPage/StatusPage";
 
 export default function NotFound() {
   return (

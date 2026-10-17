@@ -5,11 +5,7 @@ import { requireAdminPage } from "../../../_lib/auth";
 import ProductForm from "../../_components/ProductForm";
 import styles from "../../form.module.css";
 
-export default async function EditProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   await requireAdminPage();
   const { id } = await params;
 

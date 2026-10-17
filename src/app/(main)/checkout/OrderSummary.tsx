@@ -28,11 +28,7 @@ export function OrderSummary({ carts, deliveryOptions }: Props) {
   return (
     <div className={styles.cartItemContainer}>
       {carts.map((cart) => (
-        <CartItemRow
-          key={cart.id}
-          cart={cart}
-          deliveryOptions={deliveryOptions}
-        />
+        <CartItemRow key={cart.id} cart={cart} deliveryOptions={deliveryOptions} />
       ))}
     </div>
   );
@@ -58,9 +54,7 @@ function CartItemRow({
   };
 
   return (
-    <div
-      className={`${styles.deliveryGrid} ${isPending ? styles.loadingDim : ""}`}
-    >
+    <div className={`${styles.deliveryGrid} ${isPending ? styles.loadingDim : ""}`}>
       <div className={styles.productInfo}>
         <div className={styles.imageWrapper}>
           <Image
@@ -73,17 +67,9 @@ function CartItemRow({
         </div>
         <div className={styles.productDetails}>
           <h4 className={styles.productName}>{cart.product.name}</h4>
-          <p className={styles.productPrice}>
-            {formatCurrency(cart.product.priceCents / 100)}
-          </p>
-          {cart.color && (
-            <p className={styles.productSize}>Color - {cart.color}</p>
-          )}
-          {cart.size && (
-            <p className={styles.productColor}>
-              Size - {cart.size.toUpperCase()}
-            </p>
-          )}
+          <p className={styles.productPrice}>{formatCurrency(cart.product.priceCents / 100)}</p>
+          {cart.color && <p className={styles.productSize}>Color - {cart.color}</p>}
+          {cart.size && <p className={styles.productColor}>Size - {cart.size.toUpperCase()}</p>}
           <div className={styles.quantityUpdate}>
             <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
             <button
@@ -121,14 +107,10 @@ function CartItemRow({
               disabled={isPending}
               checked={cart.deliveryOptionId === option.id}
               className={styles.radioInput}
-              onChange={() =>
-                run(() => updateDeliveryOption(cart.id, option.id))
-              }
+              onChange={() => run(() => updateDeliveryOption(cart.id, option.id))}
             />
             <div className={styles.optionLabel}>
-              <span className={styles.deliveryDate}>
-                Arrives in {option.deliveryDays} days
-              </span>
+              <span className={styles.deliveryDate}>Arrives in {option.deliveryDays} days</span>
               <span className={styles.deliveryCost}>
                 {option.priceCents === 0
                   ? "FREE Shipping"

@@ -6,11 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { revalidatePath, updateTag } from "next/cache";
 import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
 import { assertAdmin } from "../_lib/auth";
-import {
-  deleteProductImages,
-  isImageFile,
-  saveProductImage,
-} from "@/lib/productImages";
+import { deleteProductImages, isImageFile, saveProductImage } from "@/lib/productImages";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -117,10 +113,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
   redirect("/admin/products");
 }
 
-export async function toggleProductAvailability(
-  id: string,
-  isAvailableForPurchase: boolean,
-) {
+export async function toggleProductAvailability(id: string, isAvailableForPurchase: boolean) {
   await assertAdmin();
 
   await prisma.product.update({
@@ -148,11 +141,7 @@ export async function deleteProduct(id: string) {
   revalidateProducts();
 }
 
-export async function updateProduct(
-  id: string,
-  prevState: unknown,
-  formData: FormData,
-) {
+export async function updateProduct(id: string, prevState: unknown, formData: FormData) {
   await assertAdmin();
 
   const extractFormArray = (prefix: string) => {

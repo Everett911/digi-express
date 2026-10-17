@@ -130,17 +130,33 @@
   align-items: center;
   justify-content: center;
 }
+
+/* A modal <dialog>: undo the browser's centred box so it fills the screen. */
 .searchBarContainer {
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  color: inherit;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 200;
-  display: flex;
   align-items: start;
   justify-content: center;
-  padding-top: 20px;
+  padding: 20px 0 0;
   backdrop-filter: blur(4px);
   animation: fadeIn 0.15s ease-out;
+}
+
+.searchBarContainer[open] {
+  display: flex;
+}
+
+.searchBarContainer::backdrop {
+  background: transparent;
 }
 
 .searchBarOverlay {

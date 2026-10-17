@@ -2,6 +2,18 @@
   margin-top: 32px;
   margin: 0 auto;
 }
+/* Drop the browser's fieldset frame so groups look like the other fields. */
+.fieldset {
+  border: none;
+  padding: 0;
+  margin-inline: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+}
+
 .formContainer {
   margin-top: 8px;
   display: flex;

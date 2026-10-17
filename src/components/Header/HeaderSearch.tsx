@@ -23,31 +23,31 @@ export default function HeaderSearch({ initialQuery }: HeaderSearchProps) {
     // Searching for nothing clears the search and shows every product.
     startTransition(() => {
       router.push(
-        trimmedQuery
-          ? `/products?search=${encodeURIComponent(trimmedQuery)}`
-          : "/products",
+        trimmedQuery ? `/products?search=${encodeURIComponent(trimmedQuery)}` : "/products",
       );
     });
   };
 
   return (
-    <form role="search" onSubmit={handleSubmit} className={styles.form}>
-      <input
-        className={styles.input}
-        type="search"
-        placeholder="Search products"
-        aria-label="Search products"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <button
-        type="submit"
-        className={styles.button}
-        disabled={isPending}
-        aria-label="Submit search"
-      >
-        <Search size={18} style={{ color: "var(--text-on-dark)" }} />
-      </button>
-    </form>
+    <search>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <input
+          className={styles.input}
+          type="search"
+          placeholder="Search products"
+          aria-label="Search products"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button
+          type="submit"
+          className={styles.button}
+          disabled={isPending}
+          aria-label="Submit search"
+        >
+          <Search size={18} style={{ color: "var(--text-on-dark)" }} />
+        </button>
+      </form>
+    </search>
   );
 }

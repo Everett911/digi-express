@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import StatusPage, {
-  statusActionClass,
-} from "@/src/components/StatusPage/StatusPage";
+import StatusPage, { statusActionClass } from "@/src/components/StatusPage/StatusPage";
 
 export default function Error({
   error,

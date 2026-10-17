@@ -8,11 +8,7 @@ import styles from "./layout.module.css";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user } = await requireAdminPage();
   const displayName = user.name || user.email;
 

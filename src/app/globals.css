@@ -51,9 +51,7 @@
   --error-border: #fecaca;
   --notify: #ef4444;
 
-  --modern-shadow:
-    0 4px 6px -1px rgba(15, 23, 42, 0.04),
-    0 10px 15px -3px rgba(15, 23, 42, 0.06);
+  --modern-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 10px 15px -3px rgba(15, 23, 42, 0.06);
 }
 
 html {

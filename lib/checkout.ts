@@ -27,9 +27,7 @@ export interface CartItemForOrder {
   size?: string | null;
 }
 
-export function calculateCartTotals(
-  cart: CartItemForTotals[],
-): {
+export function calculateCartTotals(cart: CartItemForTotals[]): {
   productCostCents: number;
   shippingCostCents: number;
   taxCents: number;
@@ -46,9 +44,7 @@ export function calculateCartTotals(
     return currentItemShipping > max ? currentItemShipping : max;
   }, 0);
 
-  const taxCents = Math.round(
-    (productCostCents + shippingCostCents) * TAX_RATE,
-  );
+  const taxCents = Math.round((productCostCents + shippingCostCents) * TAX_RATE);
   const totalCostCents = productCostCents + shippingCostCents + taxCents;
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -61,9 +57,7 @@ export function calculateCartTotals(
   };
 }
 
-export function buildOrderItemData(
-  cart: CartItemForOrder[],
-): Array<{
+export function buildOrderItemData(cart: CartItemForOrder[]): Array<{
   productId: string;
   quantity: number;
   color: string | null;

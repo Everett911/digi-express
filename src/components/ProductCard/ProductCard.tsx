@@ -19,8 +19,7 @@ interface Props {
 const MAX_SWATCHES = 4;
 const NEW_FOR_DAYS = 30;
 const SIZE_ORDER = ["xxs", "xs", "s", "m", "l", "xl", "xxl", "xxxl"];
-const IMAGE_SIZES =
-  "(max-width: 360px) 100vw, (max-width: 720px) 50vw, 33vw";
+const IMAGE_SIZES = "(max-width: 360px) 100vw, (max-width: 720px) 50vw, 33vw";
 
 // "none" is stored when a product has no colour or size.
 function realOptions(values: string[]) {
@@ -60,10 +59,7 @@ export function ProductCard({ products, layout = "row" }: Props) {
 
         return (
           <div key={product.id} className={styles[layout]}>
-            <Link
-              href={`/products/${product.id}`}
-              className={`${styles.linkClick} ${styles.card}`}
-            >
+            <Link href={`/products/${product.id}`} className={`${styles.linkClick} ${styles.card}`}>
               <div className={styles.imageWrapper}>
                 {displayImage ? (
                   <>
@@ -90,25 +86,17 @@ export function ProductCard({ products, layout = "row" }: Props) {
                   </>
                 ) : (
                   // No image uploaded yet: show a neutral tile, not a broken image.
-                  <div
-                    className={styles.imagePlaceholder}
-                    role="img"
-                    aria-label={product.name}
-                  >
+                  <div className={styles.imagePlaceholder}>
                     <ImageOff size={32} aria-hidden="true" />
                   </div>
                 )}
-                {isNew(product.createdAt) && (
-                  <span className={styles.newTag}>New</span>
-                )}
+                {isNew(product.createdAt) && <span className={styles.newTag}>New</span>}
               </div>
 
               <div className={styles.cardContent}>
                 {/* Always rendered so names line up across a row. */}
                 <p className={styles.brand}>
-                  {product.brand && product.brand !== "none"
-                    ? product.brand
-                    : " "}
+                  {product.brand && product.brand !== "none" ? product.brand : " "}
                 </p>
                 <h3 className={styles.productName}>{product.name}</h3>
 
@@ -116,9 +104,7 @@ export function ProductCard({ products, layout = "row" }: Props) {
                   <div className={styles.options}>
                     {colors.length > 0 && (
                       <span className={styles.swatches}>
-                        <span className={styles.srOnly}>
-                          {`Colors: ${colors.join(", ")}.`}
-                        </span>
+                        <span className={styles.srOnly}>{`Colors: ${colors.join(", ")}.`}</span>
                         {colors.slice(0, MAX_SWATCHES).map((color) => (
                           <span
                             key={color}
@@ -143,9 +129,7 @@ export function ProductCard({ products, layout = "row" }: Props) {
                   </div>
                 )}
 
-                <p className={styles.price}>
-                  {formatCurrency(product.priceCents / 100)}
-                </p>
+                <p className={styles.price}>{formatCurrency(product.priceCents / 100)}</p>
               </div>
             </Link>
           </div>

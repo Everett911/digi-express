@@ -16,9 +16,7 @@ function dollarsToCents(value: string) {
 
 // Accepts any "Under $X", "Over $X" or "$X - $Y" label, so older links such
 // as the header's "Under $75" keep working.
-export function priceGroupToRange(
-  group: string,
-): Prisma.IntFilter<"Product"> | null {
+export function priceGroupToRange(group: string): Prisma.IntFilter<"Product"> | null {
   const normalized = group.trim().toLowerCase();
 
   if (normalized.startsWith("under")) {
@@ -42,9 +40,7 @@ export function priceGroupToRange(
   return null;
 }
 
-export function mapPriceGroupsToPrisma(
-  priceGroups: string[],
-): Prisma.ProductWhereInput[] {
+export function mapPriceGroupsToPrisma(priceGroups: string[]): Prisma.ProductWhereInput[] {
   return priceGroups.flatMap((group) => {
     const range = priceGroupToRange(group);
     return range ? [{ priceCents: range }] : [];

@@ -13,8 +13,7 @@ function QuantitySelector({
   setQuantity: Dispatch<SetStateAction<number>>;
   max?: number;
 }) {
-  const incrementQty = () =>
-    setQuantity((prev) => (prev < max ? prev + 1 : max));
+  const incrementQty = () => setQuantity((prev) => (prev < max ? prev + 1 : max));
   const decrementQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   return (
