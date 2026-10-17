@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { MessageCircle, Send, X } from "lucide-react";
+import type { ProductCard } from "@/lib/ai/chat";
+import { formatCurrency } from "@/src/utils/formatters";
 import styles from "./ShoppingChat.module.css";
 
-type Message = { role: "user" | "model"; text: string };
+type Message = { role: "user" | "model"; text: string; products?: ProductCard[] };
 
 const SUGGESTIONS = ["Sneakers under $40", "Gold jewelry", "How fast is shipping?"];
 
@@ -33,10 +37,16 @@ export function ShoppingChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.slice(-20) }),
+        // Cards are for display only; the server just needs the text.
+        body: JSON.stringify({
+          messages: next.slice(-20).map(({ role, text }) => ({ role, text })),
+        }),
       });
       const data = await res.json();
-      setMessages([...next, { role: "model", text: data.reply ?? data.error }]);
+      setMessages([
+        ...next,
+        { role: "model", text: data.reply ?? data.error, products: data.products },
+      ]);
     } catch {
       setMessages([...next, { role: "model", text: "Connection problem, please try again" }]);
     } finally {
@@ -93,9 +103,38 @@ export function ShoppingChat() {
         )}
 
         {messages.map((m, i) => (
-          <p key={i} className={`${styles.bubble} ${m.role === "user" ? styles.user : styles.bot}`}>
-            {m.text}
-          </p>
+          <div key={i} className={styles.turn}>
+            <p className={`${styles.bubble} ${m.role === "user" ? styles.user : styles.bot}`}>
+              {m.text}
+            </p>
+            {m.products && m.products.length > 0 && (
+              <ul className={styles.cards}>
+                {m.products.map((product) => (
+                  <li key={product.id}>
+                    <Link href={`/products/${product.id}`} className={styles.card}>
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className={styles.cardImage}
+                        />
+                      ) : (
+                        <span className={styles.cardImage} />
+                      )}
+                      <span className={styles.cardText}>
+                        <span className={styles.cardName}>{product.name}</span>
+                        <span className={styles.cardPrice}>
+                          {formatCurrency(product.priceCents / 100)}
+                        </span>
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         ))}
 
         {loading && (
