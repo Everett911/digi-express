@@ -10,7 +10,7 @@ interface PageProps {
 }
 
 export default async function AdminProductsPage({ searchParams }: PageProps) {
-  await requireAdminPage();
+  const { readOnly } = await requireAdminPage();
   const page = parsePage((await searchParams).page);
 
   return (
@@ -19,14 +19,16 @@ export default async function AdminProductsPage({ searchParams }: PageProps) {
         title="Products"
         description="Add, edit and publish the products in your store."
         action={
-          <ButtonLink href="/admin/products/new" icon={Plus}>
-            Add product
-          </ButtonLink>
+          !readOnly && (
+            <ButtonLink href="/admin/products/new" icon={Plus}>
+              Add product
+            </ButtonLink>
+          )
         }
       />
       <Panel>
         <Suspense key={page} fallback={<ProductTableSkeleton />}>
-          <ProductTable page={page} />
+          <ProductTable page={page} readOnly={readOnly} />
         </Suspense>
       </Panel>
     </>

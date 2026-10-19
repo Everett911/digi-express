@@ -1,10 +1,12 @@
+import { redirect } from "next/navigation";
 import { PageHeader, Panel } from "../../_components/ui";
 import { requireAdminPage } from "../../_lib/auth";
 import ProductForm from "../_components/ProductForm";
 import styles from "../form.module.css";
 
 export default async function NewProductPage() {
-  await requireAdminPage();
+  const { readOnly } = await requireAdminPage();
+  if (readOnly) redirect("/admin/products");
 
   return (
     <>

@@ -1,5 +1,6 @@
 import { Table } from "@radix-ui/themes";
 import { prisma } from "@/lib/prisma";
+import { maskCustomer } from "@/lib/demo";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 import { deleteOrder } from "../_actions/orders";
 import RowActions from "../_components/RowActions";
@@ -15,10 +16,10 @@ interface PageProps {
 }
 
 export default async function AdminOrdersPage({ searchParams }: PageProps) {
-  await requireAdminPage();
+  const { readOnly } = await requireAdminPage();
   const page = parsePage((await searchParams).page);
 
-  const [total, orders] = await Promise.all([
+  const [total, rawOrders] = await Promise.all([
     prisma.order.count(),
     prisma.order.findMany({
       skip: (page - 1) * PAGE_SIZE,
@@ -34,6 +35,9 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       },
     }),
   ]);
+  const orders = readOnly
+    ? rawOrders.map((order) => ({ ...order, user: maskCustomer(order.user) }))
+    : rawOrders;
 
   return (
     <>
@@ -98,14 +102,17 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
                           orderId={order.id}
                           status={order.status}
                           label={`Status of order from ${order.user.email}`}
+                          disabled={readOnly}
                         />
                       </Table.Cell>
                       <Table.Cell className={table.actions}>
-                        <RowActions
-                          label={`Actions for order from ${order.user.email}`}
-                          onDelete={deleteOrder.bind(null, order.id)}
-                          deleteConfirm="Delete this order? This can't be undone."
-                        />
+                        {!readOnly && (
+                          <RowActions
+                            label={`Actions for order from ${order.user.email}`}
+                            onDelete={deleteOrder.bind(null, order.id)}
+                            deleteConfirm="Delete this order? This can't be undone."
+                          />
+                        )}
                       </Table.Cell>
                     </Table.Row>
                   );

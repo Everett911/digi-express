@@ -68,6 +68,12 @@
   color: var(--error);
 }
 
+.readOnlyNote {
+  margin: 0 0 8px 10px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
 .inputGroup {
   width: 100%;
   display: flex;

@@ -1,7 +1,23 @@
 import { betterAuth, BetterAuthOptions } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { APIError, createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
+import { isDemoRole } from "@/lib/demo";
+
+// The demo account's password is public, so nobody signed in as it may
+// change its credentials or profile, delete it, or sign out the other people
+// using it. See lib/demo.ts.
+const DEMO_LOCKED_PATHS = new Set([
+  "/change-password",
+  "/change-email",
+  "/update-user",
+  "/delete-user",
+  "/link-social",
+  "/unlink-account",
+  "/revoke-sessions",
+  "/revoke-other-sessions",
+]);
 
 const resolveBaseURL = () => {
   const raw = process.env.BETTER_AUTH_URL;
@@ -62,6 +78,15 @@ const authOptions = {
         `,
       });
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (!DEMO_LOCKED_PATHS.has(ctx.path)) return;
+      const session = await getSessionFromCtx(ctx);
+      if (isDemoRole((session?.user as { role?: string } | undefined)?.role)) {
+        throw new APIError("FORBIDDEN", { message: "The demo account can't be changed." });
+      }
+    }),
   },
   user: {
     additionalFields: {

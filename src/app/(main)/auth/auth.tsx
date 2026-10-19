@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./auth.module.css";
 import Footer from "@/src/components/Footer/Footer";
 import { authClient } from "@/lib/auth-client";
+import { DEMO_ACCOUNT } from "@/lib/demo";
 import { CircleX, LoaderCircleIcon } from "lucide-react";
 import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 
@@ -74,6 +75,23 @@ export default function AuthClientPage() {
         }`,
       );
       setIsLoading(false);
+    }
+  };
+
+  const handleDemoSignIn = async () => {
+    setIsLoading(true);
+    setError("");
+
+    const { error: authError } = await authClient.signIn.email({
+      email: DEMO_ACCOUNT.email,
+      password: DEMO_ACCOUNT.password,
+    });
+
+    if (authError) {
+      setError(authError.message || "The demo account isn't available right now.");
+      setIsLoading(false);
+    } else {
+      router.push("/admin");
     }
   };
 
@@ -159,6 +177,26 @@ export default function AuthClientPage() {
                 className={styles.resendButton}
               >
                 Resend verification email
+              </button>
+            </div>
+          )}
+
+          {isSignIn && (
+            <div className={styles.demoContainer}>
+              <p className={styles.demoTitle}>Just looking around?</p>
+              <p className={styles.demoText}>
+                Open the admin dashboard with the read-only demo account:{" "}
+                <span className={styles.demoCredentials}>
+                  {DEMO_ACCOUNT.email} / {DEMO_ACCOUNT.password}
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={handleDemoSignIn}
+                disabled={isLoading}
+                className={styles.demoButton}
+              >
+                Try the admin demo
               </button>
             </div>
           )}

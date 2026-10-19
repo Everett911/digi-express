@@ -30,7 +30,7 @@ async function getProducts(page: number) {
   ]);
 }
 
-export async function ProductTable({ page }: { page: number }) {
+export async function ProductTable({ page, readOnly }: { page: number; readOnly: boolean }) {
   const [total, products] = await getProducts(page);
 
   if (total === 0) {
@@ -99,25 +99,33 @@ export async function ProductTable({ page }: { page: number }) {
                 </Table.Cell>
                 <Table.Cell className={table.number}>{formatNumber(orderCount)}</Table.Cell>
                 <Table.Cell className={table.actions}>
-                  <RowActions
-                    label={`Actions for ${product.name}`}
-                    editHref={`/admin/products/${product.id}/edit` as Route}
-                    toggle={{
-                      label: product.isAvailableForPurchase ? "Deactivate" : "Activate",
-                      action: toggleProductAvailability.bind(
-                        null,
-                        product.id,
-                        !product.isAvailableForPurchase,
-                      ),
-                    }}
-                    onDelete={deleteProduct.bind(null, product.id)}
-                    deleteConfirm={`Delete “${product.name}”? This can't be undone.`}
-                    deleteBlockedReason={
-                      orderCount > 0
-                        ? "Ordered products can't be deleted. Deactivate it instead."
-                        : undefined
-                    }
-                  />
+                  {readOnly ? (
+                    // The demo account can open the form but not save it.
+                    <RowActions
+                      label={`Actions for ${product.name}`}
+                      editHref={`/admin/products/${product.id}/edit` as Route}
+                    />
+                  ) : (
+                    <RowActions
+                      label={`Actions for ${product.name}`}
+                      editHref={`/admin/products/${product.id}/edit` as Route}
+                      toggle={{
+                        label: product.isAvailableForPurchase ? "Deactivate" : "Activate",
+                        action: toggleProductAvailability.bind(
+                          null,
+                          product.id,
+                          !product.isAvailableForPurchase,
+                        ),
+                      }}
+                      onDelete={deleteProduct.bind(null, product.id)}
+                      deleteConfirm={`Delete “${product.name}”? This can't be undone.`}
+                      deleteBlockedReason={
+                        orderCount > 0
+                          ? "Ordered products can't be deleted. Deactivate it instead."
+                          : undefined
+                      }
+                    />
+                  )}
                 </Table.Cell>
               </Table.Row>
             );
