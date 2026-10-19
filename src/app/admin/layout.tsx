@@ -1,7 +1,7 @@
 import { Theme } from "@radix-ui/themes";
 import Image from "next/image";
 import Link from "next/link";
-import { Store } from "lucide-react";
+import { Eye, Store } from "lucide-react";
 import AdminNav from "./_components/AdminNav";
 import { requireAdminPage } from "./_lib/auth";
 import styles from "./layout.module.css";
@@ -9,7 +9,7 @@ import styles from "./layout.module.css";
 export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const { user } = await requireAdminPage();
+  const { user, readOnly } = await requireAdminPage();
   const displayName = user.name || user.email;
 
   return (
@@ -36,7 +36,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               </span>
               <div className={styles.userText}>
                 <span className={styles.userName}>{displayName}</span>
-                <span className={styles.userRole}>Administrator</span>
+                <span className={styles.userRole}>
+                  {readOnly ? "Demo (read-only)" : "Administrator"}
+                </span>
               </div>
             </div>
             <Link href="/" className={styles.storeLink}>
@@ -46,7 +48,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
         </aside>
 
-        <main className={styles.main}>{children}</main>
+        <main className={styles.main}>
+          {readOnly && (
+            <p className={styles.demoBanner}>
+              <Eye size={16} aria-hidden />
+              <span>
+                You&apos;re viewing a read-only demo. Editing is turned off and customer details are
+                masked.
+              </span>
+            </p>
+          )}
+          {children}
+        </main>
       </div>
     </Theme>
   );

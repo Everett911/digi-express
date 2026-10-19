@@ -125,6 +125,65 @@
   color: var(--text-primary);
 }
 
+/* One message plus any product cards under it. */
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 80%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--text-primary);
+}
+
+.cardImage {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--surface-muted);
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.cardName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.cardPrice {
+  font-weight: 600;
+}
+
 /* Three bouncing dots while waiting for the answer. */
 .typing {
   display: flex;

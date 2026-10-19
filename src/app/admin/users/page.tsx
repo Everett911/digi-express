@@ -1,5 +1,6 @@
 import { Table } from "@radix-ui/themes";
 import { prisma } from "@/lib/prisma";
+import { maskCustomer } from "@/lib/demo";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 import { deleteUser } from "../_actions/users";
 import RowActions from "../_components/RowActions";
@@ -9,6 +10,12 @@ import { requireAdminPage } from "../_lib/auth";
 import { formatShortDate } from "../_lib/format";
 import { PAGE_SIZE, pageCount, parsePage } from "../_lib/pagination";
 
+const ROLE_LABELS: Record<string, string> = {
+  admin: "Admin",
+  demo: "Demo",
+  customer: "Customer",
+};
+
 interface PageProps {
   searchParams: Promise<{ page?: string }>;
 }
@@ -17,7 +24,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
   const session = await requireAdminPage();
   const page = parsePage((await searchParams).page);
 
-  const [total, users] = await Promise.all([
+  const [total, rawUsers] = await Promise.all([
     prisma.user.count(),
     prisma.user.findMany({
       skip: (page - 1) * PAGE_SIZE,
@@ -33,6 +40,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
       },
     }),
   ]);
+  const users = session.readOnly ? rawUsers.map(maskCustomer) : rawUsers;
 
   // Total spent for just the customers on this page, summed in the database.
   const spending = await prisma.order.groupBy({
@@ -83,8 +91,8 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                         </div>
                       </Table.RowHeaderCell>
                       <Table.Cell>
-                        <StatusBadge tone={user.role === "admin" ? "accent" : "neutral"}>
-                          {user.role === "admin" ? "Admin" : "Customer"}
+                        <StatusBadge tone={user.role === "customer" ? "neutral" : "accent"}>
+                          {ROLE_LABELS[user.role] ?? "Customer"}
                         </StatusBadge>
                       </Table.Cell>
                       <Table.Cell className={table.number}>
@@ -95,18 +103,20 @@ export default async function AdminUsersPage({ searchParams }: PageProps) {
                         {formatCurrency((spentByUser.get(user.id) ?? 0) / 100)}
                       </Table.Cell>
                       <Table.Cell className={table.actions}>
-                        <RowActions
-                          label={`Actions for ${user.email}`}
-                          onDelete={deleteUser.bind(null, user.id)}
-                          deleteConfirm={`Delete ${user.email}? This can't be undone.`}
-                          deleteBlockedReason={
-                            isSelf
-                              ? "You can't delete your own account."
-                              : orderCount > 0
-                                ? "Customers with orders can't be deleted."
-                                : undefined
-                          }
-                        />
+                        {!session.readOnly && (
+                          <RowActions
+                            label={`Actions for ${user.email}`}
+                            onDelete={deleteUser.bind(null, user.id)}
+                            deleteConfirm={`Delete ${user.email}? This can't be undone.`}
+                            deleteBlockedReason={
+                              isSelf
+                                ? "You can't delete your own account."
+                                : orderCount > 0
+                                  ? "Customers with orders can't be deleted."
+                                  : undefined
+                            }
+                          />
+                        )}
                       </Table.Cell>
                     </Table.Row>
                   );

@@ -322,3 +322,52 @@
   outline: none;
   text-decoration: underline;
 }
+
+.demoContainer {
+  background-color: var(--brand-soft);
+  border: 1px solid var(--brand-soft-border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.demoTitle {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.demoText {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.demoCredentials {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.demoButton {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid var(--button-primary);
+  border-radius: 8px;
+  background-color: var(--surface);
+  color: var(--button-primary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.demoButton:hover:not(:disabled) {
+  background-color: var(--button-secondary-hover);
+}
+
+.demoButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

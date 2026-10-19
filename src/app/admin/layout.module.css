@@ -144,3 +144,20 @@
     padding: 24px 16px;
   }
 }
+
+.demoBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding: 10px 14px;
+  border: 1px solid var(--brand-soft-border);
+  border-radius: 8px;
+  background-color: var(--brand-soft);
+  color: var(--text-link);
+  font-size: 14px;
+}
+
+.demoBanner svg {
+  flex-shrink: 0;
+}

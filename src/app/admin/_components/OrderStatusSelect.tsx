@@ -16,10 +16,12 @@ export default function OrderStatusSelect({
   orderId,
   status,
   label,
+  disabled = false,
 }: {
   orderId: string;
   status: OrderStatus;
   label: string;
+  disabled?: boolean;
 }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -28,7 +30,7 @@ export default function OrderStatusSelect({
     <Select.Root
       size="1"
       value={status}
-      disabled={isPending}
+      disabled={disabled || isPending}
       onValueChange={(value) =>
         startTransition(async () => {
           const result = await updateOrderStatus(orderId, value);

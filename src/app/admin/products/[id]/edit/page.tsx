@@ -6,7 +6,7 @@ import ProductForm from "../../_components/ProductForm";
 import styles from "../../form.module.css";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireAdminPage();
+  const { readOnly } = await requireAdminPage();
   const { id } = await params;
 
   const product = await prisma.product.findUnique({ where: { id } });
@@ -17,7 +17,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       <PageHeader title="Edit product" description={product.name} />
       <Panel>
         <div className={styles.formBody}>
-          <ProductForm product={product} />
+          <ProductForm product={product} readOnly={readOnly} />
         </div>
       </Panel>
     </>

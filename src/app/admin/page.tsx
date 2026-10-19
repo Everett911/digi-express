@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { DollarSign, Package, ShoppingBag, Users } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { DEMO_ROLE, maskCustomer } from "@/lib/demo";
 import { formatCurrency, formatNumber } from "@/src/utils/formatters";
 import { EmptyState, PageHeader, Panel, StatCard, TextLink } from "./_components/ui";
 import { requireAdminPage } from "./_lib/auth";
@@ -30,7 +31,7 @@ async function getDashboardData() {
       _sum: { totalCostCents: true },
       _count: true,
     }),
-    prisma.user.count({ where: { role: { not: "admin" } } }),
+    prisma.user.count({ where: { role: { notIn: ["admin", DEMO_ROLE] } } }),
     prisma.product.count({ where: { isAvailableForPurchase: true } }),
     prisma.product.count({ where: { isAvailableForPurchase: false } }),
     prisma.order.findMany({
@@ -79,8 +80,11 @@ async function getDashboardData() {
 }
 
 export default async function AdminDashboard() {
-  await requireAdminPage();
+  const { readOnly } = await requireAdminPage();
   const data = await getDashboardData();
+  const recentOrders = readOnly
+    ? data.recentOrders.map((order) => ({ ...order, user: maskCustomer(order.user) }))
+    : data.recentOrders;
 
   return (
     <>
@@ -118,11 +122,11 @@ export default async function AdminDashboard() {
 
       <div className={styles.columns}>
         <Panel title="Recent orders" action={<TextLink href="/admin/orders">View all</TextLink>}>
-          {data.recentOrders.length === 0 ? (
+          {recentOrders.length === 0 ? (
             <EmptyState title="No orders yet" description="New orders will show up here." />
           ) : (
             <ul className={styles.list}>
-              {data.recentOrders.map((order) => (
+              {recentOrders.map((order) => (
                 <li key={order.id} className={styles.listRow}>
                   <div className={styles.listMain}>
                     <span className={styles.listTitle}>{order.user.name || order.user.email}</span>

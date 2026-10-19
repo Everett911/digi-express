@@ -22,7 +22,13 @@ function newSlot(existing: string | null): ImageSlot {
   return { key: crypto.randomUUID(), existing, preview: null };
 }
 
-function ProductForm({ product }: { product?: Product | null }) {
+function ProductForm({
+  product,
+  readOnly = false,
+}: {
+  product?: Product | null;
+  readOnly?: boolean;
+}) {
   const [error, action] = useActionState(
     product == null ? addProduct : updateProduct.bind(null, product.id),
     null,
@@ -276,16 +282,17 @@ function ProductForm({ product }: { product?: Product | null }) {
             <span className={styles.errorMessage}>{fieldErrors.keywords}</span>
           </Activity>
         </fieldset>
-        <SubmitButton />
+        <SubmitButton readOnly={readOnly} />
+        {readOnly && <p className={styles.readOnlyNote}>Saving is turned off in the demo.</p>}
       </Form>
     </>
   );
 }
 
-function SubmitButton() {
+function SubmitButton({ readOnly }: { readOnly: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className={styles.submitButton} disabled={pending}>
+    <Button type="submit" className={styles.submitButton} disabled={pending || readOnly}>
       {pending ? "Saving..." : "Save"}
     </Button>
   );

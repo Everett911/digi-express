@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { canViewAdmin } from "@/lib/demo";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = new URL(request.url);
@@ -22,7 +23,7 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/auth", request.url));
     }
 
-    if (session.user.role !== "admin") {
+    if (!canViewAdmin(session.user.role)) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   } catch (error) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { authClient } from "@/lib/auth-client";
+import { canViewAdmin } from "@/lib/demo";
 import { User, CircleUser } from "lucide-react";
 import styles from "./ProfileDropdown.module.css";
 import { truncateString } from "@/src/utils/truncatestring";
@@ -104,9 +105,7 @@ export default function ProfileDropdown({ session }: ProfileDropdownProps) {
               >
                 Account
               </Link>
-              <Activity
-                mode={(session?.user?.role ?? "customer") === "admin" ? "visible" : "hidden"}
-              >
+              <Activity mode={canViewAdmin(session?.user?.role) ? "visible" : "hidden"}>
                 <Link className={styles.item} role="menuitem" href={"/admin"}>
                   Admin
                 </Link>
