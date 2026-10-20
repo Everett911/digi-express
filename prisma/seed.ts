@@ -6,8 +6,6 @@ import { hashPassword } from "better-auth/crypto";
 import { createLocalAccountIssuer } from "@better-auth/core/db";
 import { DEMO_ACCOUNT, DEMO_ROLE } from "../lib/demo";
 
-// Reference data the store can't run without: adding to cart needs at
-// least one delivery option. Safe to run repeatedly.
 const DELIVERY_OPTIONS = [
   { id: "1", deliveryDays: 7, priceCents: 0 },
   { id: "2", deliveryDays: 3, priceCents: 499 },
@@ -18,8 +16,6 @@ const prisma = new PrismaClient({
   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }),
 });
 
-// The read-only demo admin (see lib/demo.ts). Running the seed again resets
-// its role and password.
 async function seedDemoAccount() {
   const user = await prisma.user.upsert({
     where: { email: DEMO_ACCOUNT.email },
@@ -34,7 +30,7 @@ async function seedDemoAccount() {
   });
 
   const password = await hashPassword(DEMO_ACCOUNT.password);
-  // Better Auth only signs in with a credential account that has this issuer.
+
   const issuer = createLocalAccountIssuer("credential");
   const account = await prisma.account.findFirst({
     where: { userId: user.id, providerId: "credential" },
