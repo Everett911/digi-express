@@ -133,7 +133,6 @@ export async function runChat(messages: ChatMessage[], { userId }: { userId?: st
         config: {
           systemInstruction: `${SYSTEM_PROMPT}\n${userId ? SIGNED_IN : SIGNED_OUT}`,
           tools: [{ functionDeclarations }],
-          // Thinking tokens are billed as output; product lookups need little.
           thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
         },
       });
