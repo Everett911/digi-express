@@ -5,6 +5,9 @@ const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(request: Request) {
   const { prompt, system, temperature, timeoutMs } = await request.json();
+  if (!prompt) {
+    return Response.json({ error: "prompt is required" }, { status: 400 });
+  }
   try {
     const { text, usage } = await generateText({
       model: google(process.env.GEMINI_MODEL ?? "gemini-3.5-flash"),
@@ -12,16 +15,15 @@ export async function POST(request: Request) {
       temperature,
       abortSignal: AbortSignal.timeout(timeoutMs ?? 15000),
       maxOutputTokens: 1000,
-      maxRetries: 0,
       prompt,
     });
     return Response.json({ text, usage });
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.name, error.message);
-    } else {
-      console.log(error);
+    console.log(error);
+    if (error instanceof Error && error.name === "TimeoutError") {
+      return Response.json({ error: "The AI took too long. Try again." }, { status: 504 });
     }
+
+    return Response.json({ error: "Something went wrong" }, { status: 500 });
   }
-  return Response.json({ error: "The AI took too long. Try again." }, { status: 504 });
 }
