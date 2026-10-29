@@ -48,6 +48,8 @@ function ProductForm({
   const [sizes, setSizes] = useState<string[]>(product?.size ?? [""]);
   const [keywords, setKeywords] = useState<string[]>(product?.keywords ?? [""]);
   const [name, setName] = useState(product?.name ?? "");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // One slot per photo: the saved image (if any) and a preview of a newly
   // picked file. Keys stay stable so file inputs keep their files when a
@@ -102,14 +104,21 @@ function ProductForm({
               type="button"
               onClick={async () => {
                 const result = await describeProduct(name);
-                console.log(result);
+                if (result.product) {
+                  setDescription(result.product.description);
+                  setKeywords(result.product.tags);
+                  setAiError(null);
+                }
+                if (result.error) {
+                  setAiError(result.error);
+                }
               }}
             >
               AI describe
             </button>
           )}
-          <Activity mode={fieldErrors.name ? "visible" : "hidden"}>
-            <span className={styles.errorMessage}>{fieldErrors.name}</span>
+          <Activity mode={aiError ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{aiError}</span>
           </Activity>
         </div>
 
@@ -155,7 +164,8 @@ function ProductForm({
             className={styles.input}
             name="description"
             required
-            defaultValue={product?.description ?? ""}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <Activity mode={fieldErrors.description ? "visible" : "hidden"}>
             <span className={styles.errorMessage}>{fieldErrors.description}</span>
@@ -286,7 +296,12 @@ function ProductForm({
               className={styles.input}
               placeholder={`Keyword #${index + 1} for better searches`}
               required
-              defaultValue={product?.keywords[index]}
+              value={keywords[index]}
+              onChange={(e) => {
+                const next = [...keywords];
+                next[index] = e.target.value;
+                setKeywords(next);
+              }}
             />
           ))}
           <button type="button" onClick={addKeywordField} className={styles.button}>

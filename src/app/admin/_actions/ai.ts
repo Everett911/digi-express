@@ -30,5 +30,6 @@ export async function describeProduct(name: string) {
     if (NoObjectGeneratedError.isInstance(error)) {
       return { error: "Couldn't create a description. Try again" };
     }
+    return { error: "Something went wrong. Try again." };
   }
 }
