@@ -11,6 +11,7 @@ import Form from "next/form";
 import Image from "next/image";
 import type { Product } from "@prisma/client";
 import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
+import { describeProduct } from "../../_actions/ai";
 
 type ImageSlot = {
   key: string;
@@ -46,6 +47,7 @@ function ProductForm({
   const [colors, setColors] = useState<string[]>(product?.color ?? [""]);
   const [sizes, setSizes] = useState<string[]>(product?.size ?? [""]);
   const [keywords, setKeywords] = useState<string[]>(product?.keywords ?? [""]);
+  const [name, setName] = useState(product?.name ?? "");
 
   // One slot per photo: the saved image (if any) and a preview of a newly
   // picked file. Keys stay stable so file inputs keep their files when a
@@ -92,8 +94,20 @@ function ProductForm({
             name="name"
             className={styles.input}
             required
-            defaultValue={product?.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
+          {!readOnly && (
+            <button
+              type="button"
+              onClick={async () => {
+                const result = await describeProduct(name);
+                console.log(result);
+              }}
+            >
+              AI describe
+            </button>
+          )}
           <Activity mode={fieldErrors.name ? "visible" : "hidden"}>
             <span className={styles.errorMessage}>{fieldErrors.name}</span>
           </Activity>
