@@ -29,7 +29,7 @@ order, use the card `4242 4242 4242 4242` with any future expiry date and CVC.
 | ![Shopping assistant answering "sneakers under $60" with product cards](docs/screenshots/chat.png) | ![Product grid with filters and sorting](docs/screenshots/catalogue.png) |
 | **Sales (as the demo account sees it)**                                                            | **Sign-in with one-click demo**                                          |
 | ![Orders table with masked customer emails](docs/screenshots/admin-orders.png)                     | ![Sign-in page with the demo account box](docs/screenshots/sign-in.png)  |
-
+| ![Ai-Describe button that take the name of the products and gives Suggestion on Description and Keyword fields](docs/screenshots/ai-describe.png)
 ## What I built
 
 I built Digi-Express on my own to learn everything a real online store needs,
