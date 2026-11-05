@@ -20,6 +20,11 @@ const productSchema = z.object({
 
 const nameSchema = z.string().trim().min(2).max(100);
 
+const SYSTEM_PROMPT =
+  "You're writing text for a shop page, and it must never mention price or stock. If the name isn't a real product you can describe, say so instead of inventing one";
+
+const PROMPT_VERSION = "describe-v2";
+
 export async function describeProduct(name: string) {
   await assertAdmin();
   const parsed = nameSchema.safeParse(name);
@@ -29,14 +34,13 @@ export async function describeProduct(name: string) {
     const { output } = await generateText({
       model: google(process.env.GEMINI_MODEL ?? "gemini-3.5-flash"),
       prompt: `Product name: ${parsed.data}`,
-      system:
-        "You're writing text for a shop page, and it must never mention price or stock. if the name isn't a real product you can describe, say so instead of inventing one",
+      system: SYSTEM_PROMPT,
       abortSignal: AbortSignal.timeout(15000),
       maxOutputTokens: 1000,
       output: Output.object({ schema: productSchema }),
     });
     if (!output.isRealProduct) return { error: "Item name is not recognized as a real product" };
-    return { product: output };
+    return { product: output, promptVersion: PROMPT_VERSION };
   } catch (error) {
     console.log(error);
     if (NoObjectGeneratedError.isInstance(error)) {

@@ -23,6 +23,7 @@ interface SuggestionObject {
   isRealProduct: boolean;
   description: string;
   tags: string[];
+  promptVersion: string;
 }
 
 function newSlot(existing: string | null): ImageSlot {
@@ -58,7 +59,6 @@ function ProductForm({
   const [aiError, setAiError] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [suggestion, setSuggestion] = useState<SuggestionObject | null>(null);
-
   // One slot per photo: the saved image (if any) and a preview of a newly
   // picked file. Keys stay stable so file inputs keep their files when a
   // slot above them is removed.
@@ -93,6 +93,23 @@ function ProductForm({
     );
   };
 
+  async function runDescribe() {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const result = await describeProduct(name);
+      if (result.product) {
+        setSuggestion({ ...result.product, promptVersion: result.promptVersion });
+        setAiError(null);
+      }
+      if (result.error) {
+        setAiError(result.error);
+      }
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   return (
     <>
       <Form action={action} className={styles.form}>
@@ -108,28 +125,16 @@ function ProductForm({
             onChange={(e) => setName(e.target.value)}
           />
           {!readOnly && (
-            <button
-              type="button"
-              disabled={aiLoading}
-              onClick={async () => {
-                setAiLoading(true);
-                setAiError(null);
-                try {
-                  const result = await describeProduct(name);
-                  if (result.product) {
-                    setSuggestion(result.product);
-                    setAiError(null);
-                  }
-                  if (result.error) {
-                    setAiError(result.error);
-                  }
-                } finally {
-                  setAiLoading(false);
-                }
-              }}
-            >
-              {aiLoading ? "Writing..." : "AI describe"}
-            </button>
+            <>
+              <button
+                type="button"
+                disabled={aiLoading}
+                className={styles.suggestButton}
+                onClick={runDescribe}
+              >
+                {aiLoading ? "Writing..." : "AI describe"}
+              </button>
+            </>
           )}
           {suggestion && (
             <div className={styles.aiSuggestContainer}>
@@ -141,7 +146,17 @@ function ProductForm({
               <p className={styles.Title}>Tags: </p>
               <p className={styles.content}>{suggestion.tags.join(", ")}</p>
 
+              <p className={styles.helpText}>Prompt: {suggestion.promptVersion}</p>
+
               <div className={styles.suggestButtonContainer}>
+                <button
+                  type="button"
+                  disabled={aiLoading}
+                  className={styles.suggestButton}
+                  onClick={runDescribe}
+                >
+                  {aiLoading ? "Regenerating..." : "Regenerate"}
+                </button>
                 <button
                   type="button"
                   className={styles.suggestButton}
@@ -165,7 +180,7 @@ function ProductForm({
                 </button>
                 <button
                   type="button"
-                  className={styles.suggestButton}
+                  className={styles.discardButton}
                   onClick={() => {
                     setSuggestion(null);
                   }}
