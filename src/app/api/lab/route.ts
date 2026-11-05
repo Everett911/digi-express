@@ -4,6 +4,8 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function POST(request: Request) {
+  if (process.env.NODE_ENV !== "development")
+    return Response.json({ error: "Not found" }, { status: 404 });
   const { prompt, system, temperature, timeoutMs } = await request.json();
   if (!prompt) {
     return Response.json({ error: "prompt is required" }, { status: 400 });
