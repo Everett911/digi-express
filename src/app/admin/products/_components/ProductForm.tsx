@@ -11,12 +11,20 @@ import Form from "next/form";
 import Image from "next/image";
 import type { Product } from "@prisma/client";
 import { MAX_PRODUCT_IMAGES } from "@/src/schemas/products";
+import { describeProduct } from "../../_actions/ai";
 
 type ImageSlot = {
   key: string;
   existing: string | null;
   preview: string | null;
 };
+
+interface SuggestionObject {
+  isRealProduct: boolean;
+  description: string;
+  tags: string[];
+  promptVersion: string;
+}
 
 function newSlot(existing: string | null): ImageSlot {
   return { key: crypto.randomUUID(), existing, preview: null };
@@ -46,7 +54,11 @@ function ProductForm({
   const [colors, setColors] = useState<string[]>(product?.color ?? [""]);
   const [sizes, setSizes] = useState<string[]>(product?.size ?? [""]);
   const [keywords, setKeywords] = useState<string[]>(product?.keywords ?? [""]);
-
+  const [name, setName] = useState(product?.name ?? "");
+  const [description, setDescription] = useState(product?.description ?? "");
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [suggestion, setSuggestion] = useState<SuggestionObject | null>(null);
   // One slot per photo: the saved image (if any) and a preview of a newly
   // picked file. Keys stay stable so file inputs keep their files when a
   // slot above them is removed.
@@ -81,6 +93,23 @@ function ProductForm({
     );
   };
 
+  async function runDescribe() {
+    setAiLoading(true);
+    setAiError(null);
+    try {
+      const result = await describeProduct(name);
+      if (result.product) {
+        setSuggestion({ ...result.product, promptVersion: result.promptVersion });
+        setAiError(null);
+      }
+      if (result.error) {
+        setAiError(result.error);
+      }
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   return (
     <>
       <Form action={action} className={styles.form}>
@@ -92,10 +121,77 @@ function ProductForm({
             name="name"
             className={styles.input}
             required
-            defaultValue={product?.name}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-          <Activity mode={fieldErrors.name ? "visible" : "hidden"}>
-            <span className={styles.errorMessage}>{fieldErrors.name}</span>
+          {!readOnly && (
+            <>
+              <button
+                type="button"
+                disabled={aiLoading}
+                className={styles.suggestButton}
+                onClick={runDescribe}
+              >
+                {aiLoading ? "Writing..." : "AI describe"}
+              </button>
+            </>
+          )}
+          {suggestion && (
+            <div className={styles.aiSuggestContainer}>
+              <h4 className={styles.headTitle}>AI Suggestion</h4>
+
+              <p className={styles.Title}>Description :</p>
+              <p className={styles.content}>&ldquo;{suggestion.description}&ldquo;</p>
+
+              <p className={styles.Title}>Tags: </p>
+              <p className={styles.content}>{suggestion.tags.join(", ")}</p>
+
+              <p className={styles.helpText}>Prompt: {suggestion.promptVersion}</p>
+
+              <div className={styles.suggestButtonContainer}>
+                <button
+                  type="button"
+                  disabled={aiLoading}
+                  className={styles.suggestButton}
+                  onClick={runDescribe}
+                >
+                  {aiLoading ? "Regenerating..." : "Regenerate"}
+                </button>
+                <button
+                  type="button"
+                  className={styles.suggestButton}
+                  onClick={() => {
+                    setDescription(suggestion.description);
+                  }}
+                >
+                  Use Description
+                </button>
+                <button
+                  type="button"
+                  className={styles.suggestButton}
+                  onClick={() => {
+                    const trimTags = keywords.filter((k) => k.trim());
+                    const joinTags = [...trimTags, ...suggestion.tags];
+                    const tags = [...new Set(joinTags)];
+                    setKeywords(tags);
+                  }}
+                >
+                  Add Keywords
+                </button>
+                <button
+                  type="button"
+                  className={styles.discardButton}
+                  onClick={() => {
+                    setSuggestion(null);
+                  }}
+                >
+                  Discard
+                </button>
+              </div>
+            </div>
+          )}
+          <Activity mode={aiError ? "visible" : "hidden"}>
+            <span className={styles.errorMessage}>{aiError}</span>
           </Activity>
         </div>
 
@@ -141,7 +237,8 @@ function ProductForm({
             className={styles.input}
             name="description"
             required
-            defaultValue={product?.description ?? ""}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <Activity mode={fieldErrors.description ? "visible" : "hidden"}>
             <span className={styles.errorMessage}>{fieldErrors.description}</span>
@@ -272,7 +369,12 @@ function ProductForm({
               className={styles.input}
               placeholder={`Keyword #${index + 1} for better searches`}
               required
-              defaultValue={product?.keywords[index]}
+              value={keywords[index]}
+              onChange={(e) => {
+                const next = [...keywords];
+                next[index] = e.target.value;
+                setKeywords(next);
+              }}
             />
           ))}
           <button type="button" onClick={addKeywordField} className={styles.button}>
@@ -282,17 +384,21 @@ function ProductForm({
             <span className={styles.errorMessage}>{fieldErrors.keywords}</span>
           </Activity>
         </fieldset>
-        <SubmitButton readOnly={readOnly} />
+        <SubmitButton readOnly={readOnly} aiLoading={aiLoading} />
         {readOnly && <p className={styles.readOnlyNote}>Saving is turned off in the demo.</p>}
       </Form>
     </>
   );
 }
 
-function SubmitButton({ readOnly }: { readOnly: boolean }) {
+function SubmitButton({ readOnly, aiLoading }: { readOnly: boolean; aiLoading: boolean }) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className={styles.submitButton} disabled={pending || readOnly}>
+    <Button
+      type="submit"
+      className={styles.submitButton}
+      disabled={pending || readOnly || aiLoading}
+    >
       {pending ? "Saving..." : "Save"}
     </Button>
   );

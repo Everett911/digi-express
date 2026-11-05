@@ -1,3 +1,0 @@
-Fix this before your next session. You added registerStorefrontTools(server) to mcp/server.ts:26. Your admin tools already use the names search-products, get-product and list-delivery-options, so the server will crash on startup with "Tool search-products is already registered". The digi-express MCP server then won't connect in Claude Code or the inspector.
-
-I suggested that line as a temporary test in step 8, but with the same tool names it can't work. Either delete line 26 (and the import on line 11), or test the storefront tools in the inspector by pointing it at a separate server file built with createStorefrontServer().
