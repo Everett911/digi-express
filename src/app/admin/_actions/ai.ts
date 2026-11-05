@@ -23,7 +23,7 @@ const nameSchema = z.string().trim().min(2).max(100);
 export async function describeProduct(name: string) {
   await assertAdmin();
   const parsed = nameSchema.safeParse(name);
-  if (!parsed.success) return { error: "the name must be 2-100 characters" };
+  if (!parsed.success) return { error: "The name must be 2-100 characters" };
 
   try {
     const { output } = await generateText({
