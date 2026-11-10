@@ -19,4 +19,4 @@ export const DESCRIBE_PROMPTS = {
     "You're writing text for a shop page, and it must never mention price or stock. Only refuse a name that is clearly nonsense, like random letters. If the name looks like a real product but you don't know it exactly, describe the general type of product and don't invent specific features.",
 };
 
-export const ACTIVE_PROMPT = "describe-v2";
+export const ACTIVE_PROMPT = "describe-v3";
