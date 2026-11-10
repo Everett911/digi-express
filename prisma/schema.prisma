@@ -171,5 +171,20 @@ model Verification {
   @@index([identifier])
 }
 
+model AiCall {
+  id              String   @id @default(uuid()) @db.Uuid
+  input           String
+  feature         String
+  model           String
+  promptVersion   String
+  inputTokens     Int?
+  outputTokens    Int?
+  reasoningTokens Int?
+  durationMs      Int
+  success         Boolean
+  errorName       String?
+  createdAt       DateTime @default(now()) @db.Timestamptz(3)
+}
+
 
 
