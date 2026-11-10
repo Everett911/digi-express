@@ -34,7 +34,7 @@ export async function describeProduct(name: string) {
       return { error: "Couldn't create a description. Try again" };
     }
     if (error instanceof Error && error.name === "TimeoutError") {
-      return { error: " AI taking too long" };
+      return { error: "The AI is taking too long. Try again." };
     }
     return { error: "Something went wrong. Try again." };
   }
