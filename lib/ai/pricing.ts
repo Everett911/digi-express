@@ -15,3 +15,13 @@ export function estimatedCostUsd(
     (outputTokens / 1000000) * price.outputPerMillion
   );
 }
+const COST_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 4,
+});
+export function formatCostUsd(cost: number | null): string {
+  if (cost === null) return "—";
+  return COST_FORMATTER.format(cost);
+}
