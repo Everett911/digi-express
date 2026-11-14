@@ -71,9 +71,7 @@ async function getAiUsage() {
   const averageDurationMs = averageDuration._avg.durationMs ?? 0;
 
   return {
-    groupModels,
     failures,
-    averageDuration,
     groupErrors,
     dailyUsage,
     totalCalls,
@@ -179,7 +177,6 @@ export default async function AdminAiPage() {
           </ul>
         )}
       </Panel>
-      <pre>{JSON.stringify(usage, null, 2)}</pre>
     </>
   );
 }
