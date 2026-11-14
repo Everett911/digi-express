@@ -3,6 +3,7 @@ import { requireAdminPage } from "../_lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StatCard, PageHeader, Panel, EmptyState } from "../_components/ui";
 import styles from "../page.module.css";
+import aiStyles from "./page.module.css";
 import { formatNumber } from "@/src/utils/formatters";
 import { Sparkles, DollarSign, TriangleAlert, Timer } from "lucide-react";
 import { Table } from "@radix-ui/themes";
@@ -119,64 +120,66 @@ export default async function AdminAiPage() {
           icon={Timer}
         />
       </div>
-      <Panel title="Calls per day">
-        {usage.dailyUsage.length === 0 ? (
-          <EmptyState title="No AI calls yet" />
-        ) : (
-          <Table.Root variant="ghost">
-            <Table.Header>
-              <Table.Row>
-                <Table.ColumnHeaderCell>Day</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Model</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Calls</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Input tokens</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Output tokens</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Est. cost</Table.ColumnHeaderCell>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {usage.dailyUsage.map((row) => {
-                return (
-                  <Table.Row key={`${row.day.toISOString()}-${row.model}`} align="center">
-                    <Table.RowHeaderCell>{DAY_FORMATTER.format(row.day)}</Table.RowHeaderCell>
-                    <Table.Cell>{row.model}</Table.Cell>
-                    <Table.Cell className={table.number}>{formatNumber(row.calls)}</Table.Cell>
-                    <Table.Cell className={table.number}>
-                      {formatNumber(row.inputTokens)}
-                    </Table.Cell>
-                    <Table.Cell className={table.number}>
-                      {formatNumber(row.outputTokens)}
-                    </Table.Cell>
-                    <Table.Cell className={table.number}>
-                      {formatCostUsd(
-                        estimatedCostUsd(row.model, row.inputTokens, row.outputTokens),
-                      )}
-                    </Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table.Root>
-        )}
-      </Panel>
-      <Panel title="Top errors">
-        {usage.groupErrors.length === 0 ? (
-          <EmptyState title="No failed calls" description="Failed AI calls will show up here." />
-        ) : (
-          <ul className={styles.list}>
-            {usage.groupErrors.map((error) => (
-              <li key={error.errorName ?? "unknown"} className={styles.listRow}>
-                <div className={styles.listMain}>
-                  <span className={styles.listTitle}>{error.errorName ?? "Unknown error"}</span>
-                </div>
-                <span
-                  className={styles.listValue}
-                >{`${formatNumber(error._count._all)} ${error._count._all === 1 ? "call" : "calls"}`}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Panel>
+      <div className={aiStyles.panels}>
+        <Panel title="Calls per day">
+          {usage.dailyUsage.length === 0 ? (
+            <EmptyState title="No AI calls yet" />
+          ) : (
+            <Table.Root variant="ghost">
+              <Table.Header>
+                <Table.Row>
+                  <Table.ColumnHeaderCell>Day</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Model</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Calls</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Input tokens</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Output tokens</Table.ColumnHeaderCell>
+                  <Table.ColumnHeaderCell>Est. cost</Table.ColumnHeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {usage.dailyUsage.map((row) => {
+                  return (
+                    <Table.Row key={`${row.day.toISOString()}-${row.model}`} align="center">
+                      <Table.RowHeaderCell>{DAY_FORMATTER.format(row.day)}</Table.RowHeaderCell>
+                      <Table.Cell>{row.model}</Table.Cell>
+                      <Table.Cell className={table.number}>{formatNumber(row.calls)}</Table.Cell>
+                      <Table.Cell className={table.number}>
+                        {formatNumber(row.inputTokens)}
+                      </Table.Cell>
+                      <Table.Cell className={table.number}>
+                        {formatNumber(row.outputTokens)}
+                      </Table.Cell>
+                      <Table.Cell className={table.number}>
+                        {formatCostUsd(
+                          estimatedCostUsd(row.model, row.inputTokens, row.outputTokens),
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table.Root>
+          )}
+        </Panel>
+        <Panel title="Top errors">
+          {usage.groupErrors.length === 0 ? (
+            <EmptyState title="No failed calls" description="Failed AI calls will show up here." />
+          ) : (
+            <ul className={styles.list}>
+              {usage.groupErrors.map((error) => (
+                <li key={error.errorName ?? "unknown"} className={styles.listRow}>
+                  <div className={styles.listMain}>
+                    <span className={styles.listTitle}>{error.errorName ?? "Unknown error"}</span>
+                  </div>
+                  <span
+                    className={styles.listValue}
+                  >{`${formatNumber(error._count._all)} ${error._count._all === 1 ? "call" : "calls"}`}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Panel>
+      </div>
     </>
   );
 }
