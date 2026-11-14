@@ -161,6 +161,24 @@ export default async function AdminAiPage() {
           </Table.Root>
         )}
       </Panel>
+      <Panel title="Top errors">
+        {usage.groupErrors.length === 0 ? (
+          <EmptyState title="No failed calls" description="Failed AI calls will show up here." />
+        ) : (
+          <ul className={styles.list}>
+            {usage.groupErrors.map((error) => (
+              <li key={error.errorName ?? "unknown"} className={styles.listRow}>
+                <div className={styles.listMain}>
+                  <span className={styles.listTitle}>{error.errorName ?? "Unknown error"}</span>
+                </div>
+                <span
+                  className={styles.listValue}
+                >{`${formatNumber(error._count._all)} ${error._count._all === 1 ? "call" : "calls"}`}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Panel>
       <pre>{JSON.stringify(usage, null, 2)}</pre>
     </>
   );
