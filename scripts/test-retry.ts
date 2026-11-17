@@ -23,4 +23,7 @@ async function main() {
     console.log("Test 2 error:", error instanceof Error ? error.message : error);
   }
 }
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
