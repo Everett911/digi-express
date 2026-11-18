@@ -2,7 +2,7 @@
 import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, Receipt, Users } from "lucide-react";
+import { LayoutDashboard, Package, Receipt, Users, Sparkles } from "lucide-react";
 import styles from "./AdminNav.module.css";
 
 const LINKS = [
@@ -10,6 +10,7 @@ const LINKS = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/orders", label: "Sales", icon: Receipt },
   { href: "/admin/users", label: "Customers", icon: Users },
+  { href: "/admin/ai", label: "AI usage", icon: Sparkles },
 ] as const;
 
 export default function AdminNav() {

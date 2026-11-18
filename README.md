@@ -44,6 +44,23 @@ keywords, use the description, regenerate, or discard.
 
 ![Admin product form with an AI suggestion: a description and keywords, with Use description, Add keywords, Regenerate and Discard buttons](docs/screenshots/ai-describe.png)
 
+### Versioned prompts, logging and cost
+
+- **Versioned prompts:** every prompt version (`describe-v1` … `describe-v3`)
+  stays in `lib/ai/describe.ts` and is never edited after it's used.
+  `scripts/compare-prompts.ts` runs two versions on the same names. v3 won: it
+  accepts real model numbers like "Model X-200" and still refuses "asdfgh".
+- **Every call is logged:** the `AiCall` table stores the model, the prompt
+  version, input and output tokens (thinking included), the duration, and the
+  error name when a call fails.
+- **Retries only where they help:** the AI SDK already retries rate limits and
+  server errors. An answer that doesn't match the schema is retried once, with
+  exponential backoff and jitter (`lib/ai/retry.ts`). Timeouts (30 seconds) and
+  bad requests are not retried.
+- **Rate limit per admin:** 3 requests a minute and 20 a day, stored in Postgres.
+- **AI usage page** (`/admin/ai`): calls, estimated cost, failure rate, average
+  duration, calls per day and the top errors for the last 7 days.
+
 ## What I built
 
 I built Digi-Express on my own to learn everything a real online store needs,
@@ -84,6 +101,10 @@ not only the frontend.
 - **The public demo login is safe to publish.** It has its own `demo` role:
   pages render, actions reject it, customer details are masked, and Better
   Auth hooks stop anyone changing its password or profile (`lib/demo.ts`).
+- **AI costs are estimates, and unknown isn't zero.** Each call saves its
+  tokens, and the cost is calculated when the page loads, because prices
+  change and tokens don't. A model without a price shows "—" instead of a fake
+  $0, and so does the average duration when no call succeeded.
 
 ## Tech stack
 
@@ -170,12 +191,16 @@ npm run mcp:inspect
 ```
 lib/                 server code: auth, Prisma, Stripe, email, data access
   ai/chat.ts         the shopping assistant: Gemini + in-memory MCP client
+  ai/describe.ts     AI describe: the Zod schema and versioned prompts
+  ai/retry.ts        retry with exponential backoff and jitter
+  ai/pricing.ts      Gemini prices and cost estimates
   db/                queries and server actions (cart, products, orders)
   checkout.ts        cart totals and order line building
   demo.ts            the read-only demo account
   rateLimit.ts       Postgres-backed rate limiter
 mcp/                 MCP server: tools, resources and prompts
 prisma/              schema and seed script
+scripts/             one-off scripts: prompt comparison, retry and price checks
 src/app/(main)/      storefront: home, products, checkout, orders, sign-in
 src/app/admin/       admin dashboard and its server actions
 src/app/api/         auth routes, chat, revalidation and the Stripe webhook
