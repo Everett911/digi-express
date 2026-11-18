@@ -69,7 +69,7 @@ async function getAiUsage() {
   }
   const failureRate = totalCalls === 0 ? 0 : (failures / totalCalls) * 100;
 
-  const averageDurationMs = averageDuration._avg.durationMs ?? 0;
+  const averageDurationMs = averageDuration._avg.durationMs;
 
   return {
     failures,
@@ -87,7 +87,8 @@ export default async function AdminAiPage() {
   await requireAdminPage();
   const usage = await getAiUsage();
   const condition = usage.hasUnknownPrice ? "Some models have no price" : "At paid-tier prices";
-  const usageAverage = usage.averageDurationMs / 1000;
+  const averageDurationText: string =
+    usage.averageDurationMs === null ? "—" : `${(usage.averageDurationMs / 1000).toFixed(1)}s`;
   return (
     <>
       <PageHeader
@@ -115,7 +116,7 @@ export default async function AdminAiPage() {
         />
         <StatCard
           label="Average duration"
-          value={`${usageAverage.toFixed(1)}s`}
+          value={averageDurationText}
           hint="Successful calls only"
           icon={Timer}
         />
