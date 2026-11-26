@@ -4,6 +4,8 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { cosineSimilarity } from "./cosine";
 
 const google = createGoogleGenerativeAI({ apiKey: process.env.GEMINI_API_KEY });
+const USE_TASK_TYPE = process.argv.includes("--task-type");
+const model = google.embedding("gemini-embedding-001");
 
 type ProductVector = { name: string; vector: number[] };
 type EvalCase = { query: string; expected: string[] };
@@ -23,15 +25,30 @@ async function main() {
     }
   }
 
+  const productVectors = USE_TASK_TYPE
+    ? (
+        await embedMany({
+          model,
+          values: names,
+          providerOptions: { google: { taskType: "RETRIEVAL_DOCUMENT" } },
+        })
+      ).embeddings
+    : rows.map((row) => row.vector);
+
   const { embeddings } = await embedMany({
-    model: google.embedding("gemini-embedding-001"),
+    model,
     values: cases.map((c) => c.query),
+    providerOptions: USE_TASK_TYPE ? { google: { taskType: "RETRIEVAL_QUERY" } } : undefined,
   });
+  console.log(USE_TASK_TYPE ? "mode: taskType " : "mode: no taskType");
 
   const recalls: number[] = [];
   cases.forEach((c, q) => {
     const top5 = rows
-      .map((row) => ({ name: row.name, score: cosineSimilarity(embeddings[q], row.vector) }))
+      .map((row, i) => ({
+        name: row.name,
+        score: cosineSimilarity(embeddings[q], productVectors[i]),
+      }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 5);
     const topNames = top5.map((item) => item.name);
