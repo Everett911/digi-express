@@ -61,6 +61,14 @@ keywords, use the description, regenerate, or discard.
 - **AI usage page** (`/admin/ai`): calls, estimated cost, failure rate, average
   duration, calls per day and the top errors for the last 7 days.
 
+### Embedding search experiments
+
+Scripts in `scripts/embeddings/` test search by meaning before it goes into the shop. Run `embed-products.ts` first: it writes `product-vectors.json` (gitignored), which the other scripts read.
+
+- **My own cosine similarity** (`cosine.ts`), tested against the AI SDK's version, including the zero-vector case.
+- **Keyword vs embedding search** on 50 product names: for "kitchen", keyword search finds nothing, and `gemini-embedding-001` finds 5 of 5 kitchen products.
+- **A 10-query evaluation** (`eval.ts`): recall@5 is 0.85 (17 of 20 expected products). With task types (`RETRIEVAL_DOCUMENT` / `RETRIEVAL_QUERY`) it scored 0.80, or 0.89 without one vague query, and the top 5 lists were cleaner. The pgvector search will use task types.
+
 ## What I built
 
 I built Digi-Express on my own to learn everything a real online store needs,
@@ -114,9 +122,9 @@ Context Protocol SDK · Gemini API · Vitest · GitHub Actions
 
 ## Tests
 
-38 unit tests cover checkout totals and order lines, cart validation, price
-mapping, the chat's tool-calling loop, the storefront MCP tools and the demo
-account rules. GitHub Actions runs the type check, lint, format check and
+42 unit tests cover checkout totals and order lines, cart validation, price
+mapping, the chat's tool-calling loop, the storefront MCP tools, the demo
+account rules and the cosine similarity used for embedding search. GitHub Actions runs the type check, lint, format check and
 tests on every pull request and every push to `master`.
 
 ```bash
@@ -200,7 +208,7 @@ lib/                 server code: auth, Prisma, Stripe, email, data access
   rateLimit.ts       Postgres-backed rate limiter
 mcp/                 MCP server: tools, resources and prompts
 prisma/              schema and seed script
-scripts/             one-off scripts: prompt comparison, retry and price checks
+scripts/             one-off scripts: prompt comparison, retry and price checks, embedding experiments
 src/app/(main)/      storefront: home, products, checkout, orders, sign-in
 src/app/admin/       admin dashboard and its server actions
 src/app/api/         auth routes, chat, revalidation and the Stripe webhook
