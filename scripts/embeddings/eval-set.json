@@ -1,0 +1,24 @@
+[
+  { "query": "kitchen", "expected": ["Stainless Steel Frying Pan", "Electric Kettle"] },
+  {
+    "query": "sunglasses",
+    "expected": ["Retro Sunglasses With Gold Accents", "Clubmaster-Style Sunglass"]
+  },
+  {
+    "query": "jacket for winter season",
+    "expected": ["Cozy Chunky Knitted Sweater", "Fleece Hoodie"]
+  },
+  {
+    "query": "gift for the christmas event",
+    "expected": ["Gold Hoop Errings", "Elegant Wrist Watch"]
+  },
+  { "query": "clothes", "expected": ["Pleated Midi Skirt", "Oversized Graphic T-Shirt"] },
+  { "query": "Gold Layered Necklace", "expected": ["Gold Hoop Errings", "Gold Layered Necklace"] },
+  {
+    "query": "Gold Chain With Letter Charm",
+    "expected": ["Gold Necklace With Sunburst Pendant", "Gold Chain With Letter Charm"]
+  },
+  { "query": "jewelry", "expected": ["Gold Hoop Errings", "Gold Chain With Letter Charm"] },
+  { "query": "Gold accessories", "expected": ["Gold Layered Necklace", "Gold Hoop Errings"] },
+  { "query": "Bags", "expected": ["Elegant Cross Body Handbag", "Canvas Tote Bag"] }
+]
